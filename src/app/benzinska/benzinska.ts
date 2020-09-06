@@ -19,5 +19,6 @@ export class Benzinska {
     lon: number;
     imaGorivo: boolean;
     udaljenost: number;
+    otvoreno: boolean;
 
 }

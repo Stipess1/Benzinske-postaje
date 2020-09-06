@@ -1,8 +1,8 @@
 {
   "name": "Benzinske",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "author": "Stjepan",
-  "homepage": "https://ionicframework.com/",
+  "homepage": "",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

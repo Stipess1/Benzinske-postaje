@@ -33,7 +33,7 @@ ion-alert.select-alert {
 }
 .filter-img {
     font-size: larger;
-    border: 2px solid #c9c9c9;
+    border: 1px solid #c9c9c9;
     padding: 10px;
     border-radius: 10px;
 }
@@ -46,6 +46,24 @@ ion-alert.select-alert {
 #content {
     opacity: 0;
 }
+.benga-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+.benga-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+ion-chip {
+    margin-top: 0;
+}
+.benga-detalji {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 h2 {
     font-weight: bold;
 }
@@ -54,7 +72,7 @@ ion-select {
     width: 120px;
     margin-top: 5px;
     float: left;
-    border: 2px solid #c9c9c9;
+    border: 1px solid #c9c9c9;
     border-radius: 10px;
     --placeholder-color: #a2a2a2 !important;
 }

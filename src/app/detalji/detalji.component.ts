@@ -42,6 +42,14 @@ export class DetaljiComponent implements OnInit {
     this.statusBar.backgroundColorByHexString('#fff');
   }
 
+  logScrolling(event: any) {
+    if(event.detail.scrollTop > 2) {
+      document.getElementById('header').classList.remove('ion-no-border');
+    } else {
+      document.getElementById('header').classList.add('ion-no-border');
+    }
+  }
+
   parseTime(vrijeme: string, date: Date) {
       if(vrijeme == undefined) return;
 

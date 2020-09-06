@@ -1,5 +1,7 @@
 {
   "name": "Benzinske",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

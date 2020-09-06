@@ -1,0 +1,61 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="home"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Detalji</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content id="content">
+    <div class="center">
+        <img src="../../assets/icon/pump/signs.svg" width="32">
+        <h2>{{trenutnaBenga.ime}}</h2>
+        <p>Radno Vrijeme: {{vrijeme}}</p>
+        <p class="vrijeme" *ngIf="otvoreno"><span class="otvoreno">Otvoreno</span></p>
+        <p class="vrijeme" *ngIf="!otvoreno"><span class="zatvoreno">Zatvoreno</span></p>
+        <p stlye="font-weight:bold;">{{trenutnaBenga.kompanija}}</p>
+        <img *ngIf="trenutnaBenga.img != 'http://localhost/home'" src="{{trenutnaBenga.img}}" width="50%" stlye="margin-top: 5px;">
+
+        <div class="adresa">
+            <ion-icon name="home-outline" style="font-size: 32px;"></ion-icon>
+            <p>{{trenutnaBenga.adresa}}</p>
+        </div>
+        <div class="adresa">
+            <ion-icon name="navigate-outline" style="font-size: 32px;"></ion-icon> 
+            <p>{{trenutnaBenga.udaljenost}} km <span class="text-muted">(Zračna udaljenost)</span></p>
+        </div>
+        <ion-button color="light" size="small" (click)="odvedi()">Odvedi me</ion-button>
+    </div>
+    <hr>
+    <div class="cijene">
+        <h3>Cijene Goriva</h3>
+        <div class="cijene-bengi">
+            <ion-grid>
+                <ion-row>
+                    <ion-col *ngFor="let gorivo of trenutnaBenga.vrsteGoriva; index as i" >
+                        <p class="dizel" *ngIf="gorivo.toLowerCase().includes('eurodiesel') || gorivo.toLowerCase().includes('eurodizel')">B</p>
+                        <p class="benzin" *ngIf="gorivo.toLowerCase().includes('eurosuper')">E</p>
+                        <div class="autoplin" *ngIf="gorivo.toLowerCase().includes('autoplin') || gorivo.toLowerCase().includes('lpg')"><p style="transform: rotateZ(-45deg); margin:auto;">H</p></div>
+                        <p class="text-gorivo">{{gorivo}}</p>
+                        <p class="cijena">{{trenutnaBenga.cijenik[i]}} <span>kn/L</span> </p>
+                        
+                    </ion-col>
+                </ion-row>
+               
+            </ion-grid>
+            
+        </div>
+    </div>
+    <hr>
+    <div class="dodatne-usluge">
+        <h3>Dodatne Usluge</h3>
+        <ion-chip *ngFor="let benga of trenutnaBenga.usluge" color="secondary" outline="true">
+            <ion-avatar>
+                <img src="{{benga.img}}" alt="slika">
+            </ion-avatar>
+            <ion-label>{{benga.usluga}}</ion-label>
+        </ion-chip>
+        <ion-text *ngIf="trenutnaBenga.usluge == undefined">Nije unešeno</ion-text>
+    </div>
+</ion-content>

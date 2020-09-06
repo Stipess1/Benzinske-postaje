@@ -7,15 +7,31 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+import { HTTP } from '@ionic-native/http/ngx';
+import { PopoverComponent } from './popover/popover.component';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { LaunchNavigator } from '@ionic-native/launch-navigator/ngx';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  declarations: [AppComponent, PopoverComponent],
+  entryComponents: [PopoverComponent],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
   providers: [
     StatusBar,
     SplashScreen,
+    HttpClientModule,
+    LaunchNavigator,
+    AndroidPermissions,
+    ScreenOrientation,
+    Geolocation,
+    Diagnostic,
+    HTTP,
+    HttpClient,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

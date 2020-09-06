@@ -1,0 +1,90 @@
+ion-content {
+    --ion-background-color: #EBEBEB;
+    font-family: 'Varela Round', sans-serif !important;
+}
+
+.fuel {
+    // margin: 10px;
+    font-weight: bold;
+    color: #4B4B4B;
+}
+.title {
+    margin-left: 10px;
+    text-align: center;
+    color: #a2a2a2; 
+}
+
+h2, p, ion-label, h1, ion-select-option, ion-select, .select-text {
+    font-family: 'Varela Round', sans-serif !important;
+}
+
+ion-alert.select-alert {
+    font-family: 'Varela Round', sans-serif !important;
+  
+    button {
+        font-family: 'Varela Round', sans-serif !important;
+    }
+  }
+
+.filter-div {
+    margin-top: 5px;
+    text-align: center;
+    float: right;
+}
+.filter-img {
+    font-size: larger;
+    border: 2px solid #c9c9c9;
+    padding: 10px;
+    border-radius: 10px;
+}
+.benga {
+    --background: rgb(247, 247, 247);
+    margin-top: 15px;
+    --inner-box-shadow: 10px;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+}
+#content {
+    opacity: 0;
+}
+h2 {
+    font-weight: bold;
+}
+
+ion-select {
+    width: 120px;
+    margin-top: 5px;
+    float: left;
+    border: 2px solid #c9c9c9;
+    border-radius: 10px;
+    --placeholder-color: #a2a2a2 !important;
+}
+
+.benge {
+    padding-top: 0;
+}
+ion-grid {
+    padding-bottom: 0;
+}
+ion-text {
+    font-family: 'Varela Round', sans-serif !important;
+}
+
+.desno > h1 {
+    float: right;
+    color: #4B4B4B;
+    font-size: 26px;
+}
+.radno-vrijeme {
+    
+}
+.radi {
+    background-color: rgb(119, 255, 119);
+    color: green;
+    margin-right: 5px;
+    padding: 7px;
+}
+.desno {
+    max-width: 108px;
+    border-left: 1px solid rgb(207, 207, 207);
+    padding: 15px 0px 15px 10px;
+}

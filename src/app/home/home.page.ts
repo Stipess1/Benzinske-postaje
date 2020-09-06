@@ -1,12 +1,26 @@
-import { Component } from '@angular/core';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HomeComponent } from './home.component';
+import { IonicModule } from '@ionic/angular';
+// import { TranslateModule } from '@ngx-translate/core';
 
-@Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+const routes: Routes = [
+  {
+    path: '',
+    component: HomeComponent
+  }
+];
+@NgModule({
+  imports: [
+    CommonModule,
+    // TranslateModule,
+    FormsModule,
+    IonicModule,
+    RouterModule.forChild(routes)
+  ],
+  declarations: [HomeComponent],
+  exports: [HomeComponent]
 })
-export class HomePage {
-
-  constructor() {}
-
-}
+export class HomePage {}

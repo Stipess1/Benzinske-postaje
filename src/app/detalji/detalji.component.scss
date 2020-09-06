@@ -1,0 +1,114 @@
+ion-content, h2, h3, ion-label {
+    font-family: 'Varela Round', sans-serif !important;
+}
+
+ion-title {
+    font-family: 'Varela Round', sans-serif !important;
+    font-size: 30px;
+    font-weight: bolder;
+}
+h2{
+    margin-top: 5px;
+    
+}
+#content {
+    opacity: 0;
+}
+ion-label {
+    font-weight: bold;
+}
+.cijene, .dodatne-usluge {
+    margin: 10px;
+}
+.adresa > p {
+    font-size: small;
+}
+.dizel {
+    width: 36px;
+    height: 36px;
+    background-color: #2C313C;
+    color: white;
+    margin-right: 5px;
+    border-radius: 5px;
+    text-align: center;
+    padding: 0.5em 0 0;
+    margin: auto;
+}
+ion-item {
+    --inner-padding-start: 0;
+}
+.benzin {
+    background-color: #8DD374;
+    width: 36px;
+    height: 36px;
+    color: white;
+    border-radius: 100%;
+    text-align: center;
+    padding: 0.5em 0 0;
+    margin: auto;
+}
+
+.text-gorivo {
+    font-size: small;
+    font-weight: bold;
+    text-align: center;
+}
+.cijena {
+    font-size: medium;
+    font-weight: bold;
+    text-align: center;
+}
+.cijena > span {
+    font-size: small;
+    font-weight: normal;
+    color: rgb(59, 59, 59);
+}
+.autoplin {
+    transform: rotateZ(45deg);
+    width: 36px;
+    height: 36px;
+    color: white;
+    background-color: #fac02d;
+    border-radius: 0.3em;
+    padding: 0.5em;
+    text-align: center;
+    margin: auto;
+}
+.center {
+    margin-top: 30px;
+    text-align: center;
+}
+.zatvoreno {
+    padding: 5px 15px 5px 15px;
+    background-color: rgb(255, 168, 168);
+    color: red;
+}
+.gorivo {
+    display: inline;
+}
+
+.otvoreno{
+    padding: 5px 15px 5px 15px;
+    background-color: rgb(119, 255, 119);
+    color: green;
+}
+.vrijeme {
+    margin-bottom: 20px;
+}
+.adresa {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+.adresa > p {
+    margin-left: 10px;
+}
+hr {
+    background-color: #eaeaea;
+}
+.text-muted {
+    color: rgb(108, 117, 125);
+}
+.adresa > ion-icon {
+    margin-top: 5px;
+}

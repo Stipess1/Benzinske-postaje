@@ -18,7 +18,7 @@
     <ion-grid *ngIf="!searching">
       <ion-row>
         <ion-col>
-          <ion-select value="DIZELA" interface="action-sheet" cancelText="Odustani" (ionChange)="selectChange($event)" mode="md">
+          <ion-select value="DIZELA" interface="action-sheet" cancelText="Odustani" (ionChange)="selectChange($event)" mode="md" [interfaceOptions]="{header: 'Odaberite gorivo', cssClass: 'action'}">
             <ion-select-option selectedText value="DIZELA">Dizel</ion-select-option>
             <ion-select-option value="BENZINA">Benzin</ion-select-option>
             <ion-select-option value="AUTOPLIN">Autoplin</ion-select-option>
@@ -27,7 +27,7 @@
         </ion-col>
         <ion-col>
           <ion-select value="5" name="Radius" (ionChange)="radius($event, false)" interface="action-sheet" mode="md"
-            cancelText="Odustani">
+            cancelText="Odustani" [interfaceOptions]="{header: 'Radijus', cssClass: 'action'}">
             <ion-select-option value="5">5 km</ion-select-option>
             <ion-select-option value="10">10 km</ion-select-option>
             <ion-select-option value="15">15 km</ion-select-option>

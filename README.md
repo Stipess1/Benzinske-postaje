@@ -9,7 +9,9 @@
 [<img src="assets/slika3.jpg" width="160">](assets/slika3.jpg)
 [<img src="assets/slika4.jpg" width="160">](assets/slika4.jpg)
 [<img src="assets/slika5.jpg" width="160">](assets/slika5.jpg)
+[<img src="assets/slika7.jpg" width="160">](assets/slika7.jpg)
 [<img src="assets/slika6.jpg" width="160">](assets/slika6.jpg)
+
 
 ## Opis
 Aplikacija koristi [HAK](https://map.hak.hr/) stranicu za preuzimanje podataka, te aplikacija koristi vašu trenutnu lokaciju da pronađe benzinske postaje u blizini vas. Mogućnost traženja i filtiranje benzinskih postaji po: Udaljenosti, cijeni goriva, vrsta goriva i gradu.

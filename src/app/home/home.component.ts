@@ -55,7 +55,8 @@ export class HomeComponent implements OnInit {
     this.trenutnoGorivo = "DIZELA";
 
     this.platform.ready().then(data => {
-      // this.init();
+      if(!this.platform.is('cordova'))
+        this.click("", null);
 
       this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
         result => {
@@ -290,141 +291,161 @@ export class HomeComponent implements OnInit {
   }
 
   click(id: string, benz: BenzinskaOsnovni) {
+    if(this.platform.is('cordova'))
+      this.benzinske.getPumpData(id)
+        .then(data => {
+          let json = JSON.parse(data.data);
 
-    this.benzinske.getPumpData(id)
-      .then(data => {
-        let json = JSON.parse(data.data);
+          let htmlText = json['Content'];
+          let doc = new DOMParser().parseFromString(htmlText, "text/html");
+          let vrstaGorivaArray = [];
+          let cijenik = [];
+          let benga = new Benzinska();
 
-        let htmlText = json['Content'];
-        let doc = new DOMParser().parseFromString(htmlText, "text/html");
-        let vrstaGorivaArray = [];
-        let cijenik = [];
-        let benga = new Benzinska();
+          benga.lat = benz.lat;
+          benga.lon = benz.lon;
+          let radnoVrijeme = new RadnoVrijeme();
+          let slika = doc.getElementsByClassName("iw-top__icon")[0].querySelectorAll('img')[0].src;
 
-        benga.lat = benz.lat;
-        benga.lon = benz.lon;
-        let radnoVrijeme = new RadnoVrijeme();
-        let slika = doc.getElementsByClassName("iw-top__icon")[0].querySelectorAll('img')[0].src;
-
-        let grad = doc.getElementsByClassName("iw-section")[3].getElementsByClassName("iw-row")[1].getElementsByClassName("iw-value")[0].innerHTML;
-        let adresa = doc.getElementsByClassName("iw-section")[3].getElementsByClassName("iw-row")[0].getElementsByClassName("iw-value")[0].innerHTML;
-        let vrijeme = doc.getElementById("rv").getElementsByClassName("iw-row");
-        if (vrijeme.length == 2) {
-          radnoVrijeme.ponPet = vrijeme[0].getElementsByClassName("iw-col--right")[0].innerHTML;
-          radnoVrijeme.sub = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
-        } else {
-          radnoVrijeme.ponPet = vrijeme[0].getElementsByClassName("iw-col--right")[0].innerHTML;
-          radnoVrijeme.sub = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
-          radnoVrijeme.ned = vrijeme[2].getElementsByClassName("iw-col--right")[0].innerHTML;
-          let temp = vrijeme[3];
-          if (temp != undefined)
-            radnoVrijeme.praznik = vrijeme[3].getElementsByClassName("iw-col--right")[0].innerHTML;
-        }
-        let usluge;
-        let listaUsluga = [];
-        if (doc.getElementById("features") != null) {
-          usluge = doc.getElementById("features").getElementsByClassName("iw-col-container")[0].innerHTML;
-          let lUsluga = usluge.split(",");
-          for (let i = 0; i < lUsluga.length; i++) {
-            if (i != 0)
-              lUsluga[i] = lUsluga[i].replace(" ", "");
+          let grad = doc.getElementsByClassName("iw-section")[3].getElementsByClassName("iw-row")[1].getElementsByClassName("iw-value")[0].innerHTML;
+          let adresa = doc.getElementsByClassName("iw-section")[3].getElementsByClassName("iw-row")[0].getElementsByClassName("iw-value")[0].innerHTML;
+          let vrijeme = doc.getElementById("rv").getElementsByClassName("iw-row");
+          if (vrijeme.length == 2) {
+            radnoVrijeme.ponPet = vrijeme[0].getElementsByClassName("iw-col--right")[0].innerHTML;
+            radnoVrijeme.sub = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
+          } else {
+            radnoVrijeme.ponPet = vrijeme[0].getElementsByClassName("iw-col--right")[0].innerHTML;
+            radnoVrijeme.sub = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
+            radnoVrijeme.ned = vrijeme[2].getElementsByClassName("iw-col--right")[0].innerHTML;
+            let temp = vrijeme[3];
+            if (temp != undefined)
+              radnoVrijeme.praznik = vrijeme[3].getElementsByClassName("iw-col--right")[0].innerHTML;
           }
-          // console.log(lUsluga);
-          for (let i = 0; i < lUsluga.length; i++) {
-            listaUsluga.push(new Usluge(lUsluga[i]));
-          }
-        }
-
-        let imeFirme = doc.getElementsByClassName("iw-top")[0].getElementsByClassName("iw-title")[0].innerHTML;
-        let imeBenge = doc.getElementsByClassName("iw-top")[0].getElementsByClassName("iw-title")[1].innerHTML;
-
-        let vrsteGoriva = doc.getElementById("fueltypes").getElementsByClassName("iw-section__content")[0].getElementsByClassName("label");
-        for (let i = 0; i < vrsteGoriva.length; i++) {
-          let split = vrsteGoriva[i].innerHTML.split(":");
-          vrstaGorivaArray[i] = split[0].replace("&nbsp;", " ");
-          cijenik[i] = split[1].slice(0, -5);
-        }
-        let imaGorivo = false;
-        if (this.trenutnoGorivo == "DIZELA") {
-          for (let i = 0; i < vrstaGorivaArray.length; i++) {
-            let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
-            if (lower === "eurodiesel" || lower === "eurodizel" || lower === "eurodieselbs"
-              || lower === "evoeurodieselbs" || lower === "eurodizelbs") {
-              benga.gorivo = cijenik[i];
-              imaGorivo = true;
+          let usluge;
+          let listaUsluga = [];
+          if (doc.getElementById("features") != null) {
+            usluge = doc.getElementById("features").getElementsByClassName("iw-col-container")[0].innerHTML;
+            let lUsluga = usluge.split(",");
+            for (let i = 0; i < lUsluga.length; i++) {
+              if (i != 0)
+                lUsluga[i] = lUsluga[i].replace(" ", "");
+            }
+            // console.log(lUsluga);
+            for (let i = 0; i < lUsluga.length; i++) {
+              listaUsluga.push(new Usluge(lUsluga[i]));
             }
           }
-        } else if (this.trenutnoGorivo == "BENZINA") {
-          for (let i = 0; i < vrstaGorivaArray.length; i++) {
-            let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
-            if (lower === "eurosuper95" || lower === "qmaxeurosuper95" || lower === "evoeurosuper95bs" ||
-              lower === "eurosuperbs95" || lower === "eurosuper95bsmaxpower" || lower === "eurosuper95bs" || lower === "eurosuper95classplus") {
-              benga.gorivo = cijenik[i];
-              imaGorivo = true;
+
+          let imeFirme = doc.getElementsByClassName("iw-top")[0].getElementsByClassName("iw-title")[0].innerHTML;
+          let imeBenge = doc.getElementsByClassName("iw-top")[0].getElementsByClassName("iw-title")[1].innerHTML;
+
+          let vrsteGoriva = doc.getElementById("fueltypes").getElementsByClassName("iw-section__content")[0].getElementsByClassName("label");
+          for (let i = 0; i < vrsteGoriva.length; i++) {
+            let split = vrsteGoriva[i].innerHTML.split(":");
+            vrstaGorivaArray[i] = split[0].replace("&nbsp;", " ");
+            cijenik[i] = split[1].slice(0, -5);
+          }
+          let imaGorivo = false;
+          if (this.trenutnoGorivo == "DIZELA") {
+            for (let i = 0; i < vrstaGorivaArray.length; i++) {
+              let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
+              if (lower === "eurodiesel" || lower === "eurodizel" || lower === "eurodieselbs"
+                || lower === "evoeurodieselbs" || lower === "eurodizelbs") {
+                  console.log(cijenik[i]);
+                  
+                benga.gorivo = cijenik[i];
+                imaGorivo = true;
+              }
+            }
+          } else if (this.trenutnoGorivo == "BENZINA") {
+            for (let i = 0; i < vrstaGorivaArray.length; i++) {
+              let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
+              if (lower === "eurosuper95" || lower === "qmaxeurosuper95" || lower === "evoeurosuper95bs" ||
+                lower === "eurosuperbs95" || lower === "eurosuper95bsmaxpower" || lower === "eurosuper95bs" || lower === "eurosuper95classplus") {
+                benga.gorivo = cijenik[i];
+                imaGorivo = true;
+              }
+            }
+          } else if (this.trenutnoGorivo == "AUTOPLIN") {
+            for (let i = 0; i < vrstaGorivaArray.length; i++) {
+              let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
+              if (lower === "lpg" || lower === "evolpg"
+                || lower === "autoplinmaxpower"
+                || lower === "autoplin(unp)"
+                || lower === "qmaxlpgautoplin"
+                || lower === "autoplin") {
+                benga.gorivo = cijenik[i];
+                imaGorivo = true;
+              }
             }
           }
-        } else if (this.trenutnoGorivo == "AUTOPLIN") {
-          for (let i = 0; i < vrstaGorivaArray.length; i++) {
-            let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
-            if (lower === "lpg" || lower === "evolpg"
-              || lower === "autoplinmaxpower"
-              || lower === "autoplin(unp)"
-              || lower === "qmaxlpgautoplin"
-              || lower === "autoplin") {
-              benga.gorivo = cijenik[i];
-              imaGorivo = true;
-            }
+
+
+          if (imeFirme.includes("Konzum")) {
+            slika = "https://www.konzum.hr/assets/1i0/frontend/facebook/facebook_meta_image-5b88c5da1a557eaf6501d1fb63f883285f9346300d9b2e0a196dc32047a9542a.png";
+          } else if (imeFirme.includes("AGS")) {
+            slika = "/assets/icon/pump/ags.png";
           }
-        }
 
+          benga.adresa = adresa;
+          benga.grad = grad;
+          benga.radnoVrijeme = radnoVrijeme;
+          benga.kompanija = imeFirme;
+          benga.ime = imeBenge;
+          benga.img = slika;
+          benga.vrsteGoriva = vrstaGorivaArray;
+          benga.id = id;
+          benga.cijenik = cijenik;
+          benga.imaGorivo = imaGorivo;
+          benga.udaljenost = benz.udaljenost;
+          if (usluge != undefined)
+            benga.usluge = listaUsluga;
 
-        if (imeFirme.includes("Konzum")) {
-          slika = "https://www.konzum.hr/assets/1i0/frontend/facebook/facebook_meta_image-5b88c5da1a557eaf6501d1fb63f883285f9346300d9b2e0a196dc32047a9542a.png";
-        } else if (imeFirme.includes("AGS")) {
-          slika = "/assets/icon/pump/ags.png";
-        }
+          let date = new Date();
+          if (date.getDay() >= 1 && date.getDay() <= 5) {
 
-        benga.adresa = adresa;
-        benga.grad = grad;
-        benga.radnoVrijeme = radnoVrijeme;
-        benga.kompanija = imeFirme;
-        benga.ime = imeBenge;
-        benga.img = slika;
-        benga.vrsteGoriva = vrstaGorivaArray;
-        benga.id = id;
-        benga.cijenik = cijenik;
-        benga.imaGorivo = imaGorivo;
-        benga.udaljenost = benz.udaljenost;
-        if (usluge != undefined)
-          benga.usluge = listaUsluga;
+            this.parseTime(benga.radnoVrijeme.ponPet, date, benga);
 
-        let date = new Date();
-        if (date.getDay() >= 1 && date.getDay() <= 5) {
+          } else if (date.getDay() == 0) {
 
-          this.parseTime(benga.radnoVrijeme.ponPet, date, benga);
+            this.parseTime(benga.radnoVrijeme.ned, date, benga);
 
-        } else if (date.getDay() == 0) {
+          } else if (date.getDay() == 6) {
+            this.parseTime(benga.radnoVrijeme.sub, date, benga);
+          }
 
-          this.parseTime(benga.radnoVrijeme.ned, date, benga);
+          // this.benge.push(benga);
+          if (imaGorivo) {
+            this.benzinske.filterBenga.push(benga);
+            setTimeout(() => {
+              const animation = this.animationController.create().addElement(document.getElementById("" + benga.id)).
+                duration(300).iterations(1).fromTo('opacity', '0', '1');
 
-        } else if (date.getDay() == 6) {
-          this.parseTime(benga.radnoVrijeme.sub, date, benga);
-        }
+              animation.play();
+            }, 50)
+            console.log("play");
 
-        // this.benge.push(benga);
-        if (imaGorivo) {
-          this.benzinske.filterBenga.push(benga);
-          setTimeout(() => {
-            const animation = this.animationController.create().addElement(document.getElementById("" + benga.id)).
-              duration(300).iterations(1).fromTo('opacity', '0', '1');
+          }
 
-            animation.play();
-          }, 50)
-          console.log("play");
+        });
+    else {
+      // 
+      let benga = new Benzinska();
+      benga.adresa = "Slavonska avenija 110";
+      benga.ime = "BP ZAGREB ISTOK";
+      benga.img = "/assets/icon/pump/ags.png";
+      benga.udaljenost = 1.2;
+      benga.id = "2"
+      benga.gorivo = "8.40";
+      this.benzinske.filterBenga.push(benga);
+      this.loadedData = true;
+      setTimeout(() => {
+        const animation = this.animationController.create().addElement(document.getElementById("2")).
+          duration(300).iterations(1).fromTo('opacity', '0', '1');
 
-        }
-
-      });
+        animation.play();
+      }, 50)
+    }
   }
 
   parseTime(vrijeme: string, date: Date, benga: Benzinska) {

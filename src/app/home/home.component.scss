@@ -92,9 +92,6 @@ ion-text {
     color: #4B4B4B;
     font-size: 26px;
 }
-.radno-vrijeme {
-    
-}
 .radi {
     background-color: rgb(119, 255, 119);
     color: green;
@@ -105,4 +102,24 @@ ion-text {
     max-width: 108px;
     border-left: 1px solid rgb(207, 207, 207);
     padding: 15px 0px 15px 10px;
+}
+
+@media only screen and (max-width: 370px) {
+    .desno > h1 {
+        font-size: 23px;
+    }
+    .desno {
+        max-width: 90px !important;
+        padding: 15px 0px 15px 0px;
+    }
+    .desno > h1 > span {
+        font-size: small !important;
+    }
+}
+
+@media only screen and (max-width: 350px) {
+    .benga-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

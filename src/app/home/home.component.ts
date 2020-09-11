@@ -292,8 +292,6 @@ export class HomeComponent implements OnInit {
         if (benga.ime == "ostale benzinske postaje")
           benga.ime = benga.mjesto;
 
-        console.log(benga.ime);
-
         // hardcodamo jer nema drugog nacina
         if (benga.ime == "Tifon") {
           benga.img = "https://tifon.hr/images/fb-tifon-logo.jpg";
@@ -376,7 +374,7 @@ export class HomeComponent implements OnInit {
           let vrsteGoriva = doc.getElementById("fueltypes").getElementsByClassName("iw-section__content")[0].getElementsByClassName("label");
           for (let i = 0; i < vrsteGoriva.length; i++) {
             let split = vrsteGoriva[i].innerHTML.split(":");
-            vrstaGorivaArray[i] = split[0].replace("&nbsp;", " ");
+            vrstaGorivaArray[i] = split[0].replace(/&nbsp;/g, " ");
             cijenik[i] = split[1].slice(0, -5);
           }
           let imaGorivo = false;
@@ -484,7 +482,7 @@ export class HomeComponent implements OnInit {
       benga.img = "/assets/icon/pump/ags.png";
       benga.udaljenost = 1.2;
       benga.id = "2"
-      benga.gorivo = "8.40";
+      benga.gorivo = "10.40";
       this.benzinske.filterBenga.push(benga);
       this.loadedData = true;
       this.http.get('assets/json/postaje.json').subscribe((res: any) => {
@@ -590,8 +588,6 @@ export class HomeComponent implements OnInit {
       for (let i = 0; i < this.benzinske.filterBenga.length; i++) {
         for (let j = 0; j < this.benzinske.filterBenga[i].vrsteGoriva.length; j++) {
           let lower = this.benzinske.filterBenga[i].vrsteGoriva[j].toLowerCase().replace(/ /g, "");
-          console.log("lower: " + lower);
-
           if (lower === "eurodiesel" || lower === "eurodizel" || lower === "eurodieselbs"
             || lower === "evoeurodieselbs" || lower === "eurodizelbs") {
             this.benzinske.filterBenga[i].gorivo = this.benzinske.filterBenga[i].cijenik[j];
@@ -614,11 +610,8 @@ export class HomeComponent implements OnInit {
       for (let i = 0; i < this.benzinske.filterBenga.length; i++) {
         this.benzinske.filterBenga[i].gorivo = "---";
         for (let j = 0; j < this.benzinske.filterBenga[i].vrsteGoriva.length; j++) {
-          console.log(this.benzinske.filterBenga[i].vrsteGoriva[j]);
-
-
           let lower = this.benzinske.filterBenga[i].vrsteGoriva[j].toLowerCase().replace(/ /g, "");
-          console.log(lower);
+
           if (lower === "lpg" || lower === "evolpg"
             || lower === "autoplinmaxpower"
             || lower === "autoplin(unp)"

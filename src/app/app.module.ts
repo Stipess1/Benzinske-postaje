@@ -16,6 +16,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LaunchNavigator } from '@ionic-native/launch-navigator/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
+import {AndroidFullScreen} from "@ionic-native/android-full-screen/ngx";
 
 @NgModule({
   declarations: [AppComponent, PopoverComponent],
@@ -31,6 +32,7 @@ import { Diagnostic } from '@ionic-native/diagnostic/ngx';
     Geolocation,
     Diagnostic,
     HTTP,
+    AndroidFullScreen,
     HttpClient,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

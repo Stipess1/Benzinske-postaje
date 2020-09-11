@@ -484,7 +484,7 @@ export class HomeComponent implements OnInit {
       benga.id = "2"
       benga.gorivo = "10.40";
       this.benzinske.filterBenga.push(benga);
-      this.loadedData = true;
+      // this.loadedData = true;
       this.http.get('assets/json/postaje.json').subscribe((res: any) => {
         console.log(res['postajas'][0]['adresa']);
 

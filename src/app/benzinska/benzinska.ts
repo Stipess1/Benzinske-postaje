@@ -3,6 +3,7 @@ import { Usluge } from './usluge';
 
 export class Benzinska {
     id: string;
+    mzoeId: string
     kompanija: string;
     ime: string;
     grad: string;

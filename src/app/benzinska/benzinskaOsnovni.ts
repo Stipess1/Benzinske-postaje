@@ -1,8 +1,5 @@
-import { Gorivo } from './gorivo';
-
 export class BenzinskaOsnovni {
 
-    // netreba jer su ljdu iz haka carevi
     id: string;
     mjesto: string;
     ime: string;

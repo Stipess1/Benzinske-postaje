@@ -23,7 +23,10 @@ export class PopoverComponent implements OnInit {
     if(filter === "niza") {
       for(let i = 0; i < this.service.filterBenga.length; i++) {
         for(let j = 0; j < this.service.filterBenga.length; j++) {
-          if(this.service.filterBenga[i].gorivo.replace(",",".") < this.service.filterBenga[j].gorivo.replace(",",".")) {
+          let prvi: number = +this.service.filterBenga[i].gorivo.replace(",",".");
+          let drugi: number = +this.service.filterBenga[j].gorivo.replace(",",".");
+
+          if(prvi < drugi) {
             let temp = this.service.filterBenga[i];
             this.service.filterBenga[i] = this.service.filterBenga[j];
             this.service.filterBenga[j] = temp;
@@ -33,7 +36,9 @@ export class PopoverComponent implements OnInit {
     } else if (filter === "visa"){
       for(let i = 0; i < this.service.filterBenga.length; i++) {
         for(let j = 0; j < this.service.filterBenga.length; j++) {
-          if(this.service.filterBenga[i].gorivo.replace(",",".") > this.service.filterBenga[j].gorivo.replace(",",".")) {
+          let prvi: number = +this.service.filterBenga[i].gorivo.replace(",",".");
+          let drugi: number = +this.service.filterBenga[j].gorivo.replace(",",".");
+          if(prvi > drugi) {
             let temp = this.service.filterBenga[i];
             this.service.filterBenga[i] = this.service.filterBenga[j];
             this.service.filterBenga[j] = temp;

@@ -6,7 +6,6 @@ import { Benzinska } from '../benzinska/benzinska';
 import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
 import pako from 'pako';
 import { BenzinskaOsnovni } from '../benzinska/benzinskaOsnovni';
-import { Gorivo } from '../benzinska/gorivo';
 import { Platform, ToastController, PopoverController, AnimationController } from '@ionic/angular';
 import { Search } from '../search/model/search';
 import { PopoverComponent } from '../popover/popover.component';
@@ -16,6 +15,7 @@ import { Usluge } from '../benzinska/usluge';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
+import { Gorivo } from '../benzinska/gorivo';
 
 @Component({
   selector: 'app-home',
@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
   public loadedData: boolean = false;
   public reloading: boolean = false;
   public grad: string = "blizini";
+  public subscription: any;
   // -
   // https://nominatim.org/release-docs/develop/api/Search/
 
@@ -53,17 +54,19 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.trenutnoGorivo = "DIZELA";
+    // this.benzinske.getZip();
 
     this.platform.ready().then(data => {
-      if(!this.platform.is('cordova'))
-        this.click("", null);
+      if (!this.platform.is('cordova'))
+        this.parse("", null);
 
       this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
         result => {
           console.log('Has permission?', result.hasPermission);
           this.permission = result.hasPermission;
-        })
+        });
 
+      
 
       this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION, this.androidPermissions.PERMISSION.ACCESS_FINE_LOCATION]).then(
         data => {
@@ -87,10 +90,42 @@ export class HomeComponent implements OnInit {
             })
 
           } else {
+            // this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION, this.androidPermissions.PERMISSION.ACCESS_FINE_LOCATION]).then(
+            //   data => {
+            //     this.diagnostic.isGpsLocationEnabled().then((gps) => {
+            //       if (gps)
+            //         this.geolocation.getCurrentPosition().then((resp) => {
+    
+            //           this.benzinske.lat = resp.coords.latitude;
+            //           this.benzinske.lon = resp.coords.longitude;
+            //           this.init();
+    
+            //         }).catch(err => {
+            //           console.log("err: " + err);
+    
+            //         });
+            //       else
+            //         this.presentToast();
+            //     })
+            //   }
+            // )
             console.log("Nema Permission");
           }
         }
       );
+
+    });
+
+    this.http.get('assets/json/gorivo.json').subscribe((data: any) => {
+
+      console.log(data['gorivos'].length);
+      for (let i = 0; i < data['gorivos'].length; i++) {
+        let gorivo = new Gorivo();
+        gorivo.id = data['gorivos'][i]['id'];
+        gorivo.naziv = data['gorivos'][i]['naziv'];
+        gorivo.vrstaGorivaId = data['gorivos'][i]['vrsta_goriva_id'];
+        this.benzinske.vrsteGoriva.push(gorivo);
+      }
 
     });
   }
@@ -104,6 +139,9 @@ export class HomeComponent implements OnInit {
   }
 
   ionViewWillEnter() {
+    this.subscription = this.platform.backButton.subscribeWithPriority(0, () => {
+      navigator['app'].exitApp();
+    });
     this.statusBar.backgroundColorByHexString('#EBEBEB');
   }
   ionViewDidEnter() {
@@ -211,17 +249,10 @@ export class HomeComponent implements OnInit {
           benga.udaljenost = udaljenost;
 
           if (udaljenost <= value) {
-            this.click(benga.id.substr(1), benga);
+            this.parse(benga.id.substr(1), benga);
           }
 
         }
-
-        // for(let i = 0; i < this.benzinske.filterBenga.length; i++) {
-        //   let temp = this.benzinske.filterBenga[i];
-        //   if(temp.udaljenost > value) {
-        //     this.benzinske.filterBenga.splice(i, 1);
-        //   }
-        // }
 
       }).catch(err => {
         console.log("err: " + err);
@@ -235,7 +266,7 @@ export class HomeComponent implements OnInit {
         benga.udaljenost = udaljenost;
 
         if (udaljenost <= value) {
-          this.click(benga.id.substr(1), benga);
+          this.parse(benga.id.substr(1), benga);
         }
       }
     }
@@ -257,8 +288,11 @@ export class HomeComponent implements OnInit {
 
         benga.ime = json[i]['CategoryName'];
 
+
         if (benga.ime == "ostale benzinske postaje")
           benga.ime = benga.mjesto;
+
+        console.log(benga.ime);
 
         // hardcodamo jer nema drugog nacina
         if (benga.ime == "Tifon") {
@@ -282,7 +316,7 @@ export class HomeComponent implements OnInit {
         this.jsonBenge.push(benga);
 
         if (udaljenost <= 5)
-          this.click(benga.id.substr(1), benga);
+          this.parse(benga.id.substr(1), benga);
 
       }
 
@@ -290,8 +324,8 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  click(id: string, benz: BenzinskaOsnovni) {
-    if(this.platform.is('cordova'))
+  parse(id: string, benz: BenzinskaOsnovni) {
+    if (this.platform.is('cordova'))
       this.benzinske.getPumpData(id)
         .then(data => {
           let json = JSON.parse(data.data);
@@ -350,9 +384,8 @@ export class HomeComponent implements OnInit {
             for (let i = 0; i < vrstaGorivaArray.length; i++) {
               let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
               if (lower === "eurodiesel" || lower === "eurodizel" || lower === "eurodieselbs"
-                || lower === "evoeurodieselbs" || lower === "eurodizelbs") {
-                  console.log(cijenik[i]);
-                  
+                || lower === "evoeurodieselbs" || lower === "eurodizelbs" || lower === "eurodieselbsa-motion") {
+
                 benga.gorivo = cijenik[i];
                 imaGorivo = true;
               }
@@ -361,7 +394,8 @@ export class HomeComponent implements OnInit {
             for (let i = 0; i < vrstaGorivaArray.length; i++) {
               let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
               if (lower === "eurosuper95" || lower === "qmaxeurosuper95" || lower === "evoeurosuper95bs" ||
-                lower === "eurosuperbs95" || lower === "eurosuper95bsmaxpower" || lower === "eurosuper95bs" || lower === "eurosuper95classplus") {
+                lower === "eurosuperbs95" || lower === "eurosuper95bsmaxpower" || lower === "eurosuper95bs" || lower === "eurosuper95classplus"
+                || lower === "eurosuper95bsa-motion") {
                 benga.gorivo = cijenik[i];
                 imaGorivo = true;
               }
@@ -373,7 +407,8 @@ export class HomeComponent implements OnInit {
                 || lower === "autoplinmaxpower"
                 || lower === "autoplin(unp)"
                 || lower === "qmaxlpgautoplin"
-                || lower === "autoplin") {
+                || lower === "autoplin"
+                || lower === "autoplin-lpg") {
                 benga.gorivo = cijenik[i];
                 imaGorivo = true;
               }
@@ -385,6 +420,8 @@ export class HomeComponent implements OnInit {
             slika = "https://www.konzum.hr/assets/1i0/frontend/facebook/facebook_meta_image-5b88c5da1a557eaf6501d1fb63f883285f9346300d9b2e0a196dc32047a9542a.png";
           } else if (imeFirme.includes("AGS")) {
             slika = "/assets/icon/pump/ags.png";
+          } else if (imeFirme.includes("APIOS")) {
+            slika = "https://webservis.mzoe-gor.hr/img/obv_20_logo.png";
           }
 
           benga.adresa = adresa;
@@ -398,6 +435,18 @@ export class HomeComponent implements OnInit {
           benga.cijenik = cijenik;
           benga.imaGorivo = imaGorivo;
           benga.udaljenost = benz.udaljenost;
+
+          this.http.get('assets/json/postaje.json').subscribe((res: any) => {
+
+            for (let i = 0; i < res['postajas'].length; i++) {
+              if (res['postajas'][i]['adresa'] === benga.adresa && res['postajas'][i]['naziv'] === benga.ime) {
+                benga.mzoeId = res['postajas'][i]['id'];
+              }
+            }
+          });
+
+          // console.log(benga.id);
+
           if (usluge != undefined)
             benga.usluge = listaUsluga;
 
@@ -423,7 +472,6 @@ export class HomeComponent implements OnInit {
 
               animation.play();
             }, 50)
-            console.log("play");
 
           }
 
@@ -439,6 +487,16 @@ export class HomeComponent implements OnInit {
       benga.gorivo = "8.40";
       this.benzinske.filterBenga.push(benga);
       this.loadedData = true;
+      this.http.get('assets/json/postaje.json').subscribe((res: any) => {
+        console.log(res['postajas'][0]['adresa']);
+
+        for (let i = 0; i < res['postajas'].length; i++) {
+          if (res['postajas'][i]['adresa'] === benga.adresa && res['postajas'][i]['ime'] === benga.ime)
+            benga.id = res['postajas'][i]['id'];
+          // console.log(res['postajas'][i]);
+
+        }
+      });
       setTimeout(() => {
         const animation = this.animationController.create().addElement(document.getElementById("2")).
           duration(300).iterations(1).fromTo('opacity', '0', '1');
@@ -446,6 +504,11 @@ export class HomeComponent implements OnInit {
         animation.play();
       }, 50)
     }
+
+    // this.benzinske.getTrend().then(data => {
+    //   console.log(data.data);
+
+    // });
   }
 
   parseTime(vrijeme: string, date: Date, benga: Benzinska) {
@@ -472,7 +535,7 @@ export class HomeComponent implements OnInit {
       else
         benga.otvoreno = false;
     }
-    
+
   }
 
   get(benga: Benzinska) {
@@ -498,6 +561,7 @@ export class HomeComponent implements OnInit {
   ionViewDidLeave() {
     const animation = this.animationController.create().addElement(document.getElementById('home')).iterations(1).duration(500).fromTo('opacity', 1, 0);
     animation.play();
+    this.subscription.unsubscribe();
   }
   selectChange(event: any) {
     let value = event.target.value;

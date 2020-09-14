@@ -11,6 +11,7 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <preference name="loadUrlTimeoutValue" value="700000" />
     <preference name="SplashStatusBarBackgroundColor" value="#582929" />
     <preference name="StatusBarBackgroundColor" value="#582929" />
     <preference name="SplashNavigationBarBackgroundColor" value="#582929" />

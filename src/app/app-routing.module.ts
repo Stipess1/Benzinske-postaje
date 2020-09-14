@@ -8,12 +8,20 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'pocetna/home',
     pathMatch: 'full'
   },
   {
     path: 'detalji',
     loadChildren: './detalji/detalji.page#DetaljiPage'
+  },
+  {
+    path: 'karta',
+    loadChildren: './karta/karta.page#KartaPage'
+  },
+  {
+    path: 'pocetna',
+    loadChildren: () => import('./pocetna/pocetna.module').then( m => m.PocetnaPageModule)
   }
 ];
 

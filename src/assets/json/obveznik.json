@@ -1,0 +1,667 @@
+{"obvezniks":[
+    {
+       "id":82,
+       "logo":"obv_82_logo.png",
+       "naziv":"Adria Oil d.o.o."
+    },
+    {
+       "id":167,
+       "logo":null,
+       "naziv":"Adria Plin d.o.o."
+    },
+    {
+       "id":86,
+       "logo":null,
+       "naziv":"Agro-Amerika d.o.o."
+    },
+    {
+       "id":186,
+       "logo":null,
+       "naziv":"AGS Hrvatska"
+    },
+    {
+       "id":91,
+       "logo":null,
+       "naziv":"AG Trade J d.o.o."
+    },
+    {
+       "id":20,
+       "logo":"obv_20_logo.png",
+       "naziv":"APIOS d.o.o."
+    },
+    {
+       "id":81,
+       "logo":null,
+       "naziv":"AQUA PLIN d.o.o."
+    },
+    {
+       "id":79,
+       "logo":null,
+       "naziv":"Aspetrol d.o.o."
+    },
+    {
+       "id":193,
+       "logo":null,
+       "naziv":"asseriaoil"
+    },
+    {
+       "id":27,
+       "logo":null,
+       "naziv":"Atika"
+    },
+    {
+       "id":153,
+       "logo":null,
+       "naziv":"ATTENDO CENTAR d.o.o."
+    },
+    {
+       "id":211,
+       "logo":null,
+       "naziv":"ATTENDO CENTAR d.o.o."
+    },
+    {
+       "id":109,
+       "logo":null,
+       "naziv":"AUTO GAS PEHLIN"
+    },
+    {
+       "id":32,
+       "logo":null,
+       "naziv":"Auto-Ivec"
+    },
+    {
+       "id":46,
+       "logo":null,
+       "naziv":"AUTO PLIN,obrt za trgovinu,vl.Zlatan Malovi\u0107 i Carlos Alexandre Fabiano"
+    },
+    {
+       "id":45,
+       "logo":null,
+       "naziv":"Autopromet d.d."
+    },
+    {
+       "id":77,
+       "logo":null,
+       "naziv":"Auto Sport Granda"
+    },
+    {
+       "id":70,
+       "logo":null,
+       "naziv":"Bahnjik d.o.o."
+    },
+    {
+       "id":62,
+       "logo":null,
+       "naziv":"Benzin d.o.o."
+    },
+    {
+       "id":24,
+       "logo":"obv_24_logo.jpg",
+       "naziv":"Benzinska postaja Dra\u017e, PZ Topolje"
+    },
+    {
+       "id":146,
+       "logo":null,
+       "naziv":"BENZINSKA PUMPA BREBRI\u0106 D.O.O."
+    },
+    {
+       "id":51,
+       "logo":null,
+       "naziv":"Biotron d.o.o."
+    },
+    {
+       "id":171,
+       "logo":null,
+       "naziv":"B-MAX 282 d.o.o."
+    },
+    {
+       "id":165,
+       "logo":null,
+       "naziv":"BONUS PLIN J.D.O.O"
+    },
+    {
+       "id":34,
+       "logo":null,
+       "naziv":"B.P. Jozinovi\u0107"
+    },
+    {
+       "id":93,
+       "logo":null,
+       "naziv":"Butan plin"
+    },
+    {
+       "id":44,
+       "logo":null,
+       "naziv":"\u010cef d.o.o."
+    },
+    {
+       "id":189,
+       "logo":null,
+       "naziv":"Corvus d.o.o."
+    },
+    {
+       "id":47,
+       "logo":null,
+       "naziv":"Crodiesel d.o.o."
+    },
+    {
+       "id":8,
+       "logo":"obv_8_logo.png",
+       "naziv":"Crodux Derivati Dva d.o.o."
+    },
+    {
+       "id":139,
+       "logo":null,
+       "naziv":"\u010cukelj d.o.o."
+    },
+    {
+       "id":107,
+       "logo":null,
+       "naziv":"DALER d.o.o."
+    },
+    {
+       "id":57,
+       "logo":null,
+       "naziv":"D.D. \u0160enkovec d.o.o."
+    },
+    {
+       "id":87,
+       "logo":null,
+       "naziv":"Denia d.o.o."
+    },
+    {
+       "id":42,
+       "logo":null,
+       "naziv":"Dirus Projekt d.o.o."
+    },
+    {
+       "id":180,
+       "logo":null,
+       "naziv":"ENERGY-BENTZ d.o.o."
+    },
+    {
+       "id":182,
+       "logo":null,
+       "naziv":"ENSOLIS PROIZVODNJA D.O.O."
+    },
+    {
+       "id":78,
+       "logo":null,
+       "naziv":"Etradex d.o.o."
+    },
+    {
+       "id":214,
+       "logo":null,
+       "naziv":"ETRADEX d.o.o."
+    },
+    {
+       "id":35,
+       "logo":null,
+       "naziv":"Euro benz"
+    },
+    {
+       "id":130,
+       "logo":null,
+       "naziv":"Eurotank"
+    },
+    {
+       "id":145,
+       "logo":null,
+       "naziv":"Exclusive obrt za trgovinu i usluge"
+    },
+    {
+       "id":37,
+       "logo":null,
+       "naziv":"Gali\u0107-benz d.o.o."
+    },
+    {
+       "id":199,
+       "logo":null,
+       "naziv":"GasOil d.o.o."
+    },
+    {
+       "id":53,
+       "logo":null,
+       "naziv":"Golubi\u0107 d.o.o. Gradina"
+    },
+    {
+       "id":89,
+       "logo":null,
+       "naziv":"G.P.P. Miki\u0107 d.o.o."
+    },
+    {
+       "id":94,
+       "logo":null,
+       "naziv":"G.S. Plin d.o.o."
+    },
+    {
+       "id":63,
+       "logo":null,
+       "naziv":"HIDRO VING D.O.O."
+    },
+    {
+       "id":14,
+       "logo":null,
+       "naziv":"Hodak d.o.o."
+    },
+    {
+       "id":80,
+       "logo":null,
+       "naziv":"Ibiza d.o.o."
+    },
+    {
+       "id":6,
+       "logo":"obv_6_logo.jpg",
+       "naziv":"INA \u2013 Industrija nafte d.d."
+    },
+    {
+       "id":56,
+       "logo":null,
+       "naziv":"Interpetrol d.o.o."
+    },
+    {
+       "id":185,
+       "logo":null,
+       "naziv":"ISTRAGAS jdoo"
+    },
+    {
+       "id":156,
+       "logo":null,
+       "naziv":"ISTRA\u017dIVA\u010c BENZ d.o.o."
+    },
+    {
+       "id":166,
+       "logo":null,
+       "naziv":"Jadran Petrol d.o.o."
+    },
+    {
+       "id":68,
+       "logo":null,
+       "naziv":"Kavazovi\u0107-Limar d.o.o., Adria petrol"
+    },
+    {
+       "id":22,
+       "logo":"obv_22_logo.png",
+       "naziv":"Kero-Benz d.o.o."
+    },
+    {
+       "id":127,
+       "logo":null,
+       "naziv":"KNB-GORIVO d.o.o."
+    },
+    {
+       "id":75,
+       "logo":null,
+       "naziv":"Komunalno Mljet d.o.o."
+    },
+    {
+       "id":195,
+       "logo":null,
+       "naziv":"Konzum plus d.o.o."
+    },
+    {
+       "id":50,
+       "logo":null,
+       "naziv":"KORENKO d.o.o."
+    },
+    {
+       "id":40,
+       "logo":null,
+       "naziv":"Kos d.o.o."
+    },
+    {
+       "id":33,
+       "logo":null,
+       "naziv":"Ko\u0161u\u0107a Petrol d.o.o."
+    },
+    {
+       "id":113,
+       "logo":null,
+       "naziv":"KO\u0160U\u0106A PETROL D.O.O. ZA TRGOVINU I USLUGE"
+    },
+    {
+       "id":67,
+       "logo":null,
+       "naziv":"Kp Plin d.o.o."
+    },
+    {
+       "id":39,
+       "logo":null,
+       "naziv":"Krklec-Trgovina d.o.o."
+    },
+    {
+       "id":105,
+       "logo":null,
+       "naziv":"KTC d.d."
+    },
+    {
+       "id":141,
+       "logo":null,
+       "naziv":"Lepirac d.o.o."
+    },
+    {
+       "id":137,
+       "logo":"obv_137_logo.jpg",
+       "naziv":"Lepus d.o.o."
+    },
+    {
+       "id":103,
+       "logo":null,
+       "naziv":"LI\u0106A D.O.O."
+    },
+    {
+       "id":192,
+       "logo":"obv_192_logo.png",
+       "naziv":"LISANA KOMERC D.O.O."
+    },
+    {
+       "id":66,
+       "logo":null,
+       "naziv":"Lodis j d.o.o."
+    },
+    {
+       "id":92,
+       "logo":"obv_92_logo.png",
+       "naziv":"Lpg Narona"
+    },
+    {
+       "id":97,
+       "logo":null,
+       "naziv":"LPG NARONA d.o.o."
+    },
+    {
+       "id":85,
+       "logo":null,
+       "naziv":"Ludina d.o.o."
+    },
+    {
+       "id":7,
+       "logo":"obv_7_logo.jpg",
+       "naziv":"LUKOIL Croatia d.o.o."
+    },
+    {
+       "id":116,
+       "logo":null,
+       "naziv":"M.A.H. d.o.o."
+    },
+    {
+       "id":118,
+       "logo":"obv_118_logo.jpg",
+       "naziv":"Marol  d.o.o. Zagreb, Ilica 71 -  BP Rakov Potok"
+    },
+    {
+       "id":151,
+       "logo":null,
+       "naziv":"MARP-PROMET d.o.o."
+    },
+    {
+       "id":21,
+       "logo":null,
+       "naziv":"Mati\u0107 benzinska pumpa d.o.o."
+    },
+    {
+       "id":147,
+       "logo":null,
+       "naziv":"Metalmineral d.d."
+    },
+    {
+       "id":99,
+       "logo":null,
+       "naziv":"Metal trgovina Filko"
+    },
+    {
+       "id":132,
+       "logo":null,
+       "naziv":"MIKI PROMET d.o.o."
+    },
+    {
+       "id":18,
+       "logo":"obv_18_logo.jpg",
+       "naziv":"Mikol d.o.o."
+    },
+    {
+       "id":60,
+       "logo":"obv_60_logo.jpg",
+       "naziv":"Mirko Babi\u0107 d.o.o."
+    },
+    {
+       "id":191,
+       "logo":null,
+       "naziv":"Mitea Trade Limited d.o.o."
+    },
+    {
+       "id":26,
+       "logo":null,
+       "naziv":"Mobenz d.o.o."
+    },
+    {
+       "id":61,
+       "logo":"obv_61_logo.png",
+       "naziv":"Mohari\u0107 commerce d.o.o."
+    },
+    {
+       "id":73,
+       "logo":null,
+       "naziv":"Mo\u0161unj d.o.o."
+    },
+    {
+       "id":36,
+       "logo":null,
+       "naziv":"Nafta centar d.o.o."
+    },
+    {
+       "id":28,
+       "logo":null,
+       "naziv":"Naftne crpke ulice d.o.o."
+    },
+    {
+       "id":54,
+       "logo":null,
+       "naziv":"Nautica Vukovar d.o.o."
+    },
+    {
+       "id":69,
+       "logo":null,
+       "naziv":"N.B. Nena d.o.o."
+    },
+    {
+       "id":133,
+       "logo":null,
+       "naziv":"Norma d.o.o."
+    },
+    {
+       "id":15,
+       "logo":null,
+       "naziv":"Novak-Benz d.o.o."
+    },
+    {
+       "id":29,
+       "logo":null,
+       "naziv":"Oktan Zazine d.o.o."
+    },
+    {
+       "id":52,
+       "logo":null,
+       "naziv":"Osatina grupa d.o.o."
+    },
+    {
+       "id":98,
+       "logo":null,
+       "naziv":"PAN ENERGIJA D.O.O."
+    },
+    {
+       "id":9,
+       "logo":"obv_9_logo.png",
+       "naziv":"Petrol d.o.o."
+    },
+    {
+       "id":140,
+       "logo":null,
+       "naziv":"Pilip Samobor d.o.o."
+    },
+    {
+       "id":76,
+       "logo":null,
+       "naziv":"PIROV\u010cANKA PZ PIROVAC"
+    },
+    {
+       "id":188,
+       "logo":null,
+       "naziv":"PLINKA-PUH d.o.o."
+    },
+    {
+       "id":135,
+       "logo":"obv_135_logo.jpg",
+       "naziv":"Plinski centar Zagreb d.o.o."
+    },
+    {
+       "id":196,
+       "logo":"obv_196_logo.png",
+       "naziv":"Pokup\u010danka d.o.o."
+    },
+    {
+       "id":59,
+       "logo":null,
+       "naziv":"Protektor Bandag Katalini\u0107 d.o.o."
+    },
+    {
+       "id":172,
+       "logo":null,
+       "naziv":"Reka promet d. o. o. "
+    },
+    {
+       "id":175,
+       "logo":null,
+       "naziv":"REPAK D.O.O."
+    },
+    {
+       "id":120,
+       "logo":null,
+       "naziv":"Repromaterijal d.o.o."
+    },
+    {
+       "id":183,
+       "logo":"obv_183_logo.jpg",
+       "naziv":"RIJEKA TRANS D.O.O."
+    },
+    {
+       "id":90,
+       "logo":null,
+       "naziv":"Santini d.o.o."
+    },
+    {
+       "id":17,
+       "logo":null,
+       "naziv":"\u0160ija d.o.o. Pridraga, BP Batur Benz"
+    },
+    {
+       "id":31,
+       "logo":null,
+       "naziv":"\u0160ilec d.o.o."
+    },
+    {
+       "id":124,
+       "logo":null,
+       "naziv":"\u0160ima"
+    },
+    {
+       "id":210,
+       "logo":null,
+       "naziv":"\u0161ima benz"
+    },
+    {
+       "id":194,
+       "logo":null,
+       "naziv":"\u0160imun Oil d.o.o."
+    },
+    {
+       "id":138,
+       "logo":null,
+       "naziv":"SIROVINA BENZ TRANSPORT d.o.o."
+    },
+    {
+       "id":41,
+       "logo":null,
+       "naziv":"\u0160ola d.o.o."
+    },
+    {
+       "id":83,
+       "logo":null,
+       "naziv":"Tehnix d.o.o."
+    },
+    {
+       "id":5,
+       "logo":"obv_5_logo.png",
+       "naziv":"Tifon d.o.o."
+    },
+    {
+       "id":149,
+       "logo":null,
+       "naziv":"Tin trgovina na malo"
+    },
+    {
+       "id":208,
+       "logo":null,
+       "naziv":"Tomica benz d.o.o."
+    },
+    {
+       "id":212,
+       "logo":null,
+       "naziv":"TOMICA BENZ d.o.o."
+    },
+    {
+       "id":121,
+       "logo":null,
+       "naziv":"T.O. Plinara Baderna"
+    },
+    {
+       "id":74,
+       "logo":null,
+       "naziv":"Trgovina Krk d.d."
+    },
+    {
+       "id":30,
+       "logo":null,
+       "naziv":"Tri Bartola d.o.o."
+    },
+    {
+       "id":49,
+       "logo":null,
+       "naziv":"Tromilja benzin d.o.o."
+    },
+    {
+       "id":150,
+       "logo":null,
+       "naziv":"TURBO BENZ"
+    },
+    {
+       "id":19,
+       "logo":null,
+       "naziv":"Venus d.o.o."
+    },
+    {
+       "id":104,
+       "logo":null,
+       "naziv":"VIS VIRES DOO"
+    },
+    {
+       "id":155,
+       "logo":null,
+       "naziv":"Vugip d.o.o"
+    },
+    {
+       "id":96,
+       "logo":null,
+       "naziv":"ZAGREBA\u010cKI PROMETNI ZAVOD d.o.o."
+    },
+    {
+       "id":71,
+       "logo":null,
+       "naziv":"\u017dminj petrol d.o.o."
+    },
+    {
+       "id":38,
+       "logo":null,
+       "naziv":"ZTO Brezovi\u0107"
+    }
+ ]}

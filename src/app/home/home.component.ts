@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.trenutnoGorivo = "DIZELA";
-    // this.benzinske.getZip();
+    
 
     this.platform.ready().then(data => {
       if (!this.platform.is('cordova'))
@@ -90,44 +90,54 @@ export class HomeComponent implements OnInit {
             })
 
           } else {
-            // this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION, this.androidPermissions.PERMISSION.ACCESS_FINE_LOCATION]).then(
-            //   data => {
-            //     this.diagnostic.isGpsLocationEnabled().then((gps) => {
-            //       if (gps)
-            //         this.geolocation.getCurrentPosition().then((resp) => {
-    
-            //           this.benzinske.lat = resp.coords.latitude;
-            //           this.benzinske.lon = resp.coords.longitude;
-            //           this.init();
-    
-            //         }).catch(err => {
-            //           console.log("err: " + err);
-    
-            //         });
-            //       else
-            //         this.presentToast();
-            //     })
-            //   }
-            // )
+            
             console.log("Nema Permission");
           }
         }
       );
+      this.http.get('assets/json/gorivo.json').subscribe((data: any) => {
 
+        console.log(data['gorivos'].length);
+        for (let i = 0; i < data['gorivos'].length; i++) {
+          let gorivo = new Gorivo();
+          gorivo.id = data['gorivos'][i]['id'];
+          gorivo.naziv = data['gorivos'][i]['naziv'];
+          gorivo.vrstaGorivaId = data['gorivos'][i]['vrsta_goriva_id'];
+          this.benzinske.vrsteGoriva.push(gorivo);
+        }
+  
+      });
+      this.http.get('assets/json/postaje.json').subscribe((data: any) => {
+
+        for(let i = 0; i < data['postajas'].length; i++) {
+          let postaja = data['postajas'][i];
+          let benzinska = new Benzinska();
+
+          benzinska.lat = postaja['lat'];
+          benzinska.lon = postaja['long'];
+          benzinska.adresa = postaja['adresa'];
+          benzinska.ime = postaja['naziv'];
+          benzinska.obveznikId = postaja['obveznik_id'];
+          benzinska.mzoeId = postaja['id'];
+          benzinska.grad = postaja['mjesto'];
+          this.benzinske.sveBenzinske.push(benzinska);
+        }
+
+        this.http.get('assets/json/obveznik.json').subscribe((data: any) =>{
+          for(let i = 0; i < data['obvezniks'].length; i++) {
+            let obveznik = data['obvezniks'][i];
+            for(let j = 0; j < this.benzinske.sveBenzinske.length; j++) {
+              if(this.benzinske.sveBenzinske[i].obveznikId == obveznik['id']) {
+                this.benzinske.sveBenzinske[i].kompanija = obveznik['naziv'];
+              }
+            }
+          }
+        });
+  
+      });
     });
 
-    this.http.get('assets/json/gorivo.json').subscribe((data: any) => {
 
-      console.log(data['gorivos'].length);
-      for (let i = 0; i < data['gorivos'].length; i++) {
-        let gorivo = new Gorivo();
-        gorivo.id = data['gorivos'][i]['id'];
-        gorivo.naziv = data['gorivos'][i]['naziv'];
-        gorivo.vrstaGorivaId = data['gorivos'][i]['vrsta_goriva_id'];
-        this.benzinske.vrsteGoriva.push(gorivo);
-      }
-
-    });
   }
 
   async presentToast() {
@@ -139,12 +149,17 @@ export class HomeComponent implements OnInit {
   }
 
   ionViewWillEnter() {
+    console.log("will enter");
     this.subscription = this.platform.backButton.subscribeWithPriority(0, () => {
       navigator['app'].exitApp();
     });
-    this.statusBar.backgroundColorByHexString('#EBEBEB');
+    this.benzinske.tabs('home');
+    document.getElementById('fuel').style.marginTop = this.benzinske.insetBar+"px";
+    this.statusBar.backgroundColorByHexString('#ffffff');
   }
   ionViewDidEnter() {
+    console.log("did enter");
+    
     const animation = this.animationController.create().addElement(document.getElementById('home')).iterations(1).duration(500).fromTo('opacity', 0, 1);
     animation.play();
   }
@@ -319,6 +334,8 @@ export class HomeComponent implements OnInit {
       }
 
       this.loadedData = true;
+
+      
     });
   }
 
@@ -461,7 +478,6 @@ export class HomeComponent implements OnInit {
             this.parseTime(benga.radnoVrijeme.sub, date, benga);
           }
 
-          // this.benge.push(benga);
           if (imaGorivo) {
             this.benzinske.filterBenga.push(benga);
             setTimeout(() => {
@@ -472,7 +488,7 @@ export class HomeComponent implements OnInit {
             }, 50)
 
           }
-
+        
         });
     else {
       // 
@@ -484,7 +500,7 @@ export class HomeComponent implements OnInit {
       benga.id = "2"
       benga.gorivo = "10.40";
       this.benzinske.filterBenga.push(benga);
-      // this.loadedData = true;
+      this.loadedData = true;
       this.http.get('assets/json/postaje.json').subscribe((res: any) => {
         console.log(res['postajas'][0]['adresa']);
 
@@ -539,7 +555,7 @@ export class HomeComponent implements OnInit {
   get(benga: Benzinska) {
 
     this.benzinske.trenutnaBenga = benga;
-    this.router.navigate(['/detalji/'], { relativeTo: this.route });
+    this.router.navigate(['/pocetna/detalji/'], { relativeTo: this.route });
   }
 
   input(event: any) {

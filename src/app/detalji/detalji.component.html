@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border" id="header">
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button defaultHref="home"></ion-back-button>
+            <ion-back-button (click)="zatvori()"></ion-back-button>
         </ion-buttons>
         <ion-title>{{trenutnaBenga.ime}}</ion-title>
     </ion-toolbar>
@@ -67,6 +67,6 @@
     <hr>
     <div class="grafikon">
         <h3>Grafikon cijena</h3>
-        <canvas #grafikon height="250px"></canvas>
+        <canvas #grafikon height="250px" id="grafikon" width="100%"></canvas>
     </div>
 </ion-content>

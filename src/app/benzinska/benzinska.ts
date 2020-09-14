@@ -21,5 +21,5 @@ export class Benzinska {
     imaGorivo: boolean;
     udaljenost: number;
     otvoreno: boolean;
-
+    obveznikId: number;
 }

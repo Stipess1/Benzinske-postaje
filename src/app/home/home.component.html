@@ -1,9 +1,9 @@
 <ion-content id="home">
 
-  <div class="fuel">
+  <div class="fuel" id="fuel">
     <ion-searchbar cancelButtonText="Odustani" showCancelButton="focus" mode="ios" animated="true"
       placeholder="Traži benzinske po gradu" value="{{this.benzinske.trenutniTekst}}" (ionChange)="change($event)"
-      (ionInput)="onInput()" (ionClear)="clear()" (ionCancel)="cancel()"></ion-searchbar>
+      (ionInput)="onInput()" (ionClear)="clear()" (ionCancel)="cancel()" ></ion-searchbar>
 
     <div *ngIf="searching">
       <ion-list>

@@ -3,7 +3,7 @@ import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Benzinska } from '../benzinska/benzinska';
 import { LaunchNavigator, LaunchNavigatorOptions } from '@ionic-native/launch-navigator/ngx';
-import { AnimationController } from '@ionic/angular';
+import { AnimationController, NavController, Platform } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js';
 import { CijeniciPostaja } from '../benzinska/cijeniciPostaja';
@@ -22,22 +22,26 @@ export class DetaljiComponent implements OnInit {
   public otvoreno: boolean;
   private lineChart: Chart;
   public cijenikPostaje: CijeniciPostaja[] = [];
+  public subscription: any;
 
 
   constructor(private service: BenzinskePostajeService,
     private statusBar: StatusBar,
     private launchnavigator: LaunchNavigator,
     private animationCtrl: AnimationController,
-    private http: HttpClient) {
+    private http: HttpClient,
+    private platform: Platform,
+    private navCtrl: NavController) {
     this.trenutnaBenga = this.service.trenutnaBenga;
   }
 
   ngOnInit() {
 
     this.setDate();
-
+    document.getElementById('header').style.marginTop = this.service.insetBar+"px";
     this.postaviGrafikon();
 
+   
   }
 
   setDate() {
@@ -52,6 +56,15 @@ export class DetaljiComponent implements OnInit {
     this.statusBar.backgroundColorByHexString('#fff');
   }
 
+  ionViewWillLeave() {
+    this.subscription.unsubscribe();
+  }
+
+
+
+  zatvori() {
+    this.navCtrl.back();
+  }
   postaviGrafikon() {
     this.service.getCijenik(this.trenutnaBenga.mzoeId).then((data: any) => {
       let json = JSON.parse(data.data);
@@ -59,11 +72,11 @@ export class DetaljiComponent implements OnInit {
       for (let i = 0; i < json.length; i++) {
         let cijenik = new CijeniciPostaja();
         let date = new Date(json[i]['dat_poc']);
-        let mjesec = date.getMonth()+1;
-        
+        let mjesec = date.getMonth() + 1;
+
         cijenik.cijena = json[i]['cijena'];
-        cijenik.datum = date.getDate()+"."+mjesec+"."+date.getFullYear();
-        
+        cijenik.datum = date.getDate() + "." + mjesec + "." + date.getFullYear();
+
         cijenik.gorivoId = json[i]['gorivo_id'];
 
         for (let j = 0; j < this.service.vrsteGoriva.length; j++) {
@@ -79,16 +92,21 @@ export class DetaljiComponent implements OnInit {
       this.lineChart = new Chart(this.canvas.nativeElement, {
         type: "line",
         options: {
+          maintainAspectRatio: false,
+          spanGaps: true,
           animation: {
             duration: 0
           },
           hover: {
-            animationDuration: 0 
+            animationDuration: 0
           },
           responsiveAnimationDuration: 0,
           elements: {
             line: {
-              tension: 0 
+              tension: 0,
+              fill: false,
+              stepped: false,
+              borderDash: []
             }
           }
         }
@@ -121,7 +139,6 @@ export class DetaljiComponent implements OnInit {
         let id = this.cijenikPostaje[i];
 
         this.lineChart.data.labels.push(id.datum);
-        console.log(id.imeGoriva + " " + id.tipGorivaId + " " + this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva));
         // neka goriva sadrze pod nazivom /\u00A0/ pa to moramo zamjenit sa razmakom.
         if (id.tipGorivaId == 8 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
           let dataset = {
@@ -155,7 +172,7 @@ export class DetaljiComponent implements OnInit {
 
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if(id.tipGorivaId == 7 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 7 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -171,7 +188,7 @@ export class DetaljiComponent implements OnInit {
 
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if(id.tipGorivaId == 1 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 1 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -187,7 +204,7 @@ export class DetaljiComponent implements OnInit {
 
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if(id.tipGorivaId == 9 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 9 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -202,7 +219,7 @@ export class DetaljiComponent implements OnInit {
           };
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if(id.tipGorivaId == 6 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 6 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -217,7 +234,7 @@ export class DetaljiComponent implements OnInit {
           };
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if(id.tipGorivaId == 5 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 5 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -232,18 +249,14 @@ export class DetaljiComponent implements OnInit {
           };
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } 
+        }
       }
-      console.log(this.lineChart.data.datasets);
-      for(let i = 0; i < this.trenutnaBenga.vrsteGoriva.length; i++)
-        console.log(this.trenutnaBenga.vrsteGoriva[i]);
-        
 
-      for(let i = 0; i < this.cijenikPostaje.length; i++) {
+      for (let i = 0; i < this.cijenikPostaje.length; i++) {
         let id = this.cijenikPostaje[i];
 
-        for(let j = 0; j < this.lineChart.data.datasets.length; j++) {
-          if(this.lineChart.data.datasets[j].label === id.imeGoriva) {
+        for (let j = 0; j < this.lineChart.data.datasets.length; j++) {
+          if (this.lineChart.data.datasets[j].label === id.imeGoriva) {
             let index = this.lineChart.data.labels.indexOf(id.datum);
             this.lineChart.data.datasets[j].data[index] = id.cijena;
           }
@@ -298,6 +311,9 @@ export class DetaljiComponent implements OnInit {
   }
 
   ionViewDidEnter() {
+    this.subscription = this.platform.backButton.subscribeWithPriority(9999, () => {
+      this.navCtrl.back();
+    });
     const animation = this.animationCtrl.create().addElement(document.getElementById("content")).duration(500).iterations(1).fromTo('opacity', 0, 1);
     animation.play();
   }

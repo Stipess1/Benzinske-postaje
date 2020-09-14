@@ -3,6 +3,10 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { Search } from '../search/model/search';
 import { Benzinska } from '../benzinska/benzinska';
 import { Gorivo } from '../benzinska/gorivo';
+import { HttpClient } from '@angular/common/http';
+import { request } from 'request';
+import { Buffer } from 'buffer';
+import { BenzinskaOsnovni } from '../benzinska/benzinskaOsnovni';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +18,12 @@ export class BenzinskePostajeService {
   public trenutniTekst: string = "";
   public popover: any;
   public filter: string;
+  public sveBenzinske: Benzinska[] = [];
   public filterBenga: Benzinska[] = [];
   public trenutnaBenga: Benzinska;
   public lat: number;
   public lon: number;
+  public insetBar: string;
   public vrsteGoriva: Gorivo[] = [];
 
   // https://webservis.mzoe-gor.hr/api/cjenici-postaja/303 za INA cjenik
@@ -35,6 +41,26 @@ export class BenzinskePostajeService {
       "Host": "map.hak.hr",
       "Referer": "https://map.hak.hr/?lang=hr&s=mireo;roadmap;mid;I;6;12;0;;1&z=7&c=44.589799591933456,16.360918432474136&cats=3101;3103;3102;3104;3109;3106&poi=B" + id
     });
+  }
+
+  tabs(tab: string) {
+    let item = document.getElementById('tab-bar');
+    let tempTab = tab;
+    for(let i = 0; i < 2; i++) {
+      item.children[i].children[0].setAttribute('style', "color: #9e9e9e;");
+      item.children[i].children[1].setAttribute('style', "font-weight: normal; color: #9e9e9e;");
+      if(i == 0) {
+        item.children[i].children[0].setAttribute('name', 'home-outline');
+      } else {
+        item.children[i].children[0].setAttribute('name', 'map-outline');
+      }
+    }
+    if(tab === "map")
+      tempTab = "karta"
+    
+    document.getElementById("tab-button-"+tempTab).children[0].setAttribute('name',tab)
+    document.getElementById("tab-button-"+tempTab).children[1].setAttribute('style', "font-weight: bold; color: #3880ff;");
+    document.getElementById("tab-button-"+tempTab).children[0].setAttribute('style', "color: #3880ff;");
   }
 
   // vraca podatke od svih benzinskih pumpi

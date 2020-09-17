@@ -4,7 +4,6 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { RadnoVrijeme } from '../benzinska/radnovrijeme';
 import { Benzinska } from '../benzinska/benzinska';
 import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
-import pako from 'pako';
 import { BenzinskaOsnovni } from '../benzinska/benzinskaOsnovni';
 import { Platform, ToastController, PopoverController, AnimationController } from '@ionic/angular';
 import { Search } from '../search/model/search';
@@ -16,6 +15,11 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { Gorivo } from '../benzinska/gorivo';
+import { Gunzip, Inflate, RawDeflate, RawInflate } from 'zlibt2';
+import { Buffer } from 'buffer';
+import { HakParserService } from '../service/hak-parser.service';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
+
 
 @Component({
   selector: 'app-home',
@@ -26,11 +30,9 @@ export class HomeComponent implements OnInit {
 
   private benge: Benzinska[] = [];
   public jsonBenge: BenzinskaOsnovni[] = [];
-  public trenutnoGorivo: string;
   public searching: boolean = false;
   public gradovi: Search[] = [];
   public permission: boolean;
-  public loadedData: boolean = false;
   public reloading: boolean = false;
   public grad: string = "blizini";
   public subscription: any;
@@ -50,23 +52,22 @@ export class HomeComponent implements OnInit {
     private geolocation: Geolocation,
     private androidPermissions: AndroidPermissions,
     private diagnostic: Diagnostic,
-    private animationController: AnimationController) { }
+    private animationController: AnimationController,
+    public hakParser: HakParserService,
+    private backgroundMode: BackgroundMode) { }
 
   ngOnInit() {
-    this.trenutnoGorivo = "DIZELA";
+    this.hakParser.trenutnoGorivo = "DIZELA";
     
-
     this.platform.ready().then(data => {
       if (!this.platform.is('cordova'))
-        this.parse("", null);
+        this.hakParser.parse(null);
 
       this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
         result => {
           console.log('Has permission?', result.hasPermission);
           this.permission = result.hasPermission;
         });
-
-      
 
       this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION, this.androidPermissions.PERMISSION.ACCESS_FINE_LOCATION]).then(
         data => {
@@ -95,49 +96,7 @@ export class HomeComponent implements OnInit {
           }
         }
       );
-      this.http.get('assets/json/gorivo.json').subscribe((data: any) => {
-
-        console.log(data['gorivos'].length);
-        for (let i = 0; i < data['gorivos'].length; i++) {
-          let gorivo = new Gorivo();
-          gorivo.id = data['gorivos'][i]['id'];
-          gorivo.naziv = data['gorivos'][i]['naziv'];
-          gorivo.vrstaGorivaId = data['gorivos'][i]['vrsta_goriva_id'];
-          this.benzinske.vrsteGoriva.push(gorivo);
-        }
-  
-      });
-      this.http.get('assets/json/postaje.json').subscribe((data: any) => {
-
-        for(let i = 0; i < data['postajas'].length; i++) {
-          let postaja = data['postajas'][i];
-          let benzinska = new Benzinska();
-
-          benzinska.lat = postaja['lat'];
-          benzinska.lon = postaja['long'];
-          benzinska.adresa = postaja['adresa'];
-          benzinska.ime = postaja['naziv'];
-          benzinska.obveznikId = postaja['obveznik_id'];
-          benzinska.mzoeId = postaja['id'];
-          benzinska.grad = postaja['mjesto'];
-          this.benzinske.sveBenzinske.push(benzinska);
-        }
-
-        this.http.get('assets/json/obveznik.json').subscribe((data: any) =>{
-          for(let i = 0; i < data['obvezniks'].length; i++) {
-            let obveznik = data['obvezniks'][i];
-            for(let j = 0; j < this.benzinske.sveBenzinske.length; j++) {
-              if(this.benzinske.sveBenzinske[i].obveznikId == obveznik['id']) {
-                this.benzinske.sveBenzinske[i].kompanija = obveznik['naziv'];
-              }
-            }
-          }
-        });
-  
-      });
     });
-
-
   }
 
   async presentToast() {
@@ -151,7 +110,7 @@ export class HomeComponent implements OnInit {
   ionViewWillEnter() {
     console.log("will enter");
     this.subscription = this.platform.backButton.subscribeWithPriority(0, () => {
-      navigator['app'].exitApp();
+      this.backgroundMode.moveToBackground();
     });
     this.benzinske.tabs('home');
     document.getElementById('fuel').style.marginTop = this.benzinske.insetBar+"px";
@@ -241,6 +200,10 @@ export class HomeComponent implements OnInit {
     this.searching = false;
   }
 
+  imgNotLoaded(benga: Benzinska) {
+    benga.img = "../assets/icon/icon2.png";
+  }
+
   radius(event: any, bool: boolean) {
     let value;
     if (!bool && event !== "") {
@@ -256,6 +219,7 @@ export class HomeComponent implements OnInit {
 
         this.benzinske.lat = resp.coords.latitude;
         this.benzinske.lon = resp.coords.longitude;
+        let brojUdaljenosti = 0;
 
         for (let i = 0; i < this.jsonBenge.length; i++) {
           let benga = this.jsonBenge[i];
@@ -264,7 +228,10 @@ export class HomeComponent implements OnInit {
           benga.udaljenost = udaljenost;
 
           if (udaljenost <= value) {
-            this.parse(benga.id.substr(1), benga);
+            this.hakParser.parse(benga).then(data => {
+              this.benzinske.filterBenga.push(data);
+            });
+            
           }
 
         }
@@ -281,7 +248,10 @@ export class HomeComponent implements OnInit {
         benga.udaljenost = udaljenost;
 
         if (udaljenost <= value) {
-          this.parse(benga.id.substr(1), benga);
+          this.hakParser.parse(benga).then(data =>{
+            this.benzinske.filterBenga.push(data);
+          });
+          
         }
       }
     }
@@ -327,230 +297,31 @@ export class HomeComponent implements OnInit {
         benga.udaljenost = udaljenost;
 
         this.jsonBenge.push(benga);
+        this.benzinske.hakBenzinske.push(benga);
+        if (udaljenost <= 5) {
+          this.hakParser.parse(benga).then(data =>{
+            this.benzinske.filterBenga.push(data);
+            this.hakParser.loadedData = true;
+              setTimeout(() => {
+                // console.log(data.id);
+                
+                // console.log(document.getElementById(""+data.id));
+                
+                const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
+                  duration(300).iterations(1).fromTo('opacity', '0', '1');
 
-        if (udaljenost <= 5)
-          this.parse(benga.id.substr(1), benga);
+                animation.play();
+              }, 50)
+          });
+        }
 
       }
-
-      this.loadedData = true;
 
       
     });
   }
-
-  parse(id: string, benz: BenzinskaOsnovni) {
-    if (this.platform.is('cordova'))
-      this.benzinske.getPumpData(id)
-        .then(data => {
-          let json = JSON.parse(data.data);
-
-          let htmlText = json['Content'];
-          let doc = new DOMParser().parseFromString(htmlText, "text/html");
-          let vrstaGorivaArray = [];
-          let cijenik = [];
-          let benga = new Benzinska();
-
-          benga.lat = benz.lat;
-          benga.lon = benz.lon;
-          let radnoVrijeme = new RadnoVrijeme();
-          let slika = doc.getElementsByClassName("iw-top__icon")[0].querySelectorAll('img')[0].src;
-
-          let grad = doc.getElementsByClassName("iw-section")[3].getElementsByClassName("iw-row")[1].getElementsByClassName("iw-value")[0].innerHTML;
-          let adresa = doc.getElementsByClassName("iw-section")[3].getElementsByClassName("iw-row")[0].getElementsByClassName("iw-value")[0].innerHTML;
-          let vrijeme = doc.getElementById("rv").getElementsByClassName("iw-row");
-          if (vrijeme.length == 2) {
-            radnoVrijeme.ponPet = vrijeme[0].getElementsByClassName("iw-col--right")[0].innerHTML;
-            radnoVrijeme.sub = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
-          } else {
-            radnoVrijeme.ponPet = vrijeme[0].getElementsByClassName("iw-col--right")[0].innerHTML;
-            radnoVrijeme.sub = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
-            radnoVrijeme.ned = vrijeme[2].getElementsByClassName("iw-col--right")[0].innerHTML;
-            let temp = vrijeme[3];
-            if (temp != undefined)
-              radnoVrijeme.praznik = vrijeme[3].getElementsByClassName("iw-col--right")[0].innerHTML;
-          }
-          let usluge;
-          let listaUsluga = [];
-          if (doc.getElementById("features") != null) {
-            usluge = doc.getElementById("features").getElementsByClassName("iw-col-container")[0].innerHTML;
-            let lUsluga = usluge.split(",");
-            for (let i = 0; i < lUsluga.length; i++) {
-              if (i != 0)
-                lUsluga[i] = lUsluga[i].replace(" ", "");
-            }
-            // console.log(lUsluga);
-            for (let i = 0; i < lUsluga.length; i++) {
-              listaUsluga.push(new Usluge(lUsluga[i]));
-            }
-          }
-
-          let imeFirme = doc.getElementsByClassName("iw-top")[0].getElementsByClassName("iw-title")[0].innerHTML;
-          let imeBenge = doc.getElementsByClassName("iw-top")[0].getElementsByClassName("iw-title")[1].innerHTML;
-
-          let vrsteGoriva = doc.getElementById("fueltypes").getElementsByClassName("iw-section__content")[0].getElementsByClassName("label");
-          for (let i = 0; i < vrsteGoriva.length; i++) {
-            let split = vrsteGoriva[i].innerHTML.split(":");
-            vrstaGorivaArray[i] = split[0].replace(/&nbsp;/g, " ");
-            cijenik[i] = split[1].slice(0, -5);
-          }
-          let imaGorivo = false;
-          if (this.trenutnoGorivo == "DIZELA") {
-            for (let i = 0; i < vrstaGorivaArray.length; i++) {
-              let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
-              if (lower === "eurodiesel" || lower === "eurodizel" || lower === "eurodieselbs"
-                || lower === "evoeurodieselbs" || lower === "eurodizelbs" || lower === "eurodieselbsa-motion") {
-
-                benga.gorivo = cijenik[i];
-                imaGorivo = true;
-              }
-            }
-          } else if (this.trenutnoGorivo == "BENZINA") {
-            for (let i = 0; i < vrstaGorivaArray.length; i++) {
-              let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
-              if (lower === "eurosuper95" || lower === "qmaxeurosuper95" || lower === "evoeurosuper95bs" ||
-                lower === "eurosuperbs95" || lower === "eurosuper95bsmaxpower" || lower === "eurosuper95bs" || lower === "eurosuper95classplus"
-                || lower === "eurosuper95bsa-motion") {
-                benga.gorivo = cijenik[i];
-                imaGorivo = true;
-              }
-            }
-          } else if (this.trenutnoGorivo == "AUTOPLIN") {
-            for (let i = 0; i < vrstaGorivaArray.length; i++) {
-              let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
-              if (lower === "lpg" || lower === "evolpg"
-                || lower === "autoplinmaxpower"
-                || lower === "autoplin(unp)"
-                || lower === "qmaxlpgautoplin"
-                || lower === "autoplin"
-                || lower === "autoplin-lpg") {
-                benga.gorivo = cijenik[i];
-                imaGorivo = true;
-              }
-            }
-          }
-
-
-          if (imeFirme.includes("Konzum")) {
-            slika = "https://www.konzum.hr/assets/1i0/frontend/facebook/facebook_meta_image-5b88c5da1a557eaf6501d1fb63f883285f9346300d9b2e0a196dc32047a9542a.png";
-          } else if (imeFirme.includes("AGS")) {
-            slika = "/assets/icon/pump/ags.png";
-          } else if (imeFirme.includes("APIOS")) {
-            slika = "https://webservis.mzoe-gor.hr/img/obv_20_logo.png";
-          }
-
-          benga.adresa = adresa;
-          benga.grad = grad;
-          benga.radnoVrijeme = radnoVrijeme;
-          benga.kompanija = imeFirme;
-          benga.ime = imeBenge;
-          benga.img = slika;
-          benga.vrsteGoriva = vrstaGorivaArray;
-          benga.id = id;
-          benga.cijenik = cijenik;
-          benga.imaGorivo = imaGorivo;
-          benga.udaljenost = benz.udaljenost;
-
-          this.http.get('assets/json/postaje.json').subscribe((res: any) => {
-
-            for (let i = 0; i < res['postajas'].length; i++) {
-              if (res['postajas'][i]['adresa'] === benga.adresa && res['postajas'][i]['naziv'] === benga.ime) {
-                benga.mzoeId = res['postajas'][i]['id'];
-              }
-            }
-          });
-
-          // console.log(benga.id);
-
-          if (usluge != undefined)
-            benga.usluge = listaUsluga;
-
-          let date = new Date();
-          if (date.getDay() >= 1 && date.getDay() <= 5) {
-
-            this.parseTime(benga.radnoVrijeme.ponPet, date, benga);
-
-          } else if (date.getDay() == 0) {
-
-            this.parseTime(benga.radnoVrijeme.ned, date, benga);
-
-          } else if (date.getDay() == 6) {
-            this.parseTime(benga.radnoVrijeme.sub, date, benga);
-          }
-
-          if (imaGorivo) {
-            this.benzinske.filterBenga.push(benga);
-            setTimeout(() => {
-              const animation = this.animationController.create().addElement(document.getElementById("" + benga.id)).
-                duration(300).iterations(1).fromTo('opacity', '0', '1');
-
-              animation.play();
-            }, 50)
-
-          }
-        
-        });
-    else {
-      // 
-      let benga = new Benzinska();
-      benga.adresa = "Slavonska avenija 110";
-      benga.ime = "BP ZAGREB ISTOK";
-      benga.img = "/assets/icon/pump/ags.png";
-      benga.udaljenost = 1.2;
-      benga.id = "2"
-      benga.gorivo = "10.40";
-      this.benzinske.filterBenga.push(benga);
-      this.loadedData = true;
-      this.http.get('assets/json/postaje.json').subscribe((res: any) => {
-        console.log(res['postajas'][0]['adresa']);
-
-        for (let i = 0; i < res['postajas'].length; i++) {
-          if (res['postajas'][i]['adresa'] === benga.adresa && res['postajas'][i]['ime'] === benga.ime)
-            benga.id = res['postajas'][i]['id'];
-          // console.log(res['postajas'][i]);
-
-        }
-      });
-      setTimeout(() => {
-        const animation = this.animationController.create().addElement(document.getElementById("2")).
-          duration(300).iterations(1).fromTo('opacity', '0', '1');
-
-        animation.play();
-      }, 50)
-    }
-
-    // this.benzinske.getTrend().then(data => {
-    //   console.log(data.data);
-
-    // });
-  }
-
-  parseTime(vrijeme: string, date: Date, benga: Benzinska) {
-    if (vrijeme == undefined) return;
-
-    let splitTime = vrijeme.split("-");
-
-    if (splitTime[0].length == 8) {
-      splitTime[0] = splitTime[0].slice(0, splitTime[0].length - 3);
-    }
-
-    splitTime[1] = splitTime[1].slice(0, splitTime[1].length - 3);
-
-    let time = splitTime[0] + "-" + splitTime[1];
-
-    let pocetnoVrijeme = splitTime[0].slice(0, splitTime[0].length - 3);
-    let zavrsnoVrijeme = splitTime[1].slice(0, splitTime[1].length - 3);
-
-    if (date.getHours() < parseInt(zavrsnoVrijeme) && date.getHours() > parseInt(pocetnoVrijeme)) {
-      benga.otvoreno = true;
-    } else {
-      if (zavrsnoVrijeme === "24" && pocetnoVrijeme == "00")
-        benga.otvoreno = true;
-      else
-        benga.otvoreno = false;
-    }
-
-  }
+  // napravit da ova funkcija vraaca objekt bennzinsku i onda s njom mozemo radit sta ocemo...
+  // pushat ju array da nam se prikazu sve benzinske u blizini ili da jednostavno parsamo benzinsku
 
   get(benga: Benzinska) {
 
@@ -580,8 +351,8 @@ export class HomeComponent implements OnInit {
   selectChange(event: any) {
     let value = event.target.value;
 
-    this.trenutnoGorivo = value;
-    this.getBenzin(this.trenutnoGorivo);
+    this.hakParser.trenutnoGorivo = value;
+    this.getBenzin(this.hakParser.trenutnoGorivo);
 
   }
 

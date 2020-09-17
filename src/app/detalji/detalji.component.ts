@@ -7,6 +7,7 @@ import { AnimationController, NavController, Platform } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js';
 import { CijeniciPostaja } from '../benzinska/cijeniciPostaja';
+import * as CanvasJS from 'canvasjs';
 
 @Component({
   selector: 'app-detalji',
@@ -37,34 +38,21 @@ export class DetaljiComponent implements OnInit {
 
   ngOnInit() {
 
-    this.setDate();
+    this.statusBar.backgroundColorByHexString('#fff');
     document.getElementById('header').style.marginTop = this.service.insetBar+"px";
     this.postaviGrafikon();
-
    
   }
 
-  setDate() {
-    let date = new Date();
-    if (date.getDay() >= 1 && date.getDay() <= 5)
-      this.vrijeme = this.parseTime(this.trenutnaBenga.radnoVrijeme.ponPet, date);
-    else if (date.getDay() == 0)
-      this.vrijeme = this.parseTime(this.trenutnaBenga.radnoVrijeme.ned, date);
-    else if (date.getDay() == 6)
-      this.vrijeme = this.parseTime(this.trenutnaBenga.radnoVrijeme.sub, date);
-
-    this.statusBar.backgroundColorByHexString('#fff');
-  }
 
   ionViewWillLeave() {
     this.subscription.unsubscribe();
   }
 
-
-
   zatvori() {
     this.navCtrl.back();
   }
+
   postaviGrafikon() {
     this.service.getCijenik(this.trenutnaBenga.mzoeId).then((data: any) => {
       let json = JSON.parse(data.data);
@@ -89,6 +77,16 @@ export class DetaljiComponent implements OnInit {
       }
 
       // Dizel, benzin, autoplin...
+      // let dataPoints = [];
+      // let chart = new CanvasJS("grafikon", {
+      //   zoomEnabled: true,
+      //   animationEnabled: true,
+      //   data: [{
+      //     type: "line",
+      //     dataPoints: dataPoints
+      //   }]
+      // });
+
       this.lineChart = new Chart(this.canvas.nativeElement, {
         type: "line",
         options: {
@@ -274,41 +272,6 @@ export class DetaljiComponent implements OnInit {
       document.getElementById('header').classList.add('ion-no-border');
     }
   }
-  /**
-   * Prima radno vrijeme benzinske (npr. 00:00:00-24:00:00 ), te skracuje
-   * zadnje dvije nule i provjerava dali je benzinska trenutno otvorena
-   * za odredene benzinske nema radnog vremena za neke dane pa je {vrijeme}
-   * undefined
-   * @param {string} vrijeme - Radno vrijeme benzinske
-   * @param {Date} date - Danasnji datum
-   * @returns {string} - vraca radno vrijeme benzinske (npr. 06:00 - 24:00)
-   */
-  parseTime(vrijeme: string, date: Date): string {
-    if (vrijeme == undefined) return;
-
-    let splitTime = vrijeme.split("-");
-
-    if (splitTime[0].length == 8) {
-      splitTime[0] = splitTime[0].slice(0, splitTime[0].length - 3);
-    }
-
-    splitTime[1] = splitTime[1].slice(0, splitTime[1].length - 3);
-
-    let time = splitTime[0] + "-" + splitTime[1];
-
-    let pocetnoVrijeme = splitTime[0].slice(0, splitTime[0].length - 3);
-    let zavrsnoVrijeme = splitTime[1].slice(0, splitTime[1].length - 3);
-
-    if (date.getHours() < parseInt(zavrsnoVrijeme) && date.getHours() > parseInt(pocetnoVrijeme)) {
-      this.otvoreno = true;
-    } else {
-      if (zavrsnoVrijeme === "24" && pocetnoVrijeme == "00")
-        this.otvoreno = true;
-      else
-        this.otvoreno = false;
-    }
-    return time;
-  }
 
   ionViewDidEnter() {
     this.subscription = this.platform.backButton.subscribeWithPriority(9999, () => {
@@ -316,6 +279,7 @@ export class DetaljiComponent implements OnInit {
     });
     const animation = this.animationCtrl.create().addElement(document.getElementById("content")).duration(500).iterations(1).fromTo('opacity', 0, 1);
     animation.play();
+    this.service.tabs('home');
   }
 
   ionViewDidLeave() {

@@ -22,4 +22,5 @@ export class Benzinska {
     udaljenost: number;
     otvoreno: boolean;
     obveznikId: number;
+    trenutnoRadnoVrijeme: string;
 }

@@ -17,6 +17,7 @@ import { LaunchNavigator } from '@ionic-native/launch-navigator/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import {AndroidFullScreen} from "@ionic-native/android-full-screen/ngx";
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 
 @NgModule({
   declarations: [AppComponent, PopoverComponent],
@@ -31,6 +32,7 @@ import {AndroidFullScreen} from "@ionic-native/android-full-screen/ngx";
     ScreenOrientation,
     Geolocation,
     Diagnostic,
+    BackgroundMode,
     HTTP,
     AndroidFullScreen,
     HttpClient,

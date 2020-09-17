@@ -39,7 +39,7 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <div *ngIf="!searching && loadedData">
+    <div *ngIf="!searching && this.hakParser.loadedData">
       <ion-list lines="none" class="benge" *ngIf="!reloading">
         <ion-list-header>
           <ion-label>
@@ -51,8 +51,8 @@
         <ion-item class="benga" style="opacity: 0;" *ngFor="let benga of benzinske.filterBenga" (click)="get(benga);"
           id="{{benga.id}}">
 
-          <img slot="start" *ngIf="benga.img != 'http://localhost/home'" src="{{benga.img}}" width="50"
-            style="background-size: cover; margin-right: 16px;">
+          <ion-img slot="start" *ngIf="benga.img != 'http://localhost/home'" (ionError)="imgNotLoaded(benga)" src="{{benga.img}}"
+            style="background-size: cover; margin-right: 16px; width: 50px;"></ion-img>
 
           <ion-label>
             <div class="benga-wrapper">
@@ -80,7 +80,7 @@
         </ion-item>
       </ion-list>
     </div>
-    <div *ngIf="!searching && !loadedData">
+    <div *ngIf="!searching && !this.hakParser.loadedData">
       <ion-list id="skeleton" class="benge" lines="none">
         <ion-list-header>
           <ion-skeleton-text animated style="width: 80px"></ion-skeleton-text>

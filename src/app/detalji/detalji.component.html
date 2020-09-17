@@ -11,13 +11,11 @@
     <div class="center">
         <img src="../../assets/icon/pump/signs.svg" width="32">
         <h2>{{trenutnaBenga.ime}}</h2>
-        <p>Radno Vrijeme: {{vrijeme}}</p>
-        <!-- <p class="vrijeme" *ngIf="otvoreno"><span class="otvoreno">Otvoreno</span></p>
-        <p class="vrijeme" *ngIf="!otvoreno"><span class="zatvoreno">Zatvoreno</span></p> -->
-        <ion-chip color="success" *ngIf="otvoreno">
+        <p>Radno Vrijeme: {{trenutnaBenga.trenutnoRadnoVrijeme}}</p>
+        <ion-chip color="success" *ngIf="trenutnaBenga.otvoreno">
             <ion-label>Otvoreno</ion-label>
         </ion-chip>
-        <ion-chip color="danger" *ngIf="!otvoreno">
+        <ion-chip color="danger" *ngIf="!trenutnaBenga.otvoreno">
             <ion-label>Zatvoreno</ion-label>
         </ion-chip>
         <p stlye="font-weight:bold;">{{trenutnaBenga.kompanija}}</p>
@@ -68,5 +66,6 @@
     <div class="grafikon">
         <h3>Grafikon cijena</h3>
         <canvas #grafikon height="250px" id="grafikon" width="100%"></canvas>
+        <!-- <div id="grafikon" style="height: 250px; width: 100%; margin-left:auto;margin-right:auto;"></div> -->
     </div>
 </ion-content>

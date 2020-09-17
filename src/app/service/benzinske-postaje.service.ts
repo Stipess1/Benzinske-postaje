@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HTTP } from '@ionic-native/http/ngx';
+import { HTTP, HTTPResponse } from '@ionic-native/http/ngx';
 import { Search } from '../search/model/search';
 import { Benzinska } from '../benzinska/benzinska';
 import { Gorivo } from '../benzinska/gorivo';
 import { HttpClient } from '@angular/common/http';
-import { request } from 'request';
 import { Buffer } from 'buffer';
 import { BenzinskaOsnovni } from '../benzinska/benzinskaOsnovni';
 
@@ -20,6 +19,7 @@ export class BenzinskePostajeService {
   public filter: string;
   public sveBenzinske: Benzinska[] = [];
   public filterBenga: Benzinska[] = [];
+  public hakBenzinske: BenzinskaOsnovni[] = [];
   public trenutnaBenga: Benzinska;
   public lat: number;
   public lon: number;
@@ -61,6 +61,25 @@ export class BenzinskePostajeService {
     document.getElementById("tab-button-"+tempTab).children[0].setAttribute('name',tab)
     document.getElementById("tab-button-"+tempTab).children[1].setAttribute('style', "font-weight: bold; color: #3880ff;");
     document.getElementById("tab-button-"+tempTab).children[0].setAttribute('style', "color: #3880ff;");
+  }
+
+  demo() {
+    this.http.setServerTrustMode("nocheck");
+    let redirectPath = "https://mzoe-gor.hr/data.gz";
+
+    console.log(redirectPath);
+    
+    // prepend the domain name
+    let redirectUrl = "http://mzoe-gor.hr" + redirectPath;
+    
+    return this.http.get(redirectPath, {}, {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36",
+      "Referer": "https://mzoe-gor.hr",
+      "Accept-Encoding": "gzip, deflate, br",
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "Accept-Language": "en-US,en;q=0.8",
+      "Accept-Charset": "ISO-8859-1,utf-8;q=0.7,*;q=0.3"
+    });
   }
 
   // vraca podatke od svih benzinskih pumpi

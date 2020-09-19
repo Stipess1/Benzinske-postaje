@@ -18,19 +18,22 @@ export class PocetnaPage implements OnInit {
     private hakParser: HakParserService) { }
 
   ngOnInit() {
-    console.log(console);
     
     this.http.get('assets/json/gorivo.json').subscribe((data: any) => {
 
       console.log(data['gorivos'].length);
       for (let i = 0; i < data['gorivos'].length; i++) {
-        let gorivo = new Gorivo();
-        gorivo.id = data['gorivos'][i]['id'];
-        gorivo.naziv = data['gorivos'][i]['naziv'];
-        gorivo.vrstaGorivaId = data['gorivos'][i]['vrsta_goriva_id'];
-        this.benzinske.vrsteGoriva.push(gorivo);
+        if(data['gorivos'][i]['naziv'] != null) {
+          let gorivo = new Gorivo();
+          gorivo.id = data['gorivos'][i]['id'];
+          gorivo.naziv = data['gorivos'][i]['naziv'];
+          gorivo.vrstaGorivaId = data['gorivos'][i]['vrsta_goriva_id'];
+          
+          
+          this.benzinske.vrsteGoriva.push(gorivo);
+        }
       }
-     
+      console.table(this.benzinske.vrsteGoriva);
       
     });
     this.http.get('assets/json/postaje.json').subscribe((data: any) => {

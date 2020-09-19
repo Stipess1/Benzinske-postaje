@@ -37,12 +37,12 @@
         <div class="cijene-bengi">
             <ion-grid>
                 <ion-row>
-                    <ion-col size="4" *ngFor="let gorivo of trenutnaBenga.vrsteGoriva; index as i" >
-                        <p class="dizel" *ngIf="gorivo.toLowerCase().includes('eurodiesel') || gorivo.toLowerCase().includes('eurodizel')">B</p>
-                        <p class="benzin" *ngIf="gorivo.toLowerCase().includes('eurosuper')">E</p>
-                        <div class="autoplin" *ngIf="gorivo.toLowerCase().includes('autoplin') || gorivo.toLowerCase().includes('lpg')"><p style="transform: rotateZ(-45deg); margin:auto;">H</p></div>
-                        <p class="text-gorivo">{{gorivo}}</p>
-                        <p class="cijena">{{trenutnaBenga.cijenik[i]}} <span>kn/L</span> </p>
+                    <ion-col style="flex: display; flex-direction: column;" size="4" *ngFor="let gorivo of trenutnaBenga.vrsteGoriva" >
+                        <p class="dizel" *ngIf="gorivo.imeGoriva.toLowerCase().includes('eurodiesel') || gorivo.imeGoriva.toLowerCase().includes('eurodizel')">B</p>
+                        <p class="benzin" *ngIf="gorivo.imeGoriva.toLowerCase().includes('eurosuper')">E</p>
+                        <div class="autoplin" *ngIf="gorivo.imeGoriva.toLowerCase().includes('autoplin') || gorivo.imeGoriva.toLowerCase().includes('lpg')"><p style="transform: rotateZ(-45deg); margin:auto;">H</p></div>
+                        <p class="text-gorivo">{{gorivo.imeGoriva}}</p>
+                        <p class="cijena">{{gorivo.cijena}} <span>kn/L</span> </p>
                         
                     </ion-col>
                 </ion-row>

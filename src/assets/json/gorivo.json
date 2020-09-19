@@ -109,14 +109,14 @@
        "oznaka":null,
        "id":29,
        "naziv":"EURODIESEL BS",
-       "vrsta_goriva_id":7
+       "vrsta_goriva_id":8
     },
     {
        "obveznik_id":8,
        "oznaka":null,
        "id":30,
        "naziv":"EURODIESEL BS MaxPower",
-       "vrsta_goriva_id":8
+       "vrsta_goriva_id":7
     },
     {
        "obveznik_id":8,
@@ -1754,7 +1754,7 @@
        "oznaka":null,
        "id":326,
        "naziv":"eurodiesel bs",
-       "vrsta_goriva_id":7
+       "vrsta_goriva_id":8
     },
     {
        "obveznik_id":117,
@@ -3826,7 +3826,7 @@
        "oznaka":null,
        "id":785,
        "naziv":"EURODIESEL BS",
-       "vrsta_goriva_id":7
+       "vrsta_goriva_id":8
     },
     {
        "obveznik_id":188,
@@ -4715,7 +4715,7 @@
        "oznaka":"ED",
        "id":1008,
        "naziv":"EURODIESEL BS",
-       "vrsta_goriva_id":7
+       "vrsta_goriva_id":8
     },
     {
        "obveznik_id":211,
@@ -4911,7 +4911,7 @@
        "oznaka":null,
        "id":1035,
        "naziv":"EURODIESEL BS",
-       "vrsta_goriva_id":7
+       "vrsta_goriva_id":8
     },
     {
        "obveznik_id":40,

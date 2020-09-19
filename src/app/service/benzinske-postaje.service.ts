@@ -6,6 +6,7 @@ import { Gorivo } from '../benzinska/gorivo';
 import { HttpClient } from '@angular/common/http';
 import { Buffer } from 'buffer';
 import { BenzinskaOsnovni } from '../benzinska/benzinskaOsnovni';
+import { from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +68,18 @@ export class BenzinskePostajeService {
     this.http.setServerTrustMode("nocheck");
     let redirectPath = "https://mzoe-gor.hr/data.gz";
 
+    const data = from(fetch(redirectPath));
+
+    data.subscribe({next(res) {
+      console.log(res);
+      
+    }, error(err) {
+      console.log(err);
+      
+    }, complete() {
+      console.log("completed");
+      
+    }});
     console.log(redirectPath);
     
     // prepend the domain name

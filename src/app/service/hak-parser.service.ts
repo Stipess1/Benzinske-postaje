@@ -4,6 +4,7 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { Platform } from '@ionic/angular';
 import { Benzinska } from '../benzinska/benzinska';
 import { BenzinskaOsnovni } from '../benzinska/benzinskaOsnovni';
+import { GorivoHak } from '../benzinska/gorivoHak';
 import { RadnoVrijeme } from '../benzinska/radnovrijeme';
 import { Usluge } from '../benzinska/usluge';
 import { BenzinskePostajeService } from './benzinske-postaje.service';
@@ -30,8 +31,8 @@ export class HakParserService {
 
             let htmlText = json['Content'];
             let doc = new DOMParser().parseFromString(htmlText, "text/html");
-            let vrstaGorivaArray = [];
-            let cijenik = [];
+            // let vrstaGorivaArray = [];
+            // let cijenik = [];
             let benga = new Benzinska();
 
             benga.lat = benz.lat;
@@ -74,43 +75,64 @@ export class HakParserService {
             let vrsteGoriva = doc.getElementById("fueltypes").getElementsByClassName("iw-section__content")[0].getElementsByClassName("label");
             for (let i = 0; i < vrsteGoriva.length; i++) {
               let split = vrsteGoriva[i].innerHTML.split(":");
-              vrstaGorivaArray[i] = split[0].replace(/&nbsp;/g, " ");
-              cijenik[i] = split[1].slice(0, -5);
+              let gorivo = new GorivoHak();
+              gorivo.imeGoriva = split[0].replace(/&nbsp;/g, " ");
+              gorivo.cijena = split[1].slice(0, -5);
+              // vrstaGorivaArray[i] = split[0].replace(/&nbsp;/g, " ");
+              // cijenik[i] = split[1].slice(0, -5);
+              benga.vrsteGoriva.push(gorivo);
             }
             let imaGorivo = false;
             // gorivo.json ima sve podatke o svakom imenu goriva tako da je najbolje loopat kroz to neko rucno dodavat...
             // jer benzinske se ne ucitaju ako ne postoji navedena vrsta goriva.
-            if (this.trenutnoGorivo == "DIZELA") {
-              for (let i = 0; i < vrstaGorivaArray.length; i++) {
-                let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
-                if (lower === "eurodiesel" || lower === "eurodizel" || lower === "eurodieselbs"
-                  || lower === "evoeurodieselbs" || lower === "eurodizelbs" || lower === "eurodieselbsa-motion" || lower === "eurodizelb7") {
 
-                  benga.gorivo = cijenik[i];
-                  imaGorivo = true;
+            for(let i = 0; i < this.benzinske.vrsteGoriva.length; i++) {
+
+              let lower = this.benzinske.vrsteGoriva[i].naziv.toLowerCase().replace(/ /g, "");
+              for(let j = 0; j < benga.vrsteGoriva.length; j++) {
+                let vrstaLower = benga.vrsteGoriva[j].imeGoriva.toLowerCase().replace(/ /g, "");
+                if(lower === vrstaLower) {             
+                  benga.vrsteGoriva[j].vrstaGorivaId = this.benzinske.vrsteGoriva[i].vrstaGorivaId;
+                }
+              }
+            }
+
+            // dizel bez aditiva
+            if (this.trenutnoGorivo == "DIZELA") {
+              for(let i = 0; i < this.benzinske.vrsteGoriva.length; i++) {
+
+                let lower = this.benzinske.vrsteGoriva[i].naziv.toLowerCase().replace(/ /g, "");
+                for(let j = 0; j < benga.vrsteGoriva.length; j++) {
+                  let vrstaLower = benga.vrsteGoriva[j].imeGoriva.toLowerCase().replace(/ /g, "");
+                  if(lower === vrstaLower && this.benzinske.vrsteGoriva[i].vrstaGorivaId == 8) {             
+                    benga.gorivo = benga.vrsteGoriva[j].cijena;
+                    imaGorivo = true;
+                  }
                 }
               }
             } else if (this.trenutnoGorivo == "BENZINA") {
-              for (let i = 0; i < vrstaGorivaArray.length; i++) {
-                let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
-                if (lower === "eurosuper95" || lower === "qmaxeurosuper95" || lower === "evoeurosuper95bs" ||
-                  lower === "eurosuperbs95" || lower === "eurosuper95bsmaxpower" || lower === "eurosuper95bs" || lower === "eurosuper95classplus"
-                  || lower === "eurosuper95bsa-motion") {
-                  benga.gorivo = cijenik[i];
-                  imaGorivo = true;
+              for(let i = 0; i < this.benzinske.vrsteGoriva.length; i++) {
+
+                let lower = this.benzinske.vrsteGoriva[i].naziv.toLowerCase().replace(/ /g, "");
+                for(let j = 0; j < benga.vrsteGoriva.length; j++) {
+                  let vrstaLower = benga.vrsteGoriva[j].imeGoriva.toLowerCase().replace(/ /g, "");
+                  if(lower === vrstaLower && this.benzinske.vrsteGoriva[i].vrstaGorivaId == 2) {             
+                    benga.gorivo = benga.vrsteGoriva[j].cijena;
+                    imaGorivo = true;
+                  }
                 }
               }
             } else if (this.trenutnoGorivo == "AUTOPLIN") {
-              for (let i = 0; i < vrstaGorivaArray.length; i++) {
-                let lower = vrstaGorivaArray[i].toLowerCase().replace(/ /g, "");
-                if (lower === "lpg" || lower === "evolpg"
-                  || lower === "autoplinmaxpower"
-                  || lower === "autoplin(unp)"
-                  || lower === "qmaxlpgautoplin"
-                  || lower === "autoplin"
-                  || lower === "autoplin-lpg") {
-                  benga.gorivo = cijenik[i];
-                  imaGorivo = true;
+              for(let i = 0; i < this.benzinske.vrsteGoriva.length; i++) {
+
+                let lower = this.benzinske.vrsteGoriva[i].naziv.toLowerCase().replace(/ /g, "");
+                for(let j = 0; j < benga.vrsteGoriva.length; j++) {
+                  let vrstaLower = benga.vrsteGoriva[j].imeGoriva.toLowerCase().replace(/ /g, "");
+                  if(lower === vrstaLower && this.benzinske.vrsteGoriva[i].vrstaGorivaId == 9) {             
+                    benga.gorivo = benga.vrsteGoriva[j].cijena;
+                    benga.vrsteGoriva[j].vrstaGorivaId = 9;
+                    imaGorivo = true;
+                  }
                 }
               }
             }
@@ -130,9 +152,9 @@ export class HakParserService {
             benga.kompanija = imeFirme;
             benga.ime = imeBenge;
             benga.img = slika;
-            benga.vrsteGoriva = vrstaGorivaArray;
+            // benga.vrsteGoriva = vrstaGorivaArray;
             benga.id = benz.id.substr(1);
-            benga.cijenik = cijenik;
+           
             benga.imaGorivo = imaGorivo;
             benga.udaljenost = benz.udaljenost;
 
@@ -153,7 +175,7 @@ export class HakParserService {
             if (imaGorivo) 
               resolve(benga);
             else
-              reject("Nema goriva");
+              reject("Nema goriva id: " + benga.id);
             
           });
       else {

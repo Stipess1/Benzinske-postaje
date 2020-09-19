@@ -138,7 +138,7 @@ export class DetaljiComponent implements OnInit {
 
         this.lineChart.data.labels.push(id.datum);
         // neka goriva sadrze pod nazivom /\u00A0/ pa to moramo zamjenit sa razmakom.
-        if (id.tipGorivaId == 8 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
+        if (id.tipGorivaId == 8 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.nadiGorivoPoImenu(id.imeGoriva.replace(/\u00A0/, " "))) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -154,7 +154,7 @@ export class DetaljiComponent implements OnInit {
 
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if (id.tipGorivaId == 2 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 2 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.nadiGorivoPoImenu(id.imeGoriva.replace(/\u00A0/, " "))) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -170,7 +170,7 @@ export class DetaljiComponent implements OnInit {
 
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if (id.tipGorivaId == 7 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 7 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.nadiGorivoPoImenu(id.imeGoriva.replace(/\u00A0/, " "))) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -186,7 +186,7 @@ export class DetaljiComponent implements OnInit {
 
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if (id.tipGorivaId == 1 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 1 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.nadiGorivoPoImenu(id.imeGoriva.replace(/\u00A0/, " "))) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -202,7 +202,7 @@ export class DetaljiComponent implements OnInit {
 
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if (id.tipGorivaId == 9 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 9 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.nadiGorivoPoImenu(id.imeGoriva.replace(/\u00A0/, " "))) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -217,7 +217,7 @@ export class DetaljiComponent implements OnInit {
           };
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if (id.tipGorivaId == 6 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 6 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.nadiGorivoPoImenu(id.imeGoriva.replace(/\u00A0/, " "))) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -232,7 +232,7 @@ export class DetaljiComponent implements OnInit {
           };
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if (id.tipGorivaId == 5 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.vrsteGoriva.includes(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 5 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.nadiGorivoPoImenu(id.imeGoriva.replace(/\u00A0/, " "))) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,

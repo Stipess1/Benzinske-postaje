@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { pluginWarn } from '@ionic-native/core/decorators/common';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AnimationController, Platform } from '@ionic/angular';
-import { Map,tileLayer,marker,circleMarker } from 'leaflet';
+import { Map,tileLayer,marker,circleMarker,icon } from 'leaflet';
 import { Benzinska } from '../benzinska/benzinska';
 import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
 import { HakParserService } from '../service/hak-parser.service';
@@ -60,6 +60,8 @@ export class KartaComponent implements OnInit {
       tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(this.map);
+
+      // marker([this.service.lon, this.service.lat])
       for(let i = 0; i < this.service.sveBenzinske.length; i++) {
         let benzinska = this.service.sveBenzinske[i];
         // console.log(benzinska.trenutnoRadnoVrijeme + " - " + benzinska.otvoreno);
@@ -94,8 +96,8 @@ export class KartaComponent implements OnInit {
           
           let bengImg = "";
           let otvoreno = "";
-          let dizel = "margin-top: 0; width: 36px;height: 36px;background-color: #2C313C;color: white;margin-right: 5px; border-radius: 5px;text-align: center;padding: 0.7em 0 0;margin: auto;"
-          let benzin = "margin-top: 0;background-color: #8DD374;width: 36px;height: 36px;color: white;border-radius: 100%; text-align: center;padding: 0.7em 0 0;margin: auto;"
+          let dizel = "margin-top: 0; width: 36px;height: 36px;background-color: #2C313C;color: white;margin-right: 5px; border-radius: 5px;text-align: center;padding: 0.8em 0 0;margin: auto;"
+          let benzin = "margin-top: 0;background-color: #8DD374;width: 36px;height: 36px;color: white;border-radius: 100%; text-align: center;padding: 0.8em 0 0;margin: auto;"
           let textGorivo = "font-weight: bold; text-align: center;"
           let cijena = "font-weight: bold;text-align: center;margin-top: 10px;"
           let listaGoriva = '<ion-grid><ion-row>';
@@ -108,13 +110,20 @@ export class KartaComponent implements OnInit {
           } else {
             otvoreno = '<ion-chip color="danger"><ion-label>Zatvoreno</ion-label></ion-chip>';
           }
-
-          for(let i = 0; i < 2; i++) {
+          // limitiraj prikaz goriva na popupu na 2
+          let threshold = 0;
+          for(let i = 0; i < beng.vrsteGoriva.length; i++) {
             let benz = beng.vrsteGoriva[i];
-            if(benz.toLowerCase().includes("eurodiesel") || benz.toLowerCase().includes("eurodizel")) 
-              listaGoriva = listaGoriva.concat('<ion-col size="6"><p style="'+dizel+'">B</p><p style="'+textGorivo+'">'+benz+'</p><p style="'+cijena+'">'+beng.cijenik[i]+'<span style="font-weight: normal;color: rgb(59, 59, 59);"> kn/L</span></p></ion-col>')
-            else if(benz.toLowerCase().includes("eurosuper"))
-              listaGoriva = listaGoriva.concat('<ion-col size="6"><p style="'+benzin+'">E</p><p style="'+textGorivo+'">'+benz+'</p><p style="'+cijena+'">'+beng.cijenik[i]+'<span style="font-weight: normal;color: rgb(59, 59, 59);"> kn/L</span></p></ion-col>');
+            
+            
+            if((benz.vrstaGorivaId == 8 || benz.vrstaGorivaId == 7) && threshold < 2) {
+              listaGoriva = listaGoriva.concat('<ion-col size="6" style="flex: display; flex-direction: column;"><p style="'+dizel+'">B</p><p style="'+textGorivo+'">'+benz.imeGoriva+'</p><p style="'+cijena+'">'+benz.cijena+'<span style="font-weight: normal;color: rgb(59, 59, 59);"> kn/L</span></p></ion-col>')
+              threshold++;
+            }
+            else if((benz.vrstaGorivaId == 1 || benz.vrstaGorivaId == 2 || benz.vrstaGorivaId == 5 || benz.vrstaGorivaId == 6) && threshold < 2) {
+              listaGoriva = listaGoriva.concat('<ion-col size="6" style="flex: display; flex-direction: column;"><p style="'+benzin+'">E</p><p style="'+textGorivo+'">'+benz.imeGoriva+'</p><p style="'+cijena+'">'+benz.cijena+'<span style="font-weight: normal;color: rgb(59, 59, 59);"> kn/L</span></p></ion-col>');
+              threshold++;
+            } else if(threshold == 2) break;
           }
           listaGoriva = listaGoriva.concat('</ion-row></ion-grid>');
           console.log(listaGoriva);

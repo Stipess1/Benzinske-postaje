@@ -158,14 +158,12 @@ export class HakParserService {
             benga.imaGorivo = imaGorivo;
             benga.udaljenost = benz.udaljenost;
 
-            this.http.get('assets/json/postaje.json').subscribe((res: any) => {
-
-              for (let i = 0; i < res['postajas'].length; i++) {
-                if (res['postajas'][i]['adresa'] === benga.adresa && res['postajas'][i]['naziv'] === benga.ime) {
-                  benga.mzoeId = res['postajas'][i]['id'];
-                }
+            for(let i = 0; i < this.benzinske.sveBenzinske.length; i++) {
+              if(this.benzinske.sveBenzinske[i].adresa == benga.adresa && this.benzinske.sveBenzinske[i].ime === benga.ime) {
+                benga.mzoeId = this.benzinske.sveBenzinske[i].mzoeId;
+                break;
               }
-            });
+            }
 
             if (usluge != undefined)
               benga.usluge = listaUsluga;

@@ -233,13 +233,9 @@ export class HomeComponent implements OnInit {
               this.benzinske.filterBenga.push(data);
 
               setTimeout(() => {
-                // console.log(data.id);
-  
-                // console.log(document.getElementById(""+data.id));
-  
                 const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
                   duration(300).iterations(1).fromTo('opacity', '0', '1');
-  
+
                 animation.play();
               }, 50)
             });
@@ -264,10 +260,6 @@ export class HomeComponent implements OnInit {
             this.benzinske.filterBenga.push(data);
 
             setTimeout(() => {
-              // console.log(data.id);
-
-              // console.log(document.getElementById(""+data.id));
-
               const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
                 duration(300).iterations(1).fromTo('opacity', '0', '1');
 
@@ -326,9 +318,6 @@ export class HomeComponent implements OnInit {
             this.benzinske.filterBenga.push(data);
             this.hakParser.loadedData = true;
             setTimeout(() => {
-              // console.log(data.id);
-
-              // console.log(document.getElementById(""+data.id));
 
               const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
                 duration(300).iterations(1).fromTo('opacity', '0', '1');
@@ -343,8 +332,6 @@ export class HomeComponent implements OnInit {
 
     });
   }
-  // napravit da ova funkcija vraaca objekt bennzinsku i onda s njom mozemo radit sta ocemo...
-  // pushat ju array da nam se prikazu sve benzinske u blizini ili da jednostavno parsamo benzinsku
 
   get(benga: Benzinska) {
 
@@ -394,52 +381,47 @@ export class HomeComponent implements OnInit {
   }
 
   getBenzin(gorivo: string) {
-    if (gorivo === "DIZELA") {
-      for(let i = 0; i < this.benzinske.filterBenga.length; i++) {
-        console.log(this.benzinske.filterBenga[i].vrsteGoriva);
-        for(let j = 0; j < this.benzinske.filterBenga[i].vrsteGoriva.length; j++) {
-          if(this.benzinske.filterBenga[i].vrsteGoriva[j].vrstaGorivaId == 8) {
-            
-            
-            this.benzinske.filterBenga[i].gorivo = this.benzinske.filterBenga[i].vrsteGoriva[j].cijena
-          }
-        }
-      }
 
-    } else if (gorivo === "BENZINA") {
-      for (let i = 0; i < this.benzinske.filterBenga.length; i++) {
-        for (let j = 0; j < this.benzinske.filterBenga[i].vrsteGoriva.length; j++) {
-          let lower = this.benzinske.filterBenga[i].vrsteGoriva[j].imeGoriva.toLowerCase().replace(/ /g, "");
-          if (lower === "eurosuper95" || lower === "qmaxeurosuper95" || lower === "evoeurosuper95bs" ||
-            lower === "eurosuperbs95" || lower === "eurosuper95bsmaxpower" || lower === "eurosuper95bs" || lower === "eurosuper95classplus") {
-            this.benzinske.filterBenga[i].gorivo = this.benzinske.filterBenga[i].vrsteGoriva[j].cijena;
-          }
-        }
-      }
-    } else if (gorivo === "AUTOPLIN") {
-      for (let i = 0; i < this.benzinske.filterBenga.length; i++) {
+    let id = -1;
+    switch (gorivo) {
+      case "DIZELA":
+        id = 8;
+        break;
+      case "BENZINA":
+        id = 2;
+        break;
+      case "AUTOPLIN":
+        id = 9;
+        break;
+      case "PLAVI-DIZEL":
+        id = 11;
+        break;
+    }
+    let ima = false;
+    for (let i = 0; i < this.benzinske.filterBenga.length; i++) {
+      // neke postaje nemaju autoplin i plavi dizel..
+      if(id == 9 || id == 11)
         this.benzinske.filterBenga[i].gorivo = "---";
-        for (let j = 0; j < this.benzinske.filterBenga[i].vrsteGoriva.length; j++) {
-          let lower = this.benzinske.filterBenga[i].vrsteGoriva[j].imeGoriva.toLowerCase().replace(/ /g, "");
+      for (let j = 0; j < this.benzinske.filterBenga[i].vrsteGoriva.length; j++) {
 
-          if (lower === "lpg" || lower === "evolpg"
-            || lower === "autoplinmaxpower"
-            || lower === "autoplin(unp)"
-            || lower === "qmaxlpgautoplin"
-            || lower === "autoplin")
-            this.benzinske.filterBenga[i].gorivo = this.benzinske.filterBenga[i].vrsteGoriva[j].cijena;
-        }
+        if (this.benzinske.filterBenga[i].vrsteGoriva[j].vrstaGorivaId == id) {
+          this.benzinske.filterBenga[i].gorivo = this.benzinske.filterBenga[i].vrsteGoriva[j].cijena;
+          ima = true;
+        } 
       }
-    } else if (gorivo === "PLAVI-DIZEL") {
-      for (let i = 0; i < this.benzinske.filterBenga.length; i++) {
-        this.benzinske.filterBenga[i].gorivo = "---";
-        for (let j = 0; j < this.benzinske.filterBenga[i].vrsteGoriva.length; j++) {
-          let lower = this.benzinske.filterBenga[i].vrsteGoriva[j].imeGoriva.toLowerCase().replace(/ /g, "");
-          if (lower === "eurodieselbsplavi" || lower === "eurodizelplavi" || lower === "plavidizel") {
-            this.benzinske.filterBenga[i].gorivo = this.benzinske.filterBenga[i].vrsteGoriva[j].cijena;
+      // posto neke benzinske nemaju benzin bez aditiva onda gledamo benzin sa aditivima
+      if(!ima) {
+        if (id == 2) {
+          // id -= 1;
+          let temp = id - 1;
+          for(let j = 0; j < this.benzinske.filterBenga[i].vrsteGoriva.length; j++) {
+            if (this.benzinske.filterBenga[i].vrsteGoriva[j].vrstaGorivaId == temp) {
+              this.benzinske.filterBenga[i].gorivo = this.benzinske.filterBenga[i].vrsteGoriva[j].cijena;
+            }
           }
         }
       }
+      ima = false;
     }
   }
 

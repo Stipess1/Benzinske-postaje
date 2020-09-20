@@ -45,8 +45,8 @@
           <ion-label>
             Benzinske u {{grad}} ({{this.benzinske.filterBenga.length}})
           </ion-label>
-          <ion-icon (click)="radius('', false)" name="locate-outline" style="font-size: 32px; margin-right: 10px;">
-          </ion-icon>
+          <!-- <ion-icon (click)="radius('', false)" name="locate-outline" style="font-size: 32px; margin-right: 10px;">
+          </ion-icon> -->
         </ion-list-header>
         <ion-item class="benga" style="opacity: 0;" *ngFor="let benga of benzinske.filterBenga" (click)="get(benga);"
           id="{{benga.id}}">

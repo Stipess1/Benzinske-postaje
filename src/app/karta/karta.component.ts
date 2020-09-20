@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { pluginWarn } from '@ionic-native/core/decorators/common';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AnimationController, Platform } from '@ionic/angular';
-import { Map,tileLayer,marker,circleMarker,icon } from 'leaflet';
+import { Map,tileLayer,marker,circleMarker,icon, Icon } from 'leaflet';
 import { Benzinska } from '../benzinska/benzinska';
 import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
 import { HakParserService } from '../service/hak-parser.service';
@@ -60,8 +60,8 @@ export class KartaComponent implements OnInit {
       tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(this.map);
-
-      // marker([this.service.lon, this.service.lat])
+      
+      marker([this.service.lat, this.service.lon]).bindPopup("Vi ste ovdje!").addTo(this.map);
       for(let i = 0; i < this.service.sveBenzinske.length; i++) {
         let benzinska = this.service.sveBenzinske[i];
         // console.log(benzinska.trenutnoRadnoVrijeme + " - " + benzinska.otvoreno);

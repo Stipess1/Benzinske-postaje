@@ -43,9 +43,17 @@ export class HakParserService {
             let grad = doc.getElementsByClassName("iw-section")[3].getElementsByClassName("iw-row")[1].getElementsByClassName("iw-value")[0].innerHTML;
             let adresa = doc.getElementsByClassName("iw-section")[3].getElementsByClassName("iw-row")[0].getElementsByClassName("iw-value")[0].innerHTML;
             let vrijeme = doc.getElementById("rv").getElementsByClassName("iw-row");
-            if (vrijeme.length == 2) {
+            console.log(vrijeme);
+            
+            if (vrijeme.length == 3) {
               radnoVrijeme.ponPet = vrijeme[0].getElementsByClassName("iw-col--right")[0].innerHTML;
-              radnoVrijeme.sub = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
+              if(vrijeme[1].getElementsByClassName("iw-col--left")[0].innerHTML === "Subota")
+                radnoVrijeme.sub = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
+              else if(vrijeme[1].getElementsByClassName("iw-col--left")[0].innerHTML === "Nedjelja")
+                radnoVrijeme.ned = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
+
+              if(vrijeme[2].getElementsByClassName("iw-col--left")[0].innerHTML == "Praznik")
+                radnoVrijeme.praznik = vrijeme[2].getElementsByClassName("iw-col--right")[0].innerHTML;
             } else {
               radnoVrijeme.ponPet = vrijeme[0].getElementsByClassName("iw-col--right")[0].innerHTML;
               radnoVrijeme.sub = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
@@ -104,7 +112,7 @@ export class HakParserService {
                 let lower = this.benzinske.vrsteGoriva[i].naziv.toLowerCase().replace(/ /g, "");
                 for(let j = 0; j < benga.vrsteGoriva.length; j++) {
                   let vrstaLower = benga.vrsteGoriva[j].imeGoriva.toLowerCase().replace(/ /g, "");
-                  if(lower === vrstaLower && this.benzinske.vrsteGoriva[i].vrstaGorivaId == 8) {             
+                  if(lower === vrstaLower && (this.benzinske.vrsteGoriva[i].vrstaGorivaId == 8 || this.benzinske.vrsteGoriva[i].vrstaGorivaId == 7)) {             
                     benga.gorivo = benga.vrsteGoriva[j].cijena;
                     imaGorivo = true;
                   }

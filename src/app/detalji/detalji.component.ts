@@ -41,6 +41,7 @@ export class DetaljiComponent implements OnInit {
     this.statusBar.backgroundColorByHexString('#fff');
     document.getElementById('header').style.marginTop = this.service.insetBar+"px";
     this.postaviGrafikon();
+   console.log(this.trenutnaBenga.radnoVrijeme);
    
   }
 

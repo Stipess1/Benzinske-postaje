@@ -26,6 +26,7 @@ export class BenzinskePostajeService {
   public lon: number;
   public insetBar: string;
   public vrsteGoriva: Gorivo[] = [];
+  public radius: number = 5;
 
   // https://webservis.mzoe-gor.hr/api/cjenici-postaja/303 za INA cjenik
   // https://webservis.mzoe-gor.hr/api/cjenici-postaja/770 za petrol

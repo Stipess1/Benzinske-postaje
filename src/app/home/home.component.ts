@@ -196,7 +196,7 @@ export class HomeComponent implements OnInit {
       this.benzinske.lon = lon;
 
       console.log("lat: " + lat + " lon: " + lon + " grad: " + grad.grad);
-      this.radius("", true);
+      this.radius("");
     });
     this.searching = false;
   }
@@ -205,50 +205,27 @@ export class HomeComponent implements OnInit {
     benga.img = "../assets/icon/icon2.png";
   }
 
-  radius(event: any, bool: boolean) {
+  radius(event: any) {
     let value;
-    if (!bool && event !== "") {
+    if(event !== "") {
       value = event.target.value;
-    } else {
-      value = 5;
+      this.benzinske.radius = value;
     }
+    else
+      value = this.benzinske.radius;
+
+    
 
     this.benzinske.filterBenga = [];
-    this.reloading = true;
-    if (!bool) {
-      this.geolocation.getCurrentPosition().then((resp) => {
+    this.hakParser.loadedData = false;
 
+    this.geolocation.getCurrentPosition().then((resp) => {
+
+      if(event !== "") {
         this.benzinske.lat = resp.coords.latitude;
         this.benzinske.lon = resp.coords.longitude;
-        let brojUdaljenosti = 0;
+      }
 
-        for (let i = 0; i < this.jsonBenge.length; i++) {
-          let benga = this.jsonBenge[i];
-          let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.lon);
-          udaljenost = Math.round(udaljenost * 10) / 10
-          benga.udaljenost = udaljenost;
-
-          if (udaljenost <= value) {
-            this.hakParser.parse(benga).then(data => {
-              this.benzinske.filterBenga.push(data);
-
-              setTimeout(() => {
-                const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
-                  duration(300).iterations(1).fromTo('opacity', '0', '1');
-
-                animation.play();
-              }, 50)
-            });
-
-          }
-
-        }
-
-      }).catch(err => {
-        console.log("err: " + err);
-
-      });
-    } else {
       for (let i = 0; i < this.jsonBenge.length; i++) {
         let benga = this.jsonBenge[i];
         let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.lon);
@@ -256,9 +233,9 @@ export class HomeComponent implements OnInit {
         benga.udaljenost = udaljenost;
 
         if (udaljenost <= value) {
-          this.hakParser.parse(benga).then(data => {
+          this.hakParser.parse(benga).then(data =>{
             this.benzinske.filterBenga.push(data);
-
+            this.hakParser.loadedData = true;
             setTimeout(() => {
               const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
                 duration(300).iterations(1).fromTo('opacity', '0', '1');
@@ -266,12 +243,37 @@ export class HomeComponent implements OnInit {
               animation.play();
             }, 50)
           });
-
         }
-      }
-    }
 
-    this.reloading = false;
+      }
+
+    }).catch(err => {
+      console.log("err: " + err);
+
+    });
+
+    // for (let i = 0; i < this.jsonBenge.length; i++) {
+    //   let benga = this.jsonBenge[i];
+    //   let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.lon);
+    //   udaljenost = Math.round(udaljenost * 10) / 10
+    //   benga.udaljenost = udaljenost;
+
+    //   if (udaljenost <= value) {
+    //     this.hakParser.parse(benga).then(data => {
+    //       this.benzinske.filterBenga.push(data);
+
+    //       setTimeout(() => {
+    //         const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
+    //           duration(300).iterations(1).fromTo('opacity', '0', '1');
+
+    //         animation.play();
+    //       }, 50)
+
+          
+    //     });
+
+    //   }
+    // }
   }
   // funkcija se zove nakon sto korisnik promjeni grad, udaljenost se racuna po centru grada
 
@@ -380,6 +382,56 @@ export class HomeComponent implements OnInit {
     return await popover.present();
   }
 
+  doRefresh(event: any) {
+    console.log("refresh");
+    this.benzinske.filterBenga = [];
+    this.reloading = true;
+    this.hakParser.loadedData = false;
+    this.geolocation.getCurrentPosition().then((resp) => {
+
+      this.benzinske.lat = resp.coords.latitude;
+      this.benzinske.lon = resp.coords.longitude;
+      let brojUdaljenosti = 0;
+      let complete = false;
+      for (let i = 0; i < this.jsonBenge.length; i++) {
+        let benga = this.jsonBenge[i];
+        let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.lon);
+        udaljenost = Math.round(udaljenost * 10) / 10
+        benga.udaljenost = udaljenost;
+
+        if (udaljenost <= this.benzinske.radius) {
+          this.hakParser.parse(benga).then(data => {
+            this.benzinske.filterBenga.push(data);
+
+            setTimeout(() => {
+              const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
+                duration(300).iterations(1).fromTo('opacity', '0', '1');
+
+              animation.play();
+            }, 50);
+            this.hakParser.loadedData = true;
+            this.reloading = false;
+
+            if (!complete) {
+              complete = true;
+              setTimeout(() => {
+                event.target.complete();
+                
+              }, 2000);
+            }
+            
+          });
+
+        }
+
+      }
+
+    }).catch(err => {
+      console.log("err: " + err);
+
+    });
+  }
+
   getBenzin(gorivo: string) {
 
     let id = -1;
@@ -400,21 +452,21 @@ export class HomeComponent implements OnInit {
     let ima = false;
     for (let i = 0; i < this.benzinske.filterBenga.length; i++) {
       // neke postaje nemaju autoplin i plavi dizel..
-      if(id == 9 || id == 11)
+      if (id == 9 || id == 11)
         this.benzinske.filterBenga[i].gorivo = "---";
       for (let j = 0; j < this.benzinske.filterBenga[i].vrsteGoriva.length; j++) {
 
         if (this.benzinske.filterBenga[i].vrsteGoriva[j].vrstaGorivaId == id) {
           this.benzinske.filterBenga[i].gorivo = this.benzinske.filterBenga[i].vrsteGoriva[j].cijena;
           ima = true;
-        } 
+        }
       }
       // posto neke benzinske nemaju benzin bez aditiva onda gledamo benzin sa aditivima
-      if(!ima) {
+      if (!ima) {
         if (id == 2) {
           // id -= 1;
           let temp = id - 1;
-          for(let j = 0; j < this.benzinske.filterBenga[i].vrsteGoriva.length; j++) {
+          for (let j = 0; j < this.benzinske.filterBenga[i].vrsteGoriva.length; j++) {
             if (this.benzinske.filterBenga[i].vrsteGoriva[j].vrstaGorivaId == temp) {
               this.benzinske.filterBenga[i].gorivo = this.benzinske.filterBenga[i].vrsteGoriva[j].cijena;
             }

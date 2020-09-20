@@ -1,5 +1,4 @@
 <ion-content id="home">
-
   <div class="fuel" id="fuel">
     <ion-searchbar cancelButtonText="Odustani" showCancelButton="focus" mode="ios" animated="true"
       placeholder="Traži benzinske po gradu" value="{{this.benzinske.trenutniTekst}}" (ionChange)="change($event)"
@@ -13,7 +12,9 @@
         </ion-item>
       </ion-list>
     </div>
-
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
     <ion-grid *ngIf="!searching">
       <ion-row>
         <ion-col>
@@ -25,7 +26,7 @@
           </ion-select>
         </ion-col>
         <ion-col>
-          <ion-select value="5" name="Radius" (ionChange)="radius($event, false)" interface="action-sheet" mode="md"
+          <ion-select value="5" name="Radius" (ionChange)="radius($event)" interface="action-sheet" mode="md"
             cancelText="Odustani" [interfaceOptions]="{header: 'Radijus', cssClass: 'action'}">
             <ion-select-option value="5">5 km</ion-select-option>
             <ion-select-option value="10">10 km</ion-select-option>
@@ -40,13 +41,12 @@
       </ion-row>
     </ion-grid>
     <div *ngIf="!searching && this.hakParser.loadedData">
+
       <ion-list lines="none" class="benge" *ngIf="!reloading">
         <ion-list-header>
           <ion-label>
             Benzinske u {{grad}} ({{this.benzinske.filterBenga.length}})
           </ion-label>
-          <!-- <ion-icon (click)="radius('', false)" name="locate-outline" style="font-size: 32px; margin-right: 10px;">
-          </ion-icon> -->
         </ion-list-header>
         <ion-item class="benga" style="opacity: 0;" *ngFor="let benga of benzinske.filterBenga" (click)="get(benga);"
           id="{{benga.id}}">

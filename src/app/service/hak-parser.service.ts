@@ -31,8 +31,6 @@ export class HakParserService {
 
             let htmlText = json['Content'];
             let doc = new DOMParser().parseFromString(htmlText, "text/html");
-            // let vrstaGorivaArray = [];
-            // let cijenik = [];
             let benga = new Benzinska();
 
             benga.lat = benz.lat;
@@ -43,17 +41,22 @@ export class HakParserService {
             let grad = doc.getElementsByClassName("iw-section")[3].getElementsByClassName("iw-row")[1].getElementsByClassName("iw-value")[0].innerHTML;
             let adresa = doc.getElementsByClassName("iw-section")[3].getElementsByClassName("iw-row")[0].getElementsByClassName("iw-value")[0].innerHTML;
             let vrijeme = doc.getElementById("rv").getElementsByClassName("iw-row");
-            console.log(vrijeme);
-            
+
             if (vrijeme.length == 3) {
               radnoVrijeme.ponPet = vrijeme[0].getElementsByClassName("iw-col--right")[0].innerHTML;
-              if(vrijeme[1].getElementsByClassName("iw-col--left")[0].innerHTML === "Subota")
+              if (vrijeme[1].getElementsByClassName("iw-col--left")[0].innerHTML === "Subota")
                 radnoVrijeme.sub = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
-              else if(vrijeme[1].getElementsByClassName("iw-col--left")[0].innerHTML === "Nedjelja")
+              else if (vrijeme[1].getElementsByClassName("iw-col--left")[0].innerHTML === "Nedjelja")
                 radnoVrijeme.ned = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
 
-              if(vrijeme[2].getElementsByClassName("iw-col--left")[0].innerHTML == "Praznik")
+              if (vrijeme[2].getElementsByClassName("iw-col--left")[0].innerHTML == "Praznik")
                 radnoVrijeme.praznik = vrijeme[2].getElementsByClassName("iw-col--right")[0].innerHTML;
+            } else if (vrijeme.length == 2) {
+              radnoVrijeme.ponPet = vrijeme[0].getElementsByClassName("iw-col--right")[0].innerHTML;
+              if (vrijeme[1].getElementsByClassName("iw-col--left")[0].innerHTML === "Subota")
+                radnoVrijeme.sub = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
+              else if (vrijeme[1].getElementsByClassName("iw-col--left")[0].innerHTML === "Nedjelja")
+                radnoVrijeme.ned = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
             } else {
               radnoVrijeme.ponPet = vrijeme[0].getElementsByClassName("iw-col--right")[0].innerHTML;
               radnoVrijeme.sub = vrijeme[1].getElementsByClassName("iw-col--right")[0].innerHTML;
@@ -79,27 +82,23 @@ export class HakParserService {
 
             let imeFirme = doc.getElementsByClassName("iw-top")[0].getElementsByClassName("iw-title")[0].innerHTML;
             let imeBenge = doc.getElementsByClassName("iw-top")[0].getElementsByClassName("iw-title")[1].innerHTML;
-
             let vrsteGoriva = doc.getElementById("fueltypes").getElementsByClassName("iw-section__content")[0].getElementsByClassName("label");
+
             for (let i = 0; i < vrsteGoriva.length; i++) {
               let split = vrsteGoriva[i].innerHTML.split(":");
               let gorivo = new GorivoHak();
               gorivo.imeGoriva = split[0].replace(/&nbsp;/g, " ");
               gorivo.cijena = split[1].slice(0, -5);
-              // vrstaGorivaArray[i] = split[0].replace(/&nbsp;/g, " ");
-              // cijenik[i] = split[1].slice(0, -5);
               benga.vrsteGoriva.push(gorivo);
             }
             let imaGorivo = false;
-            // gorivo.json ima sve podatke o svakom imenu goriva tako da je najbolje loopat kroz to neko rucno dodavat...
-            // jer benzinske se ne ucitaju ako ne postoji navedena vrsta goriva.
 
-            for(let i = 0; i < this.benzinske.vrsteGoriva.length; i++) {
+            for (let i = 0; i < this.benzinske.vrsteGoriva.length; i++) {
 
               let lower = this.benzinske.vrsteGoriva[i].naziv.toLowerCase().replace(/ /g, "");
-              for(let j = 0; j < benga.vrsteGoriva.length; j++) {
+              for (let j = 0; j < benga.vrsteGoriva.length; j++) {
                 let vrstaLower = benga.vrsteGoriva[j].imeGoriva.toLowerCase().replace(/ /g, "");
-                if(lower === vrstaLower) {             
+                if (lower === vrstaLower) {
                   benga.vrsteGoriva[j].vrstaGorivaId = this.benzinske.vrsteGoriva[i].vrstaGorivaId;
                 }
               }
@@ -107,36 +106,36 @@ export class HakParserService {
 
             // dizel bez aditiva
             if (this.trenutnoGorivo == "DIZELA") {
-              for(let i = 0; i < this.benzinske.vrsteGoriva.length; i++) {
+              for (let i = 0; i < this.benzinske.vrsteGoriva.length; i++) {
 
                 let lower = this.benzinske.vrsteGoriva[i].naziv.toLowerCase().replace(/ /g, "");
-                for(let j = 0; j < benga.vrsteGoriva.length; j++) {
+                for (let j = 0; j < benga.vrsteGoriva.length; j++) {
                   let vrstaLower = benga.vrsteGoriva[j].imeGoriva.toLowerCase().replace(/ /g, "");
-                  if(lower === vrstaLower && (this.benzinske.vrsteGoriva[i].vrstaGorivaId == 8 || this.benzinske.vrsteGoriva[i].vrstaGorivaId == 7)) {             
+                  if (lower === vrstaLower && (this.benzinske.vrsteGoriva[i].vrstaGorivaId == 8 || this.benzinske.vrsteGoriva[i].vrstaGorivaId == 7)) {
                     benga.gorivo = benga.vrsteGoriva[j].cijena;
                     imaGorivo = true;
                   }
                 }
               }
             } else if (this.trenutnoGorivo == "BENZINA") {
-              for(let i = 0; i < this.benzinske.vrsteGoriva.length; i++) {
+              for (let i = 0; i < this.benzinske.vrsteGoriva.length; i++) {
 
                 let lower = this.benzinske.vrsteGoriva[i].naziv.toLowerCase().replace(/ /g, "");
-                for(let j = 0; j < benga.vrsteGoriva.length; j++) {
+                for (let j = 0; j < benga.vrsteGoriva.length; j++) {
                   let vrstaLower = benga.vrsteGoriva[j].imeGoriva.toLowerCase().replace(/ /g, "");
-                  if(lower === vrstaLower && this.benzinske.vrsteGoriva[i].vrstaGorivaId == 2) {             
+                  if (lower === vrstaLower && this.benzinske.vrsteGoriva[i].vrstaGorivaId == 2) {
                     benga.gorivo = benga.vrsteGoriva[j].cijena;
                     imaGorivo = true;
                   }
                 }
               }
             } else if (this.trenutnoGorivo == "AUTOPLIN") {
-              for(let i = 0; i < this.benzinske.vrsteGoriva.length; i++) {
+              for (let i = 0; i < this.benzinske.vrsteGoriva.length; i++) {
 
                 let lower = this.benzinske.vrsteGoriva[i].naziv.toLowerCase().replace(/ /g, "");
-                for(let j = 0; j < benga.vrsteGoriva.length; j++) {
+                for (let j = 0; j < benga.vrsteGoriva.length; j++) {
                   let vrstaLower = benga.vrsteGoriva[j].imeGoriva.toLowerCase().replace(/ /g, "");
-                  if(lower === vrstaLower && this.benzinske.vrsteGoriva[i].vrstaGorivaId == 9) {             
+                  if (lower === vrstaLower && this.benzinske.vrsteGoriva[i].vrstaGorivaId == 9) {
                     benga.gorivo = benga.vrsteGoriva[j].cijena;
                     benga.vrsteGoriva[j].vrstaGorivaId = 9;
                     imaGorivo = true;
@@ -162,12 +161,12 @@ export class HakParserService {
             benga.img = slika;
             // benga.vrsteGoriva = vrstaGorivaArray;
             benga.id = benz.id.substr(1);
-           
+
             benga.imaGorivo = imaGorivo;
             benga.udaljenost = benz.udaljenost;
 
-            for(let i = 0; i < this.benzinske.sveBenzinske.length; i++) {
-              if(this.benzinske.sveBenzinske[i].adresa == benga.adresa && this.benzinske.sveBenzinske[i].ime === benga.ime) {
+            for (let i = 0; i < this.benzinske.sveBenzinske.length; i++) {
+              if (this.benzinske.sveBenzinske[i].adresa == benga.adresa && this.benzinske.sveBenzinske[i].ime === benga.ime) {
                 benga.mzoeId = this.benzinske.sveBenzinske[i].mzoeId;
                 break;
               }
@@ -178,11 +177,13 @@ export class HakParserService {
 
             benga.trenutnoRadnoVrijeme = this.parseTime(benga);
 
-            if (imaGorivo) 
-              resolve(benga);
-            else
-              reject("Nema goriva id: " + benga.id);
-            
+            resolve(benga);
+
+            // if (imaGorivo) 
+            //   resolve(benga);
+            // else
+            //   reject("Nema goriva id: " + benga.id);
+
           });
       else {
         // 
@@ -220,7 +221,7 @@ export class HakParserService {
    * @returns {string} - vraca radno vrijeme benzinske (npr. 06:00 - 24:00)
    */
   parseTime(benga: Benzinska) {
-    
+
 
     let vrijeme;
     let date = new Date();

@@ -10,6 +10,8 @@
 [<img src="assets/slika3.jpg" width="160">](assets/slika3.jpg)
 [<img src="assets/slika4.jpg" width="160">](assets/slika4.jpg)
 [<img src="assets/slika5.jpg" width="160">](assets/slika5.jpg)
+[<img src="assets/slika8.jpg" width="160">](assets/slika8.jpg)
+[<img src="assets/slika9.jpg" width="160">](assets/slika9.jpg)
 [<img src="assets/slika7.jpg" width="160">](assets/slika7.jpg)
 [<img src="assets/slika6.jpg" width="160">](assets/slika6.jpg)
 

@@ -3,7 +3,7 @@ import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Benzinska } from '../benzinska/benzinska';
 import { LaunchNavigator, LaunchNavigatorOptions } from '@ionic-native/launch-navigator/ngx';
-import { AnimationController, NavController, Platform } from '@ionic/angular';
+import { AnimationController, IonContent, NavController, Platform } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js';
 import { CijeniciPostaja } from '../benzinska/cijeniciPostaja';
@@ -17,6 +17,7 @@ import * as CanvasJS from 'canvasjs';
 export class DetaljiComponent implements OnInit {
 
   @ViewChild("grafikon", { static: true }) canvas: ElementRef;
+  @ViewChild(IonContent) content: IonContent;
 
   public trenutnaBenga: Benzinska;
   public vrijeme: string;
@@ -38,16 +39,22 @@ export class DetaljiComponent implements OnInit {
 
   ngOnInit() {
 
-    this.statusBar.backgroundColorByHexString('#fff');
     document.getElementById('header').style.marginTop = this.service.insetBar+"px";
     this.postaviGrafikon();
-   console.log(this.trenutnaBenga.radnoVrijeme);
-   
+
   }
 
 
   ionViewWillLeave() {
     this.subscription.unsubscribe();
+  }
+
+  ionViewWillEnter() {
+    this.statusBar.backgroundColorByHexString('#fff');
+    if(this.trenutnaBenga != this.service.trenutnaBenga) {
+      this.trenutnaBenga = this.service.trenutnaBenga;
+      this.postaviGrafikon();
+    }
   }
 
   zatvori() {
@@ -87,6 +94,7 @@ export class DetaljiComponent implements OnInit {
       //     dataPoints: dataPoints
       //   }]
       // });
+      // chart.render();
 
       this.lineChart = new Chart(this.canvas.nativeElement, {
         type: "line",
@@ -278,6 +286,7 @@ export class DetaljiComponent implements OnInit {
     this.subscription = this.platform.backButton.subscribeWithPriority(9999, () => {
       this.navCtrl.back();
     });
+    this.content.scrollToTop(300);
     const animation = this.animationCtrl.create().addElement(document.getElementById("content")).duration(500).iterations(1).fromTo('opacity', 0, 1);
     animation.play();
     this.service.tabs('home');

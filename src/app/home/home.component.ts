@@ -234,14 +234,16 @@ export class HomeComponent implements OnInit {
 
         if (udaljenost <= value) {
           this.hakParser.parse(benga).then(data =>{
-            this.benzinske.filterBenga.push(data);
-            this.hakParser.loadedData = true;
-            setTimeout(() => {
-              const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
-                duration(300).iterations(1).fromTo('opacity', '0', '1');
-
-              animation.play();
-            }, 50)
+            if(data.imaGorivo) {
+              this.benzinske.filterBenga.push(data);
+              this.hakParser.loadedData = true;
+              setTimeout(() => {
+                const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
+                  duration(300).iterations(1).fromTo('opacity', '0', '1');
+  
+                animation.play();
+              }, 50)
+            }
           });
         }
 
@@ -252,28 +254,6 @@ export class HomeComponent implements OnInit {
 
     });
 
-    // for (let i = 0; i < this.jsonBenge.length; i++) {
-    //   let benga = this.jsonBenge[i];
-    //   let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.lon);
-    //   udaljenost = Math.round(udaljenost * 10) / 10
-    //   benga.udaljenost = udaljenost;
-
-    //   if (udaljenost <= value) {
-    //     this.hakParser.parse(benga).then(data => {
-    //       this.benzinske.filterBenga.push(data);
-
-    //       setTimeout(() => {
-    //         const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
-    //           duration(300).iterations(1).fromTo('opacity', '0', '1');
-
-    //         animation.play();
-    //       }, 50)
-
-          
-    //     });
-
-    //   }
-    // }
   }
   // funkcija se zove nakon sto korisnik promjeni grad, udaljenost se racuna po centru grada
 
@@ -317,15 +297,16 @@ export class HomeComponent implements OnInit {
         this.benzinske.hakBenzinske.push(benga);
         if (udaljenost <= 5) {
           this.hakParser.parse(benga).then(data => {
-            this.benzinske.filterBenga.push(data);
-            this.hakParser.loadedData = true;
-            setTimeout(() => {
-
-              const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
-                duration(300).iterations(1).fromTo('opacity', '0', '1');
-
-              animation.play();
-            }, 50)
+            if(data.imaGorivo) {
+              this.benzinske.filterBenga.push(data);
+              this.hakParser.loadedData = true;
+              setTimeout(() => {
+                const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
+                  duration(300).iterations(1).fromTo('opacity', '0', '1');
+  
+                animation.play();
+              }, 50)
+            }
           });
         }
 
@@ -401,23 +382,22 @@ export class HomeComponent implements OnInit {
 
         if (udaljenost <= this.benzinske.radius) {
           this.hakParser.parse(benga).then(data => {
-            this.benzinske.filterBenga.push(data);
-
-            setTimeout(() => {
-              const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
-                duration(300).iterations(1).fromTo('opacity', '0', '1');
-
-              animation.play();
-            }, 50);
-            this.hakParser.loadedData = true;
-            this.reloading = false;
-
-            if (!complete) {
-              complete = true;
+            if(data.imaGorivo) {
+              this.benzinske.filterBenga.push(data);
+              this.hakParser.loadedData = true;
               setTimeout(() => {
-                event.target.complete();
-                
-              }, 2000);
+                const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
+                  duration(300).iterations(1).fromTo('opacity', '0', '1');
+  
+                animation.play();
+              }, 50)
+              if (!complete) {
+                complete = true;
+                setTimeout(() => {
+                  event.target.complete();
+                  
+                }, 2000);
+              }
             }
             
           });

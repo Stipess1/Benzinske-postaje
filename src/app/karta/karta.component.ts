@@ -64,8 +64,8 @@ export class KartaComponent implements OnInit {
       marker([this.service.lat, this.service.lon]).bindPopup("Vi ste ovdje!").addTo(this.map);
       for(let i = 0; i < this.service.sveBenzinske.length; i++) {
         let benzinska = this.service.sveBenzinske[i];
-        // console.log(benzinska.trenutnoRadnoVrijeme + " - " + benzinska.otvoreno);
         
+        // jedna postaja ima lat zapisano ovako kordinatu, pa nju ne gledamo.
         if(benzinska.lat.toString() !== "15° 31.2440' E") {
 
           let strokeColor;
@@ -74,9 +74,12 @@ export class KartaComponent implements OnInit {
           else 
             strokeColor = "#CF3C4F";
           
-          circleMarker([benzinska.lon, benzinska.lat], {color: strokeColor, weight: 2}).bindPopup("<ion-spinner name='crescent'></ion-spinner>", {className: 'popup'}).addTo(this.map).on('click', (ev) => {
-            this.markerClick(ev);
-          });
+          console.log(benzinska);
+            
+          if(benzinska.imaGorivo)
+            circleMarker([benzinska.lon, benzinska.lat], {color: strokeColor, weight: 2}).bindPopup("<ion-spinner name='crescent'></ion-spinner>", {className: 'popup'}).addTo(this.map).on('click', (ev) => {
+              this.markerClick(ev);
+            });
         }
        
       }
@@ -127,6 +130,8 @@ export class KartaComponent implements OnInit {
           }
           listaGoriva = listaGoriva.concat('</ion-row></ion-grid>');
           console.log(listaGoriva);
+          if(beng.trenutnoRadnoVrijeme == undefined)
+            beng.trenutnoRadnoVrijeme = "";
           
           let html = '<div style="display: flex; flex-direction: column; align-items: center; font-family: Varela Round, sans-serif !important;">'+
           '<p style="margin-bottom:0; margin-top: 5px;">Radno vrijeme: ' + beng.trenutnoRadnoVrijeme + 
@@ -150,6 +155,9 @@ export class KartaComponent implements OnInit {
               
             });
    
+        }).catch(err => {
+          console.log(err);
+          
         });
 
 

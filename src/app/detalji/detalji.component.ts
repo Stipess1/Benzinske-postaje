@@ -40,7 +40,6 @@ export class DetaljiComponent implements OnInit {
   ngOnInit() {
 
     document.getElementById('header').style.marginTop = this.service.insetBar+"px";
-    this.postaviGrafikon();
 
   }
 
@@ -51,9 +50,10 @@ export class DetaljiComponent implements OnInit {
 
   ionViewWillEnter() {
     this.statusBar.backgroundColorByHexString('#fff');
+    this.postaviGrafikon();
     if(this.trenutnaBenga != this.service.trenutnaBenga) {
       this.trenutnaBenga = this.service.trenutnaBenga;
-      this.postaviGrafikon();
+      
     }
   }
 

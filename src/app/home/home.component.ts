@@ -385,6 +385,7 @@ export class HomeComponent implements OnInit {
             if(data.imaGorivo) {
               this.benzinske.filterBenga.push(data);
               this.hakParser.loadedData = true;
+              this.reloading = false;
               setTimeout(() => {
                 const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
                   duration(300).iterations(1).fromTo('opacity', '0', '1');
@@ -396,7 +397,7 @@ export class HomeComponent implements OnInit {
                 setTimeout(() => {
                   event.target.complete();
                   
-                }, 2000);
+                }, 1500);
               }
             }
             

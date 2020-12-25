@@ -26,7 +26,6 @@ export class DetaljiComponent implements OnInit {
   public cijenikPostaje: CijeniciPostaja[] = [];
   public subscription: any;
 
-
   constructor(private service: BenzinskePostajeService,
     private statusBar: StatusBar,
     private launchnavigator: LaunchNavigator,
@@ -46,15 +45,31 @@ export class DetaljiComponent implements OnInit {
 
   ionViewWillLeave() {
     this.subscription.unsubscribe();
+    
+    
+    if(this.lineChart != undefined) {
+      console.log("destroy");
+      this.clearChart();
+      this.lineChart.destroy();
+      console.log(this.lineChart);
+    }
+  }
+
+  clearChart() {
+    this.lineChart.data.labels.pop();
+    this.lineChart.data.datasets.forEach((dataset) => {
+        dataset.data.pop();
+    });
+    this.lineChart.update();
   }
 
   ionViewWillEnter() {
     this.statusBar.backgroundColorByHexString('#fff');
-    this.postaviGrafikon();
+
     if(this.trenutnaBenga != this.service.trenutnaBenga) {
       this.trenutnaBenga = this.service.trenutnaBenga;
-      
     }
+    this.postaviGrafikon();
   }
 
   zatvori() {
@@ -62,6 +77,7 @@ export class DetaljiComponent implements OnInit {
   }
 
   postaviGrafikon() {
+    this.cijenikPostaje = [];
     this.service.getCijenik(this.trenutnaBenga.mzoeId).then((data: any) => {
       let json = JSON.parse(data.data);
 
@@ -95,7 +111,6 @@ export class DetaljiComponent implements OnInit {
       //   }]
       // });
       // chart.render();
-
       this.lineChart = new Chart(this.canvas.nativeElement, {
         type: "line",
         options: {
@@ -118,6 +133,7 @@ export class DetaljiComponent implements OnInit {
           }
         }
       });
+        
       /*
       tipGorivaId
       id = 1 - eurosuper 95 sa aditivima
@@ -270,7 +286,7 @@ export class DetaljiComponent implements OnInit {
         }
 
       }
-      this.lineChart.update();
+      this.lineChart.update(); 
     });
   }
 

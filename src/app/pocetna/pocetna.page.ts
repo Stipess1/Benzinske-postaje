@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { LaunchReview } from '@ionic-native/launch-review/ngx';
+import { Storage } from '@ionic/storage';
 import { Benzinska } from '../benzinska/benzinska';
 import { Gorivo } from '../benzinska/gorivo';
 import { RadnoVrijeme } from '../benzinska/radnovrijeme';
@@ -15,9 +17,12 @@ export class PocetnaPage implements OnInit {
 
   constructor(private http: HttpClient, 
     private benzinske: BenzinskePostajeService,
-    private hakParser: HakParserService) { }
+    private hakParser: HakParserService,
+    private launchReview: LaunchReview,
+    private storage: Storage) { }
 
   ngOnInit() {
+
     
     this.http.get('assets/json/gorivo.json').subscribe((data: any) => {
 
@@ -32,7 +37,7 @@ export class PocetnaPage implements OnInit {
           this.benzinske.vrsteGoriva.push(gorivo);
         }
       }
-      console.table(this.benzinske.vrsteGoriva);
+      //console.table(this.benzinske.vrsteGoriva);
       
     });
     this.http.get('assets/json/postaje.json').subscribe((data: any) => {

@@ -20,6 +20,7 @@ import { Buffer } from 'buffer';
 import { HakParserService } from '../service/hak-parser.service';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { GorivoHak } from '../benzinska/gorivoHak';
+import { LaunchReview } from '@ionic-native/launch-review/ngx';
 
 
 @Component({
@@ -55,7 +56,8 @@ export class HomeComponent implements OnInit {
     private diagnostic: Diagnostic,
     private animationController: AnimationController,
     public hakParser: HakParserService,
-    private backgroundMode: BackgroundMode) { }
+    private backgroundMode: BackgroundMode,
+    private launchReview: LaunchReview) { }
 
   ngOnInit() {
     this.hakParser.trenutnoGorivo = "DIZELA";
@@ -83,6 +85,15 @@ export class HomeComponent implements OnInit {
                   this.benzinske.lon = resp.coords.longitude;
                   this.init();
 
+                  if(this.launchReview.isRatingSupported) {
+                    console.log("rating");
+                    setTimeout(status => {
+                      this.launchReview.rating().subscribe(res => {
+                        console.log(res);
+                      });
+                    },100)
+                  }
+
                 }).catch(err => {
                   console.log("err: " + err);
 
@@ -107,6 +118,7 @@ export class HomeComponent implements OnInit {
     });
     toast.present();
   }
+
 
   ionViewWillEnter() {
     console.log("will enter");

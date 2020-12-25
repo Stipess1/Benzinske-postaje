@@ -73,8 +73,6 @@ export class KartaComponent implements OnInit {
             strokeColor = "#28ba62";
           else 
             strokeColor = "#CF3C4F";
-          
-          console.log(benzinska);
             
           if(benzinska.imaGorivo)
             circleMarker([benzinska.lon, benzinska.lat], {color: strokeColor, weight: 2}).bindPopup("<ion-spinner name='crescent'></ion-spinner>", {className: 'popup'}).addTo(this.map).on('click', (ev) => {
@@ -95,7 +93,6 @@ export class KartaComponent implements OnInit {
         console.log(item);
         
         this.hakParser.parse(item).then( beng => {
-          console.table(beng);
           
           let bengImg = "";
           let otvoreno = "";
@@ -129,7 +126,7 @@ export class KartaComponent implements OnInit {
             } else if(threshold == 2) break;
           }
           listaGoriva = listaGoriva.concat('</ion-row></ion-grid>');
-          console.log(listaGoriva);
+
           if(beng.trenutnoRadnoVrijeme == undefined)
             beng.trenutnoRadnoVrijeme = "";
           
@@ -151,6 +148,8 @@ export class KartaComponent implements OnInit {
           if(link) 
             link.addEventListener('click', () => {
               this.service.trenutnaBenga = beng;
+              console.log(beng);
+              
               this.router.navigate(['/pocetna/detalji/'], { relativeTo: this.route });
               
             });

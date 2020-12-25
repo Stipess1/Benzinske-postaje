@@ -18,11 +18,13 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import {AndroidFullScreen} from "@ionic-native/android-full-screen/ngx";
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
+import { LaunchReview } from '@ionic-native/launch-review/ngx';
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [AppComponent, PopoverComponent],
   entryComponents: [PopoverComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
+  imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot() ,AppRoutingModule, HttpClientModule],
   providers: [
     StatusBar,
     SplashScreen,
@@ -33,6 +35,7 @@ import { BackgroundMode } from '@ionic-native/background-mode/ngx';
     Geolocation,
     Diagnostic,
     BackgroundMode,
+    LaunchReview,
     HTTP,
     AndroidFullScreen,
     HttpClient,

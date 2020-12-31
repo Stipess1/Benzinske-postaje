@@ -48,7 +48,7 @@
             Benzinske u {{grad}} ({{this.benzinske.filterBenga.length}})
           </ion-label>
         </ion-list-header>
-        <ion-item class="benga" style="opacity: 0;" *ngFor="let benga of benzinske.filterBenga" (click)="get(benga);"
+        <ion-item class="benga" *ngFor="let benga of benzinske.filterBenga" (click)="get(benga);"
           id="{{benga.id}}">
 
           <ion-img slot="start" *ngIf="benga.img != 'http://localhost/home'" (ionError)="imgNotLoaded(benga)" src="{{benga.img}}"

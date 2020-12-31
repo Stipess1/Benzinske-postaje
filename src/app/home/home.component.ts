@@ -15,13 +15,12 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { Gorivo } from '../benzinska/gorivo';
-import { Gunzip, Inflate, RawDeflate, RawInflate } from 'zlibt2';
 import { Buffer } from 'buffer';
 import { HakParserService } from '../service/hak-parser.service';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { GorivoHak } from '../benzinska/gorivoHak';
 import { LaunchReview } from '@ionic-native/launch-review/ngx';
-
+import * as pako from 'pako';
 
 @Component({
   selector: 'app-home',
@@ -60,8 +59,7 @@ export class HomeComponent implements OnInit {
     private launchReview: LaunchReview) { }
 
   ngOnInit() {
-    this.hakParser.trenutnoGorivo = "DIZELA";
-    // this.benzinske.demo();
+    this.hakParser.trenutnoGorivo = "DIZELA"; 
     this.platform.ready().then(data => {
       if (!this.platform.is('cordova'))
         this.hakParser.parse(null);
@@ -312,12 +310,6 @@ export class HomeComponent implements OnInit {
             if(data.imaGorivo) {
               this.benzinske.filterBenga.push(data);
               this.hakParser.loadedData = true;
-              setTimeout(() => {
-                const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
-                  duration(300).iterations(1).fromTo('opacity', '0', '1');
-  
-                animation.play();
-              }, 50)
             }
           });
         }

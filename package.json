@@ -31,7 +31,7 @@
     "@ionic-native/core": "^5.28.0",
     "@ionic-native/diagnostic": "^5.28.0",
     "@ionic-native/geolocation": "^5.24.0",
-    "@ionic-native/http": "^5.24.0",
+    "@ionic-native/http": "^5.30.0",
     "@ionic-native/launch-navigator": "^5.26.0",
     "@ionic-native/launch-review": "^5.30.0",
     "@ionic-native/screen-orientation": "^5.27.0",
@@ -58,7 +58,6 @@
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
     "uk.co.workingedge.phonegap.plugin.launchnavigator": "^5.0.4",
-    "zlibt2": "^0.5.0",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
@@ -68,6 +67,7 @@
     "@angular/compiler-cli": "^11.0.5",
     "@angular/language-service": "^11.0.5",
     "@ionic/angular-toolkit": "^3.0.0",
+    "@ionic/app-scripts": "^3.2.4",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^14.6.4",

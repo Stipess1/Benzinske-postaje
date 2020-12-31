@@ -68,32 +68,18 @@ export class BenzinskePostajeService {
   demo() {
     this.http.setServerTrustMode("nocheck");
     let redirectPath = "https://mzoe-gor.hr/data.gz";
-
-    const data = from(fetch(redirectPath));
-
-    data.subscribe({next(res) {
-      console.log(res);
-      
-    }, error(err) {
-      console.log(err);
-      
-    }, complete() {
-      console.log("completed");
-      
-    }});
     console.log(redirectPath);
-    
+
+
     // prepend the domain name
     let redirectUrl = "http://mzoe-gor.hr" + redirectPath;
-    
-    return this.http.get(redirectPath, {}, {
+    return from(this.http.get(redirectPath, {}, {
       "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36",
       "Referer": "https://mzoe-gor.hr",
-      "Accept-Encoding": "gzip, deflate, br",
-      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-      "Accept-Language": "en-US,en;q=0.8",
-      "Accept-Charset": "ISO-8859-1,utf-8;q=0.7,*;q=0.3"
-    });
+      'Accept-Encoding': 'deflate',
+      "Content-Type": "application/json",
+      "Content-Encoding": "gzip"
+    }));
   }
 
   // vraca podatke od svih benzinskih pumpi

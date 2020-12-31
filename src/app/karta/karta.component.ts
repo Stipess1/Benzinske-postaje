@@ -76,7 +76,7 @@ export class KartaComponent implements OnInit {
             
           if(benzinska.imaGorivo)
             circleMarker([benzinska.lon, benzinska.lat], {color: strokeColor, weight: 2}).bindPopup("<ion-spinner name='crescent'></ion-spinner>", {className: 'popup'}).addTo(this.map).on('click', (ev) => {
-              this.markerClick(ev);
+              this.markerClick(ev, benzinska);
             });
         }
        
@@ -84,12 +84,16 @@ export class KartaComponent implements OnInit {
     }
   }
 
-  markerClick(event: any) {
+  markerClick(event: any, benzinska: Benzinska) {
+    console.log(benzinska);
+    console.log(this.service.hakBenzinske[0]);
+    
     
     for(let i = 0; i < this.service.hakBenzinske.length; i++) {
       let item = this.service.hakBenzinske[i];
       
-      if(item.lat === event.latlng.lat && item.lon === event.latlng.lng) {
+      // neke benzine postaje imaju lat i lon zaokurzeno na 4 deimacle pa ovo nece radit
+      if(item.mjesto.toLowerCase() == benzinska.ime.toLowerCase()) {
         console.log(item);
         
         this.hakParser.parse(item).then( beng => {

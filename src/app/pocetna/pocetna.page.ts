@@ -119,6 +119,7 @@ export class PocetnaPage implements OnInit {
             gorivo.id = web['cjenici'][j]['id'];
             gorivo.gorivo_id = web['cjenici'][j]['gorivo_id'];
             gorivo.cijena = web['cjenici'][j]['cijena'];
+            this.getNaziv(gorivo, data['gorivos']);
             postaja.cijenici.push(gorivo);
           }
 
@@ -131,26 +132,36 @@ export class PocetnaPage implements OnInit {
             let vrijeme = web['radnaVremena'][j];
 
             if(vrijeme['vrsta_dana_id'] == 1) {
-              radnoVrijeme.ponPet = this.parseTime(vrijeme['pocetak']+'-'+vrijeme['kraj'], postaja);
+              radnoVrijeme.ponPet = this.parseTime(vrijeme['pocetak']+'-'+vrijeme['kraj'], postaja, null);
             } else if(vrijeme['vrsta_dana_id'] == 2) {
-              radnoVrijeme.sub = this.parseTime(vrijeme['pocetak']+'-'+vrijeme['kraj'], postaja);
+              radnoVrijeme.sub = this.parseTime(vrijeme['pocetak']+'-'+vrijeme['kraj'], postaja, null);
             } else if(vrijeme['vrsta_dana_id'] == 3) {
-              radnoVrijeme.ned = this.parseTime(vrijeme['pocetak']+'-'+vrijeme['kraj'], postaja);
+              radnoVrijeme.ned = this.parseTime(vrijeme['pocetak']+'-'+vrijeme['kraj'], postaja, null);
             } else if((vrijeme['vrsta_dana_id'] == 4)){
-              radnoVrijeme.praznik = this.parseTime(vrijeme['pocetak']+'-'+vrijeme['kraj'], postaja);
+              radnoVrijeme.praznik = this.parseTime(vrijeme['pocetak']+'-'+vrijeme['kraj'], postaja, null);
             }
-
+            postaja.trenutnoRadnoVrijeme = this.parseTime(undefined, postaja, radnoVrijeme);
             postaja.radnaVremena.push(radnoVrijeme);
           }
 
           for(let j = 0; j < data['obvezniks'].length; j++) {
             if(data['obvezniks'][j]['id'] === postaja.obveznikId) {
               postaja.obveznik = data['obvezniks'][j]['naziv'];
+              postaja.img = "http://webservis.mzoe-gor.hr/img/" + data['obvezniks'][j]['logo'];
             }
           }
+
+          if (postaja.obveznik.includes("Konzum")) {
+            postaja.img = "https://www.konzum.hr/assets/1i0/frontend/facebook/facebook_meta_image-5b88c5da1a557eaf6501d1fb63f883285f9346300d9b2e0a196dc32047a9542a.png";
+          } else if (postaja.obveznik.includes("AGS")) {
+            postaja.img = "/assets/icon/pump/ags.png";
+          } 
+
+          postaja.udaljenost = this.benzinske.calculateDistance(postaja.lat, postaja.long);
           this.benzinske.svePostaje.push(postaja);
       }
-
+      // -console.log(this.benzinske.svePostaje);
+      
       for(let i = 0; i < data['gorivos'].length; i++) {
         let gorivo = new Gorivo();
         let web = data['gorivos'][i];
@@ -158,6 +169,7 @@ export class PocetnaPage implements OnInit {
         gorivo.id = web['id'];
         gorivo.naziv = web['naziv'];
         gorivo.obveznik_id = web['obveznik_id'];
+        gorivo.vrstaGorivaId = web['vrsta_goriva_id'];
 
         this.benzinske.svaGoriva.push(gorivo);
       }
@@ -168,31 +180,45 @@ export class PocetnaPage implements OnInit {
     // })
   }
 
+  getNaziv(cijenik: Cijenik, data: any) {
+    for(let i = 0; i < data.length; i++) {
+        if(cijenik.gorivo_id === data[i]['id']) {
+          cijenik.naziv = data[i]['naziv'];
+          cijenik.vrstaGorivaId = data[i]['vrsta_goriva_id'];
+          break;
+        }
+    }
+  }
+
     /**
    * Prima radno vrijeme benzinske (npr. 00:00:00-24:00:00 ), te skracuje
    * zadnje dvije nule i provjerava dali je benzinska trenutno otvorena
    * za odredene benzinske nema radnog vremena za neke dane pa je {vrijeme}
    * undefined
-   * @param {Benzinska} benga - Benzinska koju trenutno parsamo
+   * @param {Postaja} postaja - Postaja koju trenutno parsamo
+   * @param {string} benga - vrijeme koje parsamo
+   * @param {boolean} trenutno - dali parasmo trenutno vrijeme ili radna vremena tokom tjedna
    * @returns {string} - vraca radno vrijeme benzinske (npr. 06:00 - 24:00)
    */
-  parseTime(benga: string, postaja: Postaja) {
+  parseTime(benga: string, postaja: Postaja, radnoVrijeme: RadnoVrijeme) {
 
 
     let vrijeme = benga;
     let date = new Date();
 
-    // if (date.getDay() >= 1 && date.getDay() <= 5) {
+    if(radnoVrijeme != null) {
+      if (date.getDay() >= 1 && date.getDay() <= 5) {
 
-    //   vrijeme = benga.radnoVrijeme.ponPet;
-
-    // } else if (date.getDay() == 0) {
-
-    //   vrijeme = benga.radnoVrijeme.ned;
-
-    // } else if (date.getDay() == 6) {
-    //   vrijeme = benga.radnoVrijeme.sub;
-    // }
+        vrijeme = radnoVrijeme.ponPet;
+  
+      } else if (date.getDay() == 0) {
+  
+        vrijeme = radnoVrijeme.ned;
+  
+      } else if (date.getDay() == 6) {
+        vrijeme = radnoVrijeme.sub;
+      }
+    }
 
     if (vrijeme == undefined) return;
 

@@ -101,7 +101,7 @@ export class KartaComponent implements OnInit {
           let textGorivo = "font-weight: bold; text-align: center;"
           let cijena = "font-weight: bold;text-align: center;margin-top: 10px;"
           let listaGoriva = '<ion-grid><ion-row>';
-          if(!beng.img.includes("http://localhost")) {
+          if(!benzinska.img.includes("http://localhost")) {
             bengImg = '<ion-img style="width: 50%;" src="'+benzinska.img+'"></ion-img>';
           }
           
@@ -112,39 +112,38 @@ export class KartaComponent implements OnInit {
           }
           // limitiraj prikaz goriva na popupu na 2
           let threshold = 0;
-          for(let i = 0; i < beng.vrsteGoriva.length; i++) {
-            let benz = beng.vrsteGoriva[i];
-            
-            
+          for(let i = 0; i < benzinska.cijenici.length; i++) {
+            let benz = benzinska.cijenici[i];
+                  
             if((benz.vrstaGorivaId == 8 || benz.vrstaGorivaId == 7) && threshold < 2) {
-              listaGoriva = listaGoriva.concat('<ion-col size="6" style="flex: display; flex-direction: column;"><p style="'+dizel+'">B</p><p style="'+textGorivo+'">'+benz.imeGoriva+'</p><p style="'+cijena+'">'+benz.cijena+'<span style="font-weight: normal;color: rgb(59, 59, 59);"> kn/L</span></p></ion-col>')
+              listaGoriva = listaGoriva.concat('<ion-col size="6" style="flex: display; flex-direction: column;"><p style="'+dizel+'">B</p><p style="'+textGorivo+'">'+benz.naziv+'</p><p style="'+cijena+'">'+benz.cijena+'<span style="font-weight: normal;color: rgb(59, 59, 59);"> kn/L</span></p></ion-col>')
               threshold++;
             }
             else if((benz.vrstaGorivaId == 1 || benz.vrstaGorivaId == 2 || benz.vrstaGorivaId == 5 || benz.vrstaGorivaId == 6) && threshold < 2) {
-              listaGoriva = listaGoriva.concat('<ion-col size="6" style="flex: display; flex-direction: column;"><p style="'+benzin+'">E</p><p style="'+textGorivo+'">'+benz.imeGoriva+'</p><p style="'+cijena+'">'+benz.cijena+'<span style="font-weight: normal;color: rgb(59, 59, 59);"> kn/L</span></p></ion-col>');
+              listaGoriva = listaGoriva.concat('<ion-col size="6" style="flex: display; flex-direction: column;"><p style="'+benzin+'">E</p><p style="'+textGorivo+'">'+benz.naziv+'</p><p style="'+cijena+'">'+benz.cijena+'<span style="font-weight: normal;color: rgb(59, 59, 59);"> kn/L</span></p></ion-col>');
               threshold++;
             } else if(threshold == 2) break;
           }
           listaGoriva = listaGoriva.concat('</ion-row></ion-grid>');
 
-          if(beng.trenutnoRadnoVrijeme == undefined)
-            beng.trenutnoRadnoVrijeme = "";
+          if(benzinska.trenutnoRadnoVrijeme == undefined)
+            benzinska.trenutnoRadnoVrijeme = "";
           
           let html = '<div style="display: flex; flex-direction: column; align-items: center; font-family: Varela Round, sans-serif !important;">'+
-          '<p style="margin-bottom:0; margin-top: 5px;">Radno vrijeme: ' + beng.trenutnoRadnoVrijeme + 
+          '<p style="margin-bottom:0; margin-top: 5px;">Radno vrijeme: ' + benzinska.trenutnoRadnoVrijeme + 
           '</p>'+ otvoreno +
-          '<h5 style="margin-bottom: 10px; margin-top: 5px; text-align: center;">'+beng.ime+'</h5>'+
+          '<h5 style="margin-bottom: 10px; margin-top: 5px; text-align: center;">'+benzinska.naziv+'</h5>'+
             bengImg +
           '<div style="display: flex; flex-direction: row; align-items: center; margin-top: 5px;"><ion-icon color="medium" name="home-outline"></ion-icon>'+
-          '<p style="margin-bottom:0; margin-top: 5px; margin-left: 5px;">'+beng.adresa+'</p></div>'+
+          '<p style="margin-bottom:0; margin-top: 5px; margin-left: 5px;">'+benzinska.adresa+'</p></div>'+
           '<div style="display: flex; flex-direction: row; align-items: center; margin-top: 5px;"><ion-icon name="navigate-outline" color="medium"></ion-icon>'+
-          '<p style="margin-bottom:0; margin-top: 5px; margin-left: 5px;">'+beng.udaljenost+' km</p></div>'+
+          '<p style="margin-bottom:0; margin-top: 5px; margin-left: 5px;">'+benzinska.udaljenost+' km</p></div>'+
             listaGoriva +
-          '<ion-button id="b'+beng.id+'" style="--box-shadow: 0; --border-radius: 10px; --background: rgba(255, 255, 255, 0);" color="light">Detalji</ion-button>'+
+          '<ion-button id="b'+benzinska.id+'" style="--box-shadow: 0; --border-radius: 10px; --background: rgba(255, 255, 255, 0);" color="light">Detalji</ion-button>'+
           '</div>';
           
           event.target.setPopupContent(html);
-          let link = document.querySelector("#b"+beng.id);
+          let link = document.querySelector("#b"+benzinska.id);
           if(link) 
             link.addEventListener('click', () => {
               this.service.trenutnaBenga = beng;

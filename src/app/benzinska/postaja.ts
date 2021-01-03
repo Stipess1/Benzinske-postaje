@@ -16,4 +16,7 @@ export class Postaja {
     radnaVremena: RadnoVrijeme[] = [];
     obveznik: string;
     otvoreno: boolean;
+    img: any;
+    trenutnoRadnoVrijeme: string;
+    udaljenost: number;
 }

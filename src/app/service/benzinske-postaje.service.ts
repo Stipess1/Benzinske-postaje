@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { Buffer } from 'buffer';
 import { BenzinskaOsnovni } from '../benzinska/benzinskaOsnovni';
 import { from } from 'rxjs';
+import { Postaja } from '../benzinska/postaja';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,10 @@ export class BenzinskePostajeService {
   public filterBenga: Benzinska[] = [];
   public hakBenzinske: BenzinskaOsnovni[] = [];
   public trenutnaBenga: Benzinska;
+  // sa web api
+  public svaGoriva: Gorivo[] = [];
+  public svePostaje: Postaja[] = [];
+  //
   public lat: number;
   public lon: number;
   public insetBar: string;
@@ -32,10 +37,11 @@ export class BenzinskePostajeService {
   // https://webservis.mzoe-gor.hr/api/cjenici-postaja/770 za petrol
   // https://webservis.mzoe-gor.hr/api/cjenici-postaja/40 za tifon
   // https://webservis.mzoe-gor.hr/api/trend-cijena 
+  // https://benzinske-postaje.herokuapp.com
   // https://map.hak.hr/?lang=hr&s=mireo;roadmap;mid;I;6;12;0;;1&z=15&c=46.29234680212717,16.467994898557663&cats=3101;3103;3102;3104;3109;3106
   // https://map.hak.hr/?lang=hr&s=mireo;roadmap;mid;I;6;12;0;;1&z=15&c=45.831050387695676,16.101264506578445&cats=3101;3103;3102;3104;3109;3106
 
-  constructor(private http: HTTP) { }
+  constructor(private http: HTTP, private httpClient: HttpClient) { }
 
   // vraca podakte o benzinskoj
   getPumpData(id: string) {
@@ -66,19 +72,12 @@ export class BenzinskePostajeService {
   }
 
   demo() {
-    this.http.setServerTrustMode("nocheck");
-    let redirectPath = "https://mzoe-gor.hr/data.gz";
-    console.log(redirectPath);
-
-
-    // prepend the domain name
-    let redirectUrl = "http://mzoe-gor.hr" + redirectPath;
+    let redirectPath = "https://benzinske-postaje.herokuapp.com/";
+    
     return from(this.http.get(redirectPath, {}, {
       "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36",
-      "Referer": "https://mzoe-gor.hr",
-      'Accept-Encoding': 'deflate',
       "Content-Type": "application/json",
-      "Content-Encoding": "gzip"
+      "Accept-Encoding": "gzip, deflate"
     }));
   }
 

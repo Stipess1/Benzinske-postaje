@@ -74,7 +74,6 @@ export class HomeComponent implements OnInit {
         data => {
 
           if (data.hasPermission) {
-
             this.diagnostic.isGpsLocationEnabled().then((gps) => {
               if (gps)
                 this.geolocation.getCurrentPosition().then((resp) => {
@@ -265,7 +264,6 @@ export class HomeComponent implements OnInit {
     });
 
   }
-  // funkcija se zove nakon sto korisnik promjeni grad, udaljenost se racuna po centru grada
 
   init() {
 
@@ -369,6 +367,10 @@ export class HomeComponent implements OnInit {
 
   doRefresh(event: any) {
     console.log("refresh");
+    this.benzinske.demo().subscribe(data => {
+      console.log(data);
+      
+    });
     this.benzinske.filterBenga = [];
     this.reloading = true;
     this.hakParser.loadedData = false;

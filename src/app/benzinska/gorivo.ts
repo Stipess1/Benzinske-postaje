@@ -1,5 +1,5 @@
 export class Gorivo {
     id: number;
-    vrstaGorivaId: number;
+    obveznik_id: number;
     naziv: string;
 }

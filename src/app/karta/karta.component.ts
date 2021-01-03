@@ -5,6 +5,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AnimationController, Platform } from '@ionic/angular';
 import { Map,tileLayer,marker,circleMarker,icon, Icon } from 'leaflet';
 import { Benzinska } from '../benzinska/benzinska';
+import { Postaja } from '../benzinska/postaja';
 import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
 import { HakParserService } from '../service/hak-parser.service';
 
@@ -62,43 +63,38 @@ export class KartaComponent implements OnInit {
       }).addTo(this.map);
       
       marker([this.service.lat, this.service.lon]).bindPopup("Vi ste ovdje!").addTo(this.map);
-      for(let i = 0; i < this.service.sveBenzinske.length; i++) {
-        let benzinska = this.service.sveBenzinske[i];
+      for(let i = 0; i < this.service.svePostaje.length; i++) {
+        let benzinska = this.service.svePostaje[i];
         
         // jedna postaja ima lat zapisano ovako kordinatu, pa nju ne gledamo.
         if(benzinska.lat.toString() !== "15° 31.2440' E") {
-
+          
+          
           let strokeColor;
           if(benzinska.otvoreno) 
             strokeColor = "#28ba62";
           else 
             strokeColor = "#CF3C4F";
             
-          if(benzinska.imaGorivo)
-            circleMarker([benzinska.lon, benzinska.lat], {color: strokeColor, weight: 2}).bindPopup("<ion-spinner name='crescent'></ion-spinner>", {className: 'popup'}).addTo(this.map).on('click', (ev) => {
+            circleMarker([benzinska.long, benzinska.lat], {color: strokeColor, weight: 2}).bindPopup("<ion-spinner name='crescent'></ion-spinner>", {className: 'popup'}).addTo(this.map).on('click', (ev) => {
               this.markerClick(ev, benzinska);
             });
+            
         }
        
       }
     }
   }
 
-  markerClick(event: any, benzinska: Benzinska) {
-    console.log(benzinska);
-    console.log(this.service.hakBenzinske[0]);
+  markerClick(event: any, benzinska: Postaja) {
     
-    
-    for(let i = 0; i < this.service.hakBenzinske.length; i++) {
-      let item = this.service.hakBenzinske[i];
+    for(let i = 0; i < this.service.svePostaje.length; i++) {
+      let item = this.service.svePostaje[i];
       
-      // neke benzine postaje imaju lat i lon zaokurzeno na 4 deimacle pa ovo nece radit
-      if(item.mjesto.toLowerCase() == benzinska.ime.toLowerCase()) {
+      if(item.lat === benzinska.lat && item.long === benzinska.long) {
         console.log(item);
-        
-        this.hakParser.parse(item).then( beng => {
-          
-          let bengImg = "";
+
+        let bengImg = "";
           let otvoreno = "";
           let dizel = "margin-top: 0; width: 36px;height: 36px;background-color: #2C313C;color: white;margin-right: 5px; border-radius: 5px;text-align: center;padding: 0.8em 0 0;margin: auto;"
           let benzin = "margin-top: 0;background-color: #8DD374;width: 36px;height: 36px;color: white;border-radius: 100%; text-align: center;padding: 0.8em 0 0;margin: auto;"
@@ -106,10 +102,10 @@ export class KartaComponent implements OnInit {
           let cijena = "font-weight: bold;text-align: center;margin-top: 10px;"
           let listaGoriva = '<ion-grid><ion-row>';
           if(!beng.img.includes("http://localhost")) {
-            bengImg = '<ion-img style="width: 50%;" src="'+beng.img+'"></ion-img>';
+            bengImg = '<ion-img style="width: 50%;" src="'+benzinska.img+'"></ion-img>';
           }
           
-          if(beng.otvoreno) {
+          if(benzinska.otvoreno) {
             otvoreno = '<ion-chip color="success"><ion-label>Otvoreno</ion-label></ion-chip>';
           } else {
             otvoreno = '<ion-chip color="danger"><ion-label>Zatvoreno</ion-label></ion-chip>';
@@ -157,11 +153,15 @@ export class KartaComponent implements OnInit {
               this.router.navigate(['/pocetna/detalji/'], { relativeTo: this.route });
               
             });
-   
-        }).catch(err => {
-          console.log(err);
+        
+        // this.hakParser.parse(item).then( beng => {
           
-        });
+          
+   
+        // }).catch(err => {
+        //   console.log(err);
+          
+        // });
 
 
       }

@@ -110,7 +110,11 @@ export class DetaljiComponent implements OnInit {
       //     dataPoints: dataPoints
       //   }]
       // });
+
+      // chart
+
       // chart.render();
+
       this.lineChart = new Chart(this.canvas.nativeElement, {
         type: "line",
         options: {

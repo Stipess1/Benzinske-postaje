@@ -92,7 +92,6 @@ export class KartaComponent implements OnInit {
       let item = this.service.svePostaje[i];
       
       if(item.lat === benzinska.lat && item.long === benzinska.long) {
-        console.log(item);
 
         let bengImg = "";
           let otvoreno = "";
@@ -101,7 +100,7 @@ export class KartaComponent implements OnInit {
           let textGorivo = "font-weight: bold; text-align: center;"
           let cijena = "font-weight: bold;text-align: center;margin-top: 10px;"
           let listaGoriva = '<ion-grid><ion-row>';
-          if(!benzinska.img.includes("http://localhost")) {
+          if(!benzinska.img.includes("http://localhost") && !benzinska.img.includes("null")) {
             bengImg = '<ion-img style="width: 50%;" src="'+benzinska.img+'"></ion-img>';
           }
           
@@ -146,8 +145,8 @@ export class KartaComponent implements OnInit {
           let link = document.querySelector("#b"+benzinska.id);
           if(link) 
             link.addEventListener('click', () => {
-              this.service.trenutnaBenga = beng;
-              console.log(beng);
+              this.service.trenutnaBenga = benzinska;
+              console.log(benzinska);
               
               this.router.navigate(['/pocetna/detalji/'], { relativeTo: this.route });
               

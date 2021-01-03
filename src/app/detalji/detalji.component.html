@@ -3,14 +3,14 @@
         <ion-buttons slot="start">
             <ion-back-button (click)="zatvori()"></ion-back-button>
         </ion-buttons>
-        <ion-title>{{trenutnaBenga.ime}}</ion-title>
+        <ion-title>{{trenutnaBenga.naziv}}</ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content id="content" [scrollEvents]="true" (ionScroll)="logScrolling($event)">
     <div class="center">
         <img src="../../assets/icon/pump/signs.svg" width="32">
-        <h2>{{trenutnaBenga.ime}}</h2>
+        <h2>{{trenutnaBenga.naziv}}</h2>
         <p>Radno Vrijeme: {{trenutnaBenga.trenutnoRadnoVrijeme}}</p>
         <ion-chip color="success" *ngIf="trenutnaBenga.otvoreno">
             <ion-label>Otvoreno</ion-label>
@@ -18,7 +18,7 @@
         <ion-chip color="danger" *ngIf="!trenutnaBenga.otvoreno">
             <ion-label>Zatvoreno</ion-label>
         </ion-chip>
-        <p stlye="font-weight:bold;">{{trenutnaBenga.kompanija}}</p>
+        <p stlye="font-weight:bold;">{{trenutnaBenga.obveznik}}</p>
         <img *ngIf="trenutnaBenga.img != 'http://localhost/home'" src="{{trenutnaBenga.img}}" width="50%" stlye="margin-top: 5px;">
 
         <div class="adresa">
@@ -37,11 +37,11 @@
         <div class="cijene-bengi">
             <ion-grid>
                 <ion-row>
-                    <ion-col style="flex: display; flex-direction: column;" size="4" *ngFor="let gorivo of trenutnaBenga.vrsteGoriva" >
-                        <p class="dizel" *ngIf="gorivo.imeGoriva.toLowerCase().includes('eurodiesel') || gorivo.imeGoriva.toLowerCase().includes('eurodizel')">B</p>
-                        <p class="benzin" *ngIf="gorivo.imeGoriva.toLowerCase().includes('eurosuper')">E</p>
-                        <div class="autoplin" *ngIf="gorivo.imeGoriva.toLowerCase().includes('autoplin') || gorivo.imeGoriva.toLowerCase().includes('lpg')"><p style="transform: rotateZ(-45deg); margin:auto;">H</p></div>
-                        <p class="text-gorivo">{{gorivo.imeGoriva}}</p>
+                    <ion-col style="flex: display; flex-direction: column;" size="4" *ngFor="let gorivo of trenutnaBenga.cijenici" >
+                        <p class="dizel" *ngIf="gorivo.naziv.toLowerCase().includes('eurodiesel') || gorivo.naziv.toLowerCase().includes('eurodizel')">B</p>
+                        <p class="benzin" *ngIf="gorivo.naziv.toLowerCase().includes('eurosuper')">E</p>
+                        <div class="autoplin" *ngIf="gorivo.naziv.toLowerCase().includes('autoplin') || gorivo.naziv.toLowerCase().includes('lpg')"><p style="transform: rotateZ(-45deg); margin:auto;">H</p></div>
+                        <p class="text-gorivo">{{gorivo.naziv}}</p>
                         <p class="cijena">{{gorivo.cijena}} <span>kn/L</span> </p>
                         
                     </ion-col>
@@ -54,13 +54,13 @@
     <hr>
     <div class="dodatne-usluge">
         <h3>Dodatne Usluge</h3>
-        <ion-chip *ngFor="let benga of trenutnaBenga.usluge" color="medium" >
+        <ion-chip *ngFor="let benga of trenutnaBenga.opcije" color="medium" >
             <ion-avatar>
                 <img src="{{benga.img}}" alt="slika">
             </ion-avatar>
             <ion-label>{{benga.usluga}}</ion-label>
         </ion-chip>
-        <ion-text *ngIf="trenutnaBenga.usluge == undefined">Nije unešeno</ion-text>
+        <ion-text *ngIf="trenutnaBenga.opcije == undefined">Nije unešeno</ion-text>
     </div>
     <hr>
     <div class="grafikon">

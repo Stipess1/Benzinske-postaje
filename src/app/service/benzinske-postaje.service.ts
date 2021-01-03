@@ -22,7 +22,7 @@ export class BenzinskePostajeService {
   public sveBenzinske: Benzinska[] = [];
   public filterBenga: Benzinska[] = [];
   public hakBenzinske: BenzinskaOsnovni[] = [];
-  public trenutnaBenga: Benzinska;
+  public trenutnaBenga: Postaja;
   // sa web api
   public svaGoriva: Gorivo[] = [];
   public svePostaje: Postaja[] = [];

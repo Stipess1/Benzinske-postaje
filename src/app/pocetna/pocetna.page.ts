@@ -127,8 +127,9 @@ export class PocetnaPage implements OnInit {
             postaja.opcije.push(new Usluge(web['opcije'][j]['opcija_id']));
           }
 
+          let radnoVrijeme = new RadnoVrijeme();
           for(let j = 0; j < web['radnaVremena'].length; j++) {
-            let radnoVrijeme = new RadnoVrijeme();
+            
             let vrijeme = web['radnaVremena'][j];
 
             if(vrijeme['vrsta_dana_id'] == 1) {
@@ -140,10 +141,11 @@ export class PocetnaPage implements OnInit {
             } else if((vrijeme['vrsta_dana_id'] == 4)){
               radnoVrijeme.praznik = this.parseTime(vrijeme['pocetak']+'-'+vrijeme['kraj'], postaja, null);
             }
-            postaja.trenutnoRadnoVrijeme = this.parseTime(undefined, postaja, radnoVrijeme);
-            postaja.radnaVremena.push(radnoVrijeme);
+            
           }
 
+          postaja.radnaVremena = radnoVrijeme;
+          postaja.trenutnoRadnoVrijeme = this.parseTime(undefined, postaja, radnoVrijeme);
           for(let j = 0; j < data['obvezniks'].length; j++) {
             if(data['obvezniks'][j]['id'] === postaja.obveznikId) {
               postaja.obveznik = data['obvezniks'][j]['naziv'];
@@ -209,14 +211,14 @@ export class PocetnaPage implements OnInit {
     if(radnoVrijeme != null) {
       if (date.getDay() >= 1 && date.getDay() <= 5) {
 
-        vrijeme = radnoVrijeme.ponPet;
+        return radnoVrijeme.ponPet;
   
       } else if (date.getDay() == 0) {
   
-        vrijeme = radnoVrijeme.ned;
+        return radnoVrijeme.ned;
   
       } else if (date.getDay() == 6) {
-        vrijeme = radnoVrijeme.sub;
+        return radnoVrijeme.sub;
       }
     }
 

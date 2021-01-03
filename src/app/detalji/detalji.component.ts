@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js';
 import { CijeniciPostaja } from '../benzinska/cijeniciPostaja';
 import * as CanvasJS from 'canvasjs';
+import { Postaja } from '../benzinska/postaja';
 
 @Component({
   selector: 'app-detalji',
@@ -19,7 +20,7 @@ export class DetaljiComponent implements OnInit {
   @ViewChild("grafikon", { static: true }) canvas: ElementRef;
   @ViewChild(IonContent) content: IonContent;
 
-  public trenutnaBenga: Benzinska;
+  public trenutnaBenga: Postaja;
   public vrijeme: string;
   public otvoreno: boolean;
   private lineChart: Chart;

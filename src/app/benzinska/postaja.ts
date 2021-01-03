@@ -13,7 +13,7 @@ export class Postaja {
     naziv: string;
     obveznikId: number;
     opcije: Usluge[] = [];
-    radnaVremena: RadnoVrijeme[] = [];
+    radnaVremena: RadnoVrijeme;
     obveznik: string;
     otvoreno: boolean;
     img: any;

@@ -3,8 +3,4 @@ export class RadnoVrijeme {
     sub: string;
     ned: string;
     praznik: string;
-
-    constructor() {
-        
-    }
 }

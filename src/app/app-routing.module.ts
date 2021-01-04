@@ -20,9 +20,14 @@ const routes: Routes = [
     loadChildren: './karta/karta.page#KartaPage'
   },
   {
+    path: 'settings',
+    loadChildren: './settings/settings.page#SettingsPage'
+  },
+  {
     path: 'pocetna',
     loadChildren: () => import('./pocetna/pocetna.module').then( m => m.PocetnaPageModule)
   }
+
 ];
 
 @NgModule({

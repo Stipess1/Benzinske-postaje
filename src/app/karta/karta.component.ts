@@ -4,10 +4,8 @@ import { pluginWarn } from '@ionic-native/core/decorators/common';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AnimationController, Platform } from '@ionic/angular';
 import { Map,tileLayer,marker,circleMarker,icon, Icon } from 'leaflet';
-import { Benzinska } from '../benzinska/benzinska';
 import { Postaja } from '../benzinska/postaja';
 import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
-import { HakParserService } from '../service/hak-parser.service';
 
 @Component({
   selector: 'app-karta',
@@ -20,7 +18,6 @@ export class KartaComponent implements OnInit {
     private service: BenzinskePostajeService,
     private statusBar: StatusBar,
     private animationController: AnimationController,
-    private hakParser: HakParserService,
     private router: Router,
     private route: ActivatedRoute) { }
 

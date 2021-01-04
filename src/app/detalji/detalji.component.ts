@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { Benzinska } from '../benzinska/benzinska';
 import { LaunchNavigator, LaunchNavigatorOptions } from '@ionic-native/launch-navigator/ngx';
 import { AnimationController, IonContent, NavController, Platform } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';

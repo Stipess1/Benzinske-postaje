@@ -19,6 +19,10 @@ const routes: Routes = [
       {
         path: 'detalji',
         loadChildren: './detalji/detalji.page#DetaljiPage'
+      },
+      {
+        path: 'settings',
+        loadChildren: './settings/settings.page#SettingsPage'
       }
     ]
   }

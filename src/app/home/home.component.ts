@@ -1,12 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { HTTP } from '@ionic-native/http/ngx';
 import { RadnoVrijeme } from '../benzinska/radnovrijeme';
-import { Benzinska } from '../benzinska/benzinska';
 import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
-import { BenzinskaOsnovni } from '../benzinska/benzinskaOsnovni';
 import { Platform, ToastController, PopoverController, AnimationController } from '@ionic/angular';
-import { Search } from '../search/model/search';
 import { PopoverComponent } from '../popover/popover.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -15,11 +11,10 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { Gorivo } from '../benzinska/gorivo';
-import { HakParserService } from '../service/hak-parser.service';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
-import { GorivoHak } from '../benzinska/gorivoHak';
 import { LaunchReview } from '@ionic-native/launch-review/ngx';
 import { Postaja } from '../benzinska/postaja';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-home',
@@ -28,19 +23,17 @@ import { Postaja } from '../benzinska/postaja';
 })
 export class HomeComponent implements OnInit {
 
-  private benge: Benzinska[] = [];
-  public jsonBenge: BenzinskaOsnovni[] = [];
-  public searching: boolean = false;
-  public gradovi: Search[] = [];
+  @ViewChild("grafikon", { static: true }) canvas: ElementRef;
+
   public permission: boolean;
   public reloading: boolean = false;
   public grad: string = "blizini";
   public subscription: any;
+  
   // -
   // https://nominatim.org/release-docs/develop/api/Search/
 
   constructor(
-    private httpNative: HTTP,
     private http: HttpClient,
     public benzinske: BenzinskePostajeService,
     private platform: Platform,
@@ -53,7 +46,6 @@ export class HomeComponent implements OnInit {
     private androidPermissions: AndroidPermissions,
     private diagnostic: Diagnostic,
     private animationController: AnimationController,
-    public hakParser: HakParserService,
     private backgroundMode: BackgroundMode,
     private launchReview: LaunchReview) { }
 
@@ -88,7 +80,7 @@ export class HomeComponent implements OnInit {
                       this.benzinske.filterPostaji.push(postaja);
                     }
                   }
-                  this.hakParser.loadedData = true;
+                  this.benzinske.loadedData = true;
 
                   if(this.launchReview.isRatingSupported) {
                     console.log("rating");
@@ -125,15 +117,16 @@ export class HomeComponent implements OnInit {
             this.benzinske.filterPostaji.push(postaja);
           }
         }
-        this.hakParser.loadedData = true;
+        this.benzinske.loadedData = true;
       }
 
     });
 
-    this.hakParser.trenutnoGorivo = "DIZELA"; 
+
+    // this.prosjecneCijene();
     this.platform.ready().then(data => {
-
-
+      
+      this.benzinske.trenutnoGorivo = "DIZELA"; 
     });
   }
 
@@ -144,7 +137,41 @@ export class HomeComponent implements OnInit {
     });
     toast.present();
   }
-
+  /*
+    id 1 - benzinsko
+    id 2 - dizel
+    id 3 - autoplin
+    id 4 - plinsko ulje
+  */
+  prosjecneCijene() {
+    let lineChart = new Chart(this.canvas.nativeElement, {
+      type: "line",
+      options: {
+        maintainAspectRatio: false,
+        spanGaps: true,
+        animation: {
+          duration: 0
+        },
+        hover: {
+          animationDuration: 0
+        },
+        responsiveAnimationDuration: 0,
+        elements: {
+          line: {
+            tension: 0,
+            fill: false,
+            stepped: false,
+            borderDash: []
+          }
+        }
+      }
+    });
+    this.benzinske.getTrend().subscribe(data => {
+      console.log(data);
+      
+    })
+    lineChart.render();
+  }
 
   ionViewWillEnter() {
     console.log("will enter");
@@ -160,10 +187,6 @@ export class HomeComponent implements OnInit {
 
     const animation = this.animationController.create().addElement(document.getElementById('home')).iterations(1).duration(500).fromTo('opacity', 0, 1);
     animation.play();
-  }
-
-  onInput() {
-    this.searching = true;
   }
 
   change(event: any) {
@@ -196,50 +219,7 @@ export class HomeComponent implements OnInit {
 
   }
 
-  focus() {
-    this.searching = true;
-  }
-
-  clear() {
-    this.benzinske.trenutniGrad = undefined;
-    this.benzinske.trenutniTekst = "";
-  }
-
-  cancel() {
-    this.searching = false;
-  }
-
-  setGrad(grad: Search) {
-    this.benzinske.trenutniGrad = grad;
-    if (grad.naselje != '')
-      this.benzinske.trenutniTekst = grad.naselje + ", " + grad.grad;
-    else
-      this.benzinske.trenutniTekst = grad.grad;
-
-    console.log(grad.grad);
-    let split;
-    if (grad.grad.includes(",")) {
-      split = grad.grad.split(",");
-      grad.grad = split[0];
-    }
-
-    this.benzinske.getCordsOfCity(grad).then(resp => {
-      let json = JSON.parse(resp.data);
-      console.log(json);
-
-      let lat = json[0]['lat'];
-      let lon = json[0]['lon'];
-
-      this.benzinske.lat = lat;
-      this.benzinske.lon = lon;
-
-      console.log("lat: " + lat + " lon: " + lon + " grad: " + grad.grad);
-      this.radius("");
-    });
-    this.searching = false;
-  }
-
-  imgNotLoaded(benga: Benzinska) {
+  imgNotLoaded(benga: Postaja) {
     benga.img = "../assets/icon/icon2.png";
   }
 
@@ -254,7 +234,7 @@ export class HomeComponent implements OnInit {
 
 
     this.benzinske.filterPostaji = [];
-    this.hakParser.loadedData = false;
+    this.benzinske.loadedData = false;
 
     this.geolocation.getCurrentPosition().then((resp) => {
 
@@ -273,7 +253,7 @@ export class HomeComponent implements OnInit {
         }
 
       }
-      this.hakParser.loadedData = true;
+      this.benzinske.loadedData = true;
     }).catch(err => {
       console.log("err: " + err);
 
@@ -283,55 +263,55 @@ export class HomeComponent implements OnInit {
 
   init() {
 
-    this.benzinske.getData().then(data => {
-      let json = JSON.parse(data.data);
+    // this.benzinske.getData().then(data => {
+    //   let json = JSON.parse(data.data);
 
-      for (let i = 0; i < json.length; i++) {
-        let benga = new BenzinskaOsnovni();
-        benga.id = json[i]['PoiID'];
+    //   for (let i = 0; i < json.length; i++) {
+    //     let benga = new BenzinskaOsnovni();
+    //     benga.id = json[i]['PoiID'];
 
-        benga.mjesto = json[i]['Alias'];
+    //     benga.mjesto = json[i]['Alias'];
 
-        benga.ime = json[i]['CategoryName'];
-
-
-        if (benga.ime == "ostale benzinske postaje")
-          benga.ime = benga.mjesto;
-
-        // hardcodamo jer nema drugog nacina
-        if (benga.ime == "Tifon") {
-          benga.img = "https://tifon.hr/images/fb-tifon-logo.jpg";
-        } else if (benga.ime == "INA") {
-          benga.img = "https://ina.ea93.work/wp-content/uploads/2020/01/ina-logo-big-2.jpg";
-        } else if (benga.ime == "Crodux derivati") {
-          benga.img = "https://scontent.fzag4-1.fna.fbcdn.net/v/t1.0-9/42576275_2414705741890598_121577626362970112_n.png?_nc_cat=107&_nc_sid=09cbfe&_nc_eui2=AeFc-WfsL5AWx5vizwUuKaMOTKZFDZgHr8ZMpkUNmAevxjnTzTLZC2QLpYSQsezKiIlxwrE-1HJg_UIM1NvnNfEQ&_nc_ohc=KCw3UKw8g7kAX9qj71S&_nc_ht=scontent.fzag4-1.fna&oh=62988a1e1b667337b5319d18b109f900&oe=5EC6DD05";
-        } else if (benga.ime == "Petrol") {
-          benga.img = "https://webservis.mzoe-gor.hr/img/obv_9_logo.png";
-        } else if (benga.ime == "Lukoil") {
-          benga.img = "https://www.soundsetragusa.hr/sites/default/files/lukoil.jpg?width=825&height=550&slideshow=true&slideshowAuto=false&slideshowSpeed=2000&transition=elastic&speed=350";
-        }
-
-        benga.lat = json[i]['Lat'];
-        benga.lon = json[i]['Lon'];
-        let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.lon);
-        udaljenost = Math.round(udaljenost * 10) / 10;
-        benga.udaljenost = udaljenost;
-
-        this.jsonBenge.push(benga);
-        this.benzinske.hakBenzinske.push(benga);
-        if (udaljenost <= 5) {
-          this.hakParser.parse(benga).then(data => {
-            if(data.imaGorivo) {
-              this.benzinske.filterBenga.push(data);
-              this.hakParser.loadedData = true;
-            }
-          });
-        }
-
-      }
+    //     benga.ime = json[i]['CategoryName'];
 
 
-    });
+    //     if (benga.ime == "ostale benzinske postaje")
+    //       benga.ime = benga.mjesto;
+
+    //     // hardcodamo jer nema drugog nacina
+    //     if (benga.ime == "Tifon") {
+    //       benga.img = "https://tifon.hr/images/fb-tifon-logo.jpg";
+    //     } else if (benga.ime == "INA") {
+    //       benga.img = "https://ina.ea93.work/wp-content/uploads/2020/01/ina-logo-big-2.jpg";
+    //     } else if (benga.ime == "Crodux derivati") {
+    //       benga.img = "https://scontent.fzag4-1.fna.fbcdn.net/v/t1.0-9/42576275_2414705741890598_121577626362970112_n.png?_nc_cat=107&_nc_sid=09cbfe&_nc_eui2=AeFc-WfsL5AWx5vizwUuKaMOTKZFDZgHr8ZMpkUNmAevxjnTzTLZC2QLpYSQsezKiIlxwrE-1HJg_UIM1NvnNfEQ&_nc_ohc=KCw3UKw8g7kAX9qj71S&_nc_ht=scontent.fzag4-1.fna&oh=62988a1e1b667337b5319d18b109f900&oe=5EC6DD05";
+    //     } else if (benga.ime == "Petrol") {
+    //       benga.img = "https://webservis.mzoe-gor.hr/img/obv_9_logo.png";
+    //     } else if (benga.ime == "Lukoil") {
+    //       benga.img = "https://www.soundsetragusa.hr/sites/default/files/lukoil.jpg?width=825&height=550&slideshow=true&slideshowAuto=false&slideshowSpeed=2000&transition=elastic&speed=350";
+    //     }
+
+    //     benga.lat = json[i]['Lat'];
+    //     benga.lon = json[i]['Lon'];
+    //     let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.lon);
+    //     udaljenost = Math.round(udaljenost * 10) / 10;
+    //     benga.udaljenost = udaljenost;
+
+    //     this.jsonBenge.push(benga);
+    //     this.benzinske.hakBenzinske.push(benga);
+    //     if (udaljenost <= 5) {
+    //       this.hakParser.parse(benga).then(data => {
+    //         if(data.imaGorivo) {
+    //           this.benzinske.filterBenga.push(data);
+            
+    //         }
+    //       });
+    //     }
+
+    //   }
+
+
+    // });
   }
 
   get(benga: Postaja) {
@@ -343,15 +323,15 @@ export class HomeComponent implements OnInit {
   input(event: any) {
     let query = event.target.value;
 
-    this.benzinske.getQuery(query).then(data => {
-      let json = data.data;
+    // this.benzinske.getQuery(query).then(data => {
+    //   let json = data.data;
 
-      console.log(json);
+    //   console.log(json);
 
-      json = json.substr(7, json.length - 8);
-      json = JSON.parse(json);
-      console.log(json);
-    });
+    //   json = json.substr(7, json.length - 8);
+    //   json = JSON.parse(json);
+    //   console.log(json);
+    // });
   }
 
   ionViewDidLeave() {
@@ -362,8 +342,8 @@ export class HomeComponent implements OnInit {
   selectChange(event: any) {
     let value = event.target.value;
 
-    this.hakParser.trenutnoGorivo = value;
-    this.getBenzin(this.hakParser.trenutnoGorivo);
+    this.benzinske.trenutnoGorivo = value;
+    this.getBenzin(this.benzinske.trenutnoGorivo);
 
   }
 

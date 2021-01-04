@@ -1,21 +1,10 @@
 <ion-content id="home">
   <div class="fuel" id="fuel">
-    <ion-searchbar cancelButtonText="Odustani" showCancelButton="focus" mode="ios" animated="true"
-      placeholder="Traži benzinske po gradu" value="{{this.benzinske.trenutniTekst}}" (ionChange)="change($event)"
-      (ionInput)="onInput()" (ionClear)="clear()" (ionCancel)="cancel()"></ion-searchbar>
 
-    <div *ngIf="searching">
-      <ion-list>
-        <ion-item button *ngFor="let grad of gradovi" (click)="setGrad(grad)">
-          <ion-icon name="home-outline" slot="start"></ion-icon>
-          <ion-text><span *ngIf="grad.naselje != ''">{{grad.naselje}},</span> {{grad.grad}}</ion-text>
-        </ion-item>
-      </ion-list>
-    </div>
     <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
-    <ion-grid *ngIf="!searching">
+    <ion-grid >
       <ion-row>
         <ion-col>
           <ion-select value="DIZELA" interface="action-sheet" cancelText="Odustani" (ionChange)="selectChange($event)"
@@ -41,7 +30,7 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <div *ngIf="!searching && this.hakParser.loadedData">
+    <div *ngIf="this.benzinske.loadedData">
 
       <ion-list lines="none" class="benge" *ngIf="!reloading">
         <ion-list-header>
@@ -83,7 +72,7 @@
         </ion-item>
       </ion-list>
     </div>
-    <div *ngIf="!searching && !this.hakParser.loadedData">
+    <div *ngIf="!this.benzinske.loadedData">
       <ion-list id="skeleton" class="benge" lines="none">
         <ion-list-header>
           <ion-skeleton-text animated style="width: 80px"></ion-skeleton-text>

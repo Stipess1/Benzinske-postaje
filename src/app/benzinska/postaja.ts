@@ -21,9 +21,9 @@ export class Postaja {
     udaljenost: number;
     gorivo: string;
 
-    nadiGorivoPoImenu(imeGoriva: string): boolean {
+    nadiGorivoPoId(id: string): boolean {
         for(let i = 0; i < this.cijenici.length; i++) {
-            if(this.cijenici[i].naziv.includes(imeGoriva)) 
+            if(this.cijenici[i].gorivo_id === id) 
                 return true;
             
         }

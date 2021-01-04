@@ -189,36 +189,6 @@ export class HomeComponent implements OnInit {
     animation.play();
   }
 
-  change(event: any) {
-    let query = event.target.value;
-
-    // if (query.length > 0) {
-    //   this.gradovi = [];
-    //   this.benzinske.getQuery(query).then(data => {
-    //     let json = data.data;
-
-    //     json = json.substr(7, json.length - 8);
-    //     json = JSON.parse(json);
-
-    //     let loop = 10;
-
-    //     if (json.length < loop) loop = json.length;
-
-    //     for (let i = 0; i < loop; i++) {
-    //       let search = new Search();
-
-    //       search.postanski = json[i]['PLZ'];
-    //       search.mjesto = json[i]['area'];
-    //       search.grad = json[i]['city'];
-    //       search.naselje = json[i]['street'];
-
-    //       this.gradovi.push(search);
-    //     }
-    //   });
-    // }
-
-  }
-
   imgNotLoaded(benga: Postaja) {
     benga.img = "../assets/icon/icon2.png";
   }
@@ -231,7 +201,6 @@ export class HomeComponent implements OnInit {
     }
     else
       value = this.benzinske.radius;
-
 
     this.benzinske.filterPostaji = [];
     this.benzinske.loadedData = false;
@@ -261,77 +230,11 @@ export class HomeComponent implements OnInit {
 
   }
 
-  init() {
-
-    // this.benzinske.getData().then(data => {
-    //   let json = JSON.parse(data.data);
-
-    //   for (let i = 0; i < json.length; i++) {
-    //     let benga = new BenzinskaOsnovni();
-    //     benga.id = json[i]['PoiID'];
-
-    //     benga.mjesto = json[i]['Alias'];
-
-    //     benga.ime = json[i]['CategoryName'];
-
-
-    //     if (benga.ime == "ostale benzinske postaje")
-    //       benga.ime = benga.mjesto;
-
-    //     // hardcodamo jer nema drugog nacina
-    //     if (benga.ime == "Tifon") {
-    //       benga.img = "https://tifon.hr/images/fb-tifon-logo.jpg";
-    //     } else if (benga.ime == "INA") {
-    //       benga.img = "https://ina.ea93.work/wp-content/uploads/2020/01/ina-logo-big-2.jpg";
-    //     } else if (benga.ime == "Crodux derivati") {
-    //       benga.img = "https://scontent.fzag4-1.fna.fbcdn.net/v/t1.0-9/42576275_2414705741890598_121577626362970112_n.png?_nc_cat=107&_nc_sid=09cbfe&_nc_eui2=AeFc-WfsL5AWx5vizwUuKaMOTKZFDZgHr8ZMpkUNmAevxjnTzTLZC2QLpYSQsezKiIlxwrE-1HJg_UIM1NvnNfEQ&_nc_ohc=KCw3UKw8g7kAX9qj71S&_nc_ht=scontent.fzag4-1.fna&oh=62988a1e1b667337b5319d18b109f900&oe=5EC6DD05";
-    //     } else if (benga.ime == "Petrol") {
-    //       benga.img = "https://webservis.mzoe-gor.hr/img/obv_9_logo.png";
-    //     } else if (benga.ime == "Lukoil") {
-    //       benga.img = "https://www.soundsetragusa.hr/sites/default/files/lukoil.jpg?width=825&height=550&slideshow=true&slideshowAuto=false&slideshowSpeed=2000&transition=elastic&speed=350";
-    //     }
-
-    //     benga.lat = json[i]['Lat'];
-    //     benga.lon = json[i]['Lon'];
-    //     let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.lon);
-    //     udaljenost = Math.round(udaljenost * 10) / 10;
-    //     benga.udaljenost = udaljenost;
-
-    //     this.jsonBenge.push(benga);
-    //     this.benzinske.hakBenzinske.push(benga);
-    //     if (udaljenost <= 5) {
-    //       this.hakParser.parse(benga).then(data => {
-    //         if(data.imaGorivo) {
-    //           this.benzinske.filterBenga.push(data);
-            
-    //         }
-    //       });
-    //     }
-
-    //   }
-
-
-    // });
-  }
-
   get(benga: Postaja) {
-
+    console.log(benga);
+    
     this.benzinske.trenutnaBenga = benga;
     this.router.navigate(['/pocetna/detalji/'], { relativeTo: this.route });
-  }
-
-  input(event: any) {
-    let query = event.target.value;
-
-    // this.benzinske.getQuery(query).then(data => {
-    //   let json = data.data;
-
-    //   console.log(json);
-
-    //   json = json.substr(7, json.length - 8);
-    //   json = JSON.parse(json);
-    //   console.log(json);
-    // });
   }
 
   ionViewDidLeave() {
@@ -430,9 +333,9 @@ export class HomeComponent implements OnInit {
     }
     let ima = false;
     for (let i = 0; i < this.benzinske.filterPostaji.length; i++) {
-      // neke postaje nemaju autoplin i plavi dizel..
-      if (id == 9 || id == 11)
-        this.benzinske.filterPostaji[i].gorivo = "---";
+      
+      
+      this.benzinske.filterPostaji[i].gorivo = "---";
       for (let j = 0; j < this.benzinske.filterPostaji[i].cijenici.length; j++) {
 
         if (this.benzinske.filterPostaji[i].cijenici[j].vrstaGorivaId == id) {

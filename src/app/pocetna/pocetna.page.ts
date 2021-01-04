@@ -119,7 +119,6 @@ export class PocetnaPage implements OnInit {
 
         this.benzinske.svaGoriva.push(gorivo);
       }
-      console.log(this.benzinske.svaGoriva);
       
       this.benzinske.dataLoaded();
     });

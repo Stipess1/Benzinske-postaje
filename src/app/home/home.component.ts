@@ -252,7 +252,6 @@ export class HomeComponent implements OnInit {
     else
       value = this.benzinske.radius;
 
-    
 
     this.benzinske.filterPostaji = [];
     this.hakParser.loadedData = false;
@@ -268,14 +267,13 @@ export class HomeComponent implements OnInit {
         let benga = this.benzinske.svePostaje[i];
         let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.long);
         udaljenost = Math.round(udaljenost * 10) / 10
-        benga.udaljenost = udaljenost;
 
-        if (udaljenost <= value) {
+        if (benga.udaljenost <= value) {
             this.benzinske.filterPostaji.push(benga);
         }
 
       }
-
+      this.hakParser.loadedData = true;
     }).catch(err => {
       console.log("err: " + err);
 
@@ -469,6 +467,12 @@ export class HomeComponent implements OnInit {
           let temp = id - 1;
           for (let j = 0; j < this.benzinske.filterPostaji[i].cijenici.length; j++) {
             if (this.benzinske.filterPostaji[i].cijenici[j].vrstaGorivaId == temp) {
+              this.benzinske.filterPostaji[i].gorivo = this.benzinske.filterPostaji[i].cijenici[j].cijena.toFixed(2);
+            }
+          }
+        } else if(id == 8) {
+          for (let j = 0; j < this.benzinske.filterPostaji[i].cijenici.length; j++) {
+            if (this.benzinske.filterPostaji[i].cijenici[j].vrstaGorivaId == id-1) {
               this.benzinske.filterPostaji[i].gorivo = this.benzinske.filterPostaji[i].cijenici[j].cijena.toFixed(2);
             }
           }

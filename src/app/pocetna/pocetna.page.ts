@@ -168,7 +168,7 @@ export class PocetnaPage implements OnInit {
           for(let j = 0; j < data['obvezniks'].length; j++) {
             if(data['obvezniks'][j]['id'] === postaja.obveznikId) {
               postaja.obveznik = data['obvezniks'][j]['naziv'];
-              postaja.img = "http://webservis.mzoe-gor.hr/img/" + data['obvezniks'][j]['logo'];
+              postaja.img = "https://webservis.mzoe-gor.hr/img/" + data['obvezniks'][j]['logo'];
             }
           }
 

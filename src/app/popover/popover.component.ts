@@ -21,37 +21,37 @@ export class PopoverComponent implements OnInit {
     });
 
     if(filter === "niza") {
-      for(let i = 0; i < this.service.filterBenga.length; i++) {
-        for(let j = 0; j < this.service.filterBenga.length; j++) {
-          let prvi: number = +this.service.filterBenga[i].gorivo.replace(",",".");
-          let drugi: number = +this.service.filterBenga[j].gorivo.replace(",",".");
+      for(let i = 0; i < this.service.filterPostaji.length; i++) {
+        for(let j = 0; j < this.service.filterPostaji.length; j++) {
+          let prvi: number = +this.service.filterPostaji[i].gorivo.replace(",",".");
+          let drugi: number = +this.service.filterPostaji[j].gorivo.replace(",",".");
 
           if(prvi < drugi) {
-            let temp = this.service.filterBenga[i];
-            this.service.filterBenga[i] = this.service.filterBenga[j];
-            this.service.filterBenga[j] = temp;
+            let temp = this.service.filterPostaji[i];
+            this.service.filterPostaji[i] = this.service.filterPostaji[j];
+            this.service.filterPostaji[j] = temp;
           }
         }
       }
     } else if (filter === "visa"){
-      for(let i = 0; i < this.service.filterBenga.length; i++) {
-        for(let j = 0; j < this.service.filterBenga.length; j++) {
-          let prvi: number = +this.service.filterBenga[i].gorivo.replace(",",".");
-          let drugi: number = +this.service.filterBenga[j].gorivo.replace(",",".");
+      for(let i = 0; i < this.service.filterPostaji.length; i++) {
+        for(let j = 0; j < this.service.filterPostaji.length; j++) {
+          let prvi: number = +this.service.filterPostaji[i].gorivo.replace(",",".");
+          let drugi: number = +this.service.filterPostaji[j].gorivo.replace(",",".");
           if(prvi > drugi) {
-            let temp = this.service.filterBenga[i];
-            this.service.filterBenga[i] = this.service.filterBenga[j];
-            this.service.filterBenga[j] = temp;
+            let temp = this.service.filterPostaji[i];
+            this.service.filterPostaji[i] = this.service.filterPostaji[j];
+            this.service.filterPostaji[j] = temp;
           }
         }
       }
     } else {
-      for(let i = 0; i < this.service.filterBenga.length; i++) {
-        for(let j = 0; j < this.service.filterBenga.length; j++) {
-          if(this.service.filterBenga[i].udaljenost < this.service.filterBenga[j].udaljenost) {
-            let temp = this.service.filterBenga[i];
-            this.service.filterBenga[i] = this.service.filterBenga[j];
-            this.service.filterBenga[j] = temp;
+      for(let i = 0; i < this.service.filterPostaji.length; i++) {
+        for(let j = 0; j < this.service.filterPostaji.length; j++) {
+          if(this.service.filterPostaji[i].udaljenost < this.service.filterPostaji[j].udaljenost) {
+            let temp = this.service.filterPostaji[i];
+            this.service.filterPostaji[i] = this.service.filterPostaji[j];
+            this.service.filterPostaji[j] = temp;
           }
         }
       }

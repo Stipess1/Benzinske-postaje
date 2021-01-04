@@ -2,7 +2,7 @@
   <div class="fuel" id="fuel">
     <ion-searchbar cancelButtonText="Odustani" showCancelButton="focus" mode="ios" animated="true"
       placeholder="Traži benzinske po gradu" value="{{this.benzinske.trenutniTekst}}" (ionChange)="change($event)"
-      (ionInput)="onInput()" (ionClear)="clear()" (ionCancel)="cancel()" ></ion-searchbar>
+      (ionInput)="onInput()" (ionClear)="clear()" (ionCancel)="cancel()"></ion-searchbar>
 
     <div *ngIf="searching">
       <ion-list>
@@ -18,7 +18,8 @@
     <ion-grid *ngIf="!searching">
       <ion-row>
         <ion-col>
-          <ion-select value="DIZELA" interface="action-sheet" cancelText="Odustani" (ionChange)="selectChange($event)" mode="md" [interfaceOptions]="{header: 'Odaberite gorivo', cssClass: 'action'}">
+          <ion-select value="DIZELA" interface="action-sheet" cancelText="Odustani" (ionChange)="selectChange($event)"
+            mode="md" [interfaceOptions]="{header: 'Odaberite gorivo', cssClass: 'action'}">
             <ion-select-option selectedText value="DIZELA">Dizel</ion-select-option>
             <ion-select-option value="BENZINA">Benzin</ion-select-option>
             <ion-select-option value="AUTOPLIN">Autoplin</ion-select-option>
@@ -45,38 +46,40 @@
       <ion-list lines="none" class="benge" *ngIf="!reloading">
         <ion-list-header>
           <ion-label>
-            Benzinske u {{grad}} ({{this.benzinske.filterBenga.length}})
+            Benzinske u {{grad}} ({{this.benzinske.filterPostaji.length}})
           </ion-label>
         </ion-list-header>
-        <ion-item class="benga" *ngFor="let benga of benzinske.filterBenga" (click)="get(benga);"
-          id="{{benga.id}}">
+        <ion-item class="benga" *ngFor="let benga of benzinske.filterPostaji" (click)="get(benga);" id="{{benga.id}}">
 
-          <ion-img slot="start" *ngIf="benga.img != 'http://localhost/home'" (ionError)="imgNotLoaded(benga)" src="{{benga.img}}"
-            style="background-size: cover; margin-right: 10px; width: 50px;"></ion-img>
+          
+            <ion-img slot="start" *ngIf="benga.img != 'http://localhost/home'" (ionError)="imgNotLoaded(benga)"
+              src="{{benga.img}}" style="background-size: cover; margin-right: 10px; width: 50px;"></ion-img>
 
-          <ion-label>
-            <div class="benga-wrapper">
-              <div class="benga-detalji">
-                <h2>{{benga.ime}}</h2>
-                <p>{{benga.adresa}}</p>
+            <ion-label>
+              <div class="benga-wrapper">
+                <div class="benga-detalji">
+                  <h2>{{benga.naziv}}</h2>
+                  <p>{{benga.adresa}}</p>
+                </div>
+                <div class="benga-info">
+                  <p>
+                    <ion-icon name="navigate-outline"></ion-icon> {{benga.udaljenost}} km
+                  </p>
+                  <ion-chip color="success" *ngIf="benga.otvoreno">
+                    <ion-label>Otvoreno</ion-label>
+                  </ion-chip>
+                  <ion-chip color="danger" *ngIf="!benga.otvoreno">
+                    <ion-label>Zatvoreno</ion-label>
+                  </ion-chip>
+                </div>
               </div>
-              <div class="benga-info">
-                <p>
-                  <ion-icon name="navigate-outline"></ion-icon> {{benga.udaljenost}} km
-                </p>
-                <ion-chip color="success" *ngIf="benga.otvoreno">
-                  <ion-label>Otvoreno</ion-label>
-                </ion-chip>
-                <ion-chip color="danger" *ngIf="!benga.otvoreno">
-                  <ion-label>Zatvoreno</ion-label>
-                </ion-chip>
-              </div>
-            </div>
 
-          </ion-label>
-          <ion-label class="desno">
-            <h1>{{benga.gorivo}}<span style="color: grey; font-size: medium;">kn/L</span></h1>
-          </ion-label>
+            </ion-label>
+            <ion-label class="desno">
+              <h1>{{benga.gorivo}}<span style="color: grey; font-size: medium;">kn/L</span></h1>
+            </ion-label>
+         
+
         </ion-item>
       </ion-list>
     </div>

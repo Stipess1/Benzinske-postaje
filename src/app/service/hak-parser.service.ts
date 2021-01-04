@@ -193,20 +193,20 @@ export class HakParserService {
         benga.img = "/assets/icon/pump/ags.png";
         benga.udaljenost = 1.2;
         benga.id = "2"
-        benga.gorivo = "10.40";
+        benga.gorivo = "9.28";
         this.benzinske.filterBenga.push(benga);
         this.loadedData = true;
-        this.http.get('assets/json/postaje.json').subscribe((res: any) => {
-          console.log(res['postajas'][0]['adresa']);
+        // this.http.get('assets/json/postaje.json').subscribe((res: any) => {
+        //   console.log(res['postajas'][0]['adresa']);
 
-          for (let i = 0; i < res['postajas'].length; i++) {
-            if (res['postajas'][i]['adresa'] === benga.adresa && res['postajas'][i]['ime'] === benga.ime)
-              benga.id = res['postajas'][i]['id'];
-            // console.log(res['postajas'][i]);
+        //   for (let i = 0; i < res['postajas'].length; i++) {
+        //     if (res['postajas'][i]['adresa'] === benga.adresa && res['postajas'][i]['ime'] === benga.ime)
+        //       benga.id = res['postajas'][i]['id'];
+        //     // console.log(res['postajas'][i]);
 
-          }
-          resolve(benga);
-        });
+        //   }
+        //   resolve(benga);
+        // });
       }
     });
 

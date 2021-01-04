@@ -15,12 +15,11 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { Gorivo } from '../benzinska/gorivo';
-import { Buffer } from 'buffer';
 import { HakParserService } from '../service/hak-parser.service';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { GorivoHak } from '../benzinska/gorivoHak';
 import { LaunchReview } from '@ionic-native/launch-review/ngx';
-import * as pako from 'pako';
+import { Postaja } from '../benzinska/postaja';
 
 @Component({
   selector: 'app-home',
@@ -59,11 +58,10 @@ export class HomeComponent implements OnInit {
     private launchReview: LaunchReview) { }
 
   ngOnInit() {
-    this.hakParser.trenutnoGorivo = "DIZELA"; 
-    this.platform.ready().then(data => {
-      if (!this.platform.is('cordova'))
-        this.hakParser.parse(null);
 
+    this.benzinske.callback$.subscribe(() => {
+
+      console.log("postaje ucitane");
       this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
         result => {
           console.log('Has permission?', result.hasPermission);
@@ -80,7 +78,17 @@ export class HomeComponent implements OnInit {
 
                   this.benzinske.lat = resp.coords.latitude;
                   this.benzinske.lon = resp.coords.longitude;
-                  this.init();
+
+                  for(let i = 0; i < this.benzinske.svePostaje.length; i++) {
+                    let postaja = this.benzinske.svePostaje[i];
+            
+                    postaja.udaljenost = this.benzinske.calculateDistance(postaja.long, postaja.lat);
+                    postaja.udaljenost = Math.round(postaja.udaljenost * 10) / 10
+                    if(postaja.udaljenost <= 5) {
+                      this.benzinske.filterPostaji.push(postaja);
+                    }
+                  }
+                  this.hakParser.loadedData = true;
 
                   if(this.launchReview.isRatingSupported) {
                     console.log("rating");
@@ -100,11 +108,32 @@ export class HomeComponent implements OnInit {
             })
 
           } else {
-
             console.log("Nema Permission");
           }
         }
       );
+      if(!this.platform.is('cordova')) {
+        this.benzinske.lat = 45.8285372;
+        this.benzinske.lon = 16.1101218;
+
+        for(let i = 0; i < this.benzinske.svePostaje.length; i++) {
+          let postaja = this.benzinske.svePostaje[i];
+  
+          postaja.udaljenost = this.benzinske.calculateDistance(postaja.long, postaja.lat);
+          postaja.udaljenost = Math.round(postaja.udaljenost * 10) / 10
+          if(postaja.udaljenost <= 5) {
+            this.benzinske.filterPostaji.push(postaja);
+          }
+        }
+        this.hakParser.loadedData = true;
+      }
+
+    });
+
+    this.hakParser.trenutnoGorivo = "DIZELA"; 
+    this.platform.ready().then(data => {
+
+
     });
   }
 
@@ -140,30 +169,30 @@ export class HomeComponent implements OnInit {
   change(event: any) {
     let query = event.target.value;
 
-    if (query.length > 0) {
-      this.gradovi = [];
-      this.benzinske.getQuery(query).then(data => {
-        let json = data.data;
+    // if (query.length > 0) {
+    //   this.gradovi = [];
+    //   this.benzinske.getQuery(query).then(data => {
+    //     let json = data.data;
 
-        json = json.substr(7, json.length - 8);
-        json = JSON.parse(json);
+    //     json = json.substr(7, json.length - 8);
+    //     json = JSON.parse(json);
 
-        let loop = 10;
+    //     let loop = 10;
 
-        if (json.length < loop) loop = json.length;
+    //     if (json.length < loop) loop = json.length;
 
-        for (let i = 0; i < loop; i++) {
-          let search = new Search();
+    //     for (let i = 0; i < loop; i++) {
+    //       let search = new Search();
 
-          search.postanski = json[i]['PLZ'];
-          search.mjesto = json[i]['area'];
-          search.grad = json[i]['city'];
-          search.naselje = json[i]['street'];
+    //       search.postanski = json[i]['PLZ'];
+    //       search.mjesto = json[i]['area'];
+    //       search.grad = json[i]['city'];
+    //       search.naselje = json[i]['street'];
 
-          this.gradovi.push(search);
-        }
-      });
-    }
+    //       this.gradovi.push(search);
+    //     }
+    //   });
+    // }
 
   }
 
@@ -225,7 +254,7 @@ export class HomeComponent implements OnInit {
 
     
 
-    this.benzinske.filterBenga = [];
+    this.benzinske.filterPostaji = [];
     this.hakParser.loadedData = false;
 
     this.geolocation.getCurrentPosition().then((resp) => {
@@ -235,25 +264,14 @@ export class HomeComponent implements OnInit {
         this.benzinske.lon = resp.coords.longitude;
       }
 
-      for (let i = 0; i < this.jsonBenge.length; i++) {
-        let benga = this.jsonBenge[i];
-        let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.lon);
+      for (let i = 0; i < this.benzinske.svePostaje.length; i++) {
+        let benga = this.benzinske.svePostaje[i];
+        let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.long);
         udaljenost = Math.round(udaljenost * 10) / 10
         benga.udaljenost = udaljenost;
 
         if (udaljenost <= value) {
-          this.hakParser.parse(benga).then(data =>{
-            if(data.imaGorivo) {
-              this.benzinske.filterBenga.push(data);
-              this.hakParser.loadedData = true;
-              setTimeout(() => {
-                const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
-                  duration(300).iterations(1).fromTo('opacity', '0', '1');
-  
-                animation.play();
-              }, 50)
-            }
-          });
+            this.benzinske.filterPostaji.push(benga);
         }
 
       }
@@ -318,7 +336,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  get(benga: Benzinska) {
+  get(benga: Postaja) {
 
     this.benzinske.trenutnaBenga = benga;
     this.router.navigate(['/pocetna/detalji/'], { relativeTo: this.route });
@@ -367,56 +385,52 @@ export class HomeComponent implements OnInit {
 
   doRefresh(event: any) {
     console.log("refresh");
-    this.benzinske.demo().subscribe(data => {
-      console.log(data);
-      
-    });
-    this.benzinske.filterBenga = [];
-    this.reloading = true;
-    this.hakParser.loadedData = false;
-    this.geolocation.getCurrentPosition().then((resp) => {
+    // this.benzinske.filterBenga = [];
+    // this.reloading = true;
+    // this.hakParser.loadedData = false;
+    // this.geolocation.getCurrentPosition().then((resp) => {
 
-      this.benzinske.lat = resp.coords.latitude;
-      this.benzinske.lon = resp.coords.longitude;
-      let brojUdaljenosti = 0;
-      let complete = false;
-      for (let i = 0; i < this.jsonBenge.length; i++) {
-        let benga = this.jsonBenge[i];
-        let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.lon);
-        udaljenost = Math.round(udaljenost * 10) / 10
-        benga.udaljenost = udaljenost;
+    //   this.benzinske.lat = resp.coords.latitude;
+    //   this.benzinske.lon = resp.coords.longitude;
+    //   let brojUdaljenosti = 0;
+    //   let complete = false;
+    //   for (let i = 0; i < this.jsonBenge.length; i++) {
+    //     let benga = this.jsonBenge[i];
+    //     let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.lon);
+    //     udaljenost = Math.round(udaljenost * 10) / 10
+    //     benga.udaljenost = udaljenost;
 
-        if (udaljenost <= this.benzinske.radius) {
-          this.hakParser.parse(benga).then(data => {
-            if(data.imaGorivo) {
-              this.benzinske.filterBenga.push(data);
-              this.hakParser.loadedData = true;
-              this.reloading = false;
-              setTimeout(() => {
-                const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
-                  duration(300).iterations(1).fromTo('opacity', '0', '1');
+    //     if (udaljenost <= this.benzinske.radius) {
+    //       this.hakParser.parse(benga).then(data => {
+    //         if(data.imaGorivo) {
+    //           this.benzinske.filterBenga.push(data);
+    //           this.hakParser.loadedData = true;
+    //           this.reloading = false;
+    //           setTimeout(() => {
+    //             const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
+    //               duration(300).iterations(1).fromTo('opacity', '0', '1');
   
-                animation.play();
-              }, 50)
-              if (!complete) {
-                complete = true;
-                setTimeout(() => {
-                  event.target.complete();
+    //             animation.play();
+    //           }, 50)
+    //           if (!complete) {
+    //             complete = true;
+    //             setTimeout(() => {
+    //               event.target.complete();
                   
-                }, 1500);
-              }
-            }
+    //             }, 1500);
+    //           }
+    //         }
             
-          });
+    //       });
 
-        }
+    //     }
 
-      }
+    //   }
 
-    }).catch(err => {
-      console.log("err: " + err);
+    // }).catch(err => {
+    //   console.log("err: " + err);
 
-    });
+    // });
   }
 
   getBenzin(gorivo: string) {
@@ -437,14 +451,14 @@ export class HomeComponent implements OnInit {
         break;
     }
     let ima = false;
-    for (let i = 0; i < this.benzinske.filterBenga.length; i++) {
+    for (let i = 0; i < this.benzinske.filterPostaji.length; i++) {
       // neke postaje nemaju autoplin i plavi dizel..
       if (id == 9 || id == 11)
-        this.benzinske.filterBenga[i].gorivo = "---";
-      for (let j = 0; j < this.benzinske.filterBenga[i].vrsteGoriva.length; j++) {
+        this.benzinske.filterPostaji[i].gorivo = "---";
+      for (let j = 0; j < this.benzinske.filterPostaji[i].cijenici.length; j++) {
 
-        if (this.benzinske.filterBenga[i].vrsteGoriva[j].vrstaGorivaId == id) {
-          this.benzinske.filterBenga[i].gorivo = this.benzinske.filterBenga[i].vrsteGoriva[j].cijena;
+        if (this.benzinske.filterPostaji[i].cijenici[j].vrstaGorivaId == id) {
+          this.benzinske.filterPostaji[i].gorivo = this.benzinske.filterPostaji[i].cijenici[j].cijena.toFixed(2);
           ima = true;
         }
       }
@@ -453,9 +467,9 @@ export class HomeComponent implements OnInit {
         if (id == 2) {
           // id -= 1;
           let temp = id - 1;
-          for (let j = 0; j < this.benzinske.filterBenga[i].vrsteGoriva.length; j++) {
-            if (this.benzinske.filterBenga[i].vrsteGoriva[j].vrstaGorivaId == temp) {
-              this.benzinske.filterBenga[i].gorivo = this.benzinske.filterBenga[i].vrsteGoriva[j].cijena;
+          for (let j = 0; j < this.benzinske.filterPostaji[i].cijenici.length; j++) {
+            if (this.benzinske.filterPostaji[i].cijenici[j].vrstaGorivaId == temp) {
+              this.benzinske.filterPostaji[i].gorivo = this.benzinske.filterPostaji[i].cijenici[j].cijena.toFixed(2);
             }
           }
         }

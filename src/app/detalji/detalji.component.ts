@@ -79,8 +79,9 @@ export class DetaljiComponent implements OnInit {
 
   postaviGrafikon() {
     this.cijenikPostaje = [];
-    this.service.getCijenik(this.trenutnaBenga.mzoeId).then((data: any) => {
-      let json = JSON.parse(data.data);
+    this.service.getCijenik(this.trenutnaBenga.id).subscribe((data: any) => {
+      
+      let json = data;
 
       for (let i = 0; i < json.length; i++) {
         let cijenik = new CijeniciPostaja();
@@ -92,10 +93,10 @@ export class DetaljiComponent implements OnInit {
 
         cijenik.gorivoId = json[i]['gorivo_id'];
 
-        for (let j = 0; j < this.service.vrsteGoriva.length; j++) {
-          if (this.service.vrsteGoriva[j].id === cijenik.gorivoId) {
-            cijenik.imeGoriva = this.service.vrsteGoriva[j].naziv;
-            cijenik.tipGorivaId = this.service.vrsteGoriva[j].vrstaGorivaId;
+        for (let j = 0; j < this.service.svaGoriva.length; j++) {
+          if (this.service.svaGoriva[j].id === cijenik.gorivoId) {
+            cijenik.imeGoriva = this.service.svaGoriva[j].naziv;
+            cijenik.tipGorivaId = this.service.svaGoriva[j].vrstaGorivaId;
             this.cijenikPostaje.push(cijenik);
           }
         }
@@ -184,7 +185,7 @@ export class DetaljiComponent implements OnInit {
 
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if (id.tipGorivaId == 2 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.nadiGorivoPoImenu(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 2 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") ) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -200,7 +201,7 @@ export class DetaljiComponent implements OnInit {
 
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if (id.tipGorivaId == 7 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.nadiGorivoPoImenu(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 7 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju")) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -216,7 +217,7 @@ export class DetaljiComponent implements OnInit {
 
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if (id.tipGorivaId == 1 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju") && this.trenutnaBenga.nadiGorivoPoImenu(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 1 && !imeGoriva.includes(id.imeGoriva) && !id.imeGoriva.includes("nije u portfelju")) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -232,7 +233,7 @@ export class DetaljiComponent implements OnInit {
 
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if (id.tipGorivaId == 9 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.nadiGorivoPoImenu(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 9 && !imeGoriva.includes(id.imeGoriva)) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -247,7 +248,7 @@ export class DetaljiComponent implements OnInit {
           };
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if (id.tipGorivaId == 6 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.nadiGorivoPoImenu(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 6 && !imeGoriva.includes(id.imeGoriva)) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -262,7 +263,7 @@ export class DetaljiComponent implements OnInit {
           };
           this.lineChart.data.datasets.push(dataset);
           imeGoriva.push(id.imeGoriva);
-        } else if (id.tipGorivaId == 5 && !imeGoriva.includes(id.imeGoriva) && this.trenutnaBenga.nadiGorivoPoImenu(id.imeGoriva.replace(/\u00A0/, " "))) {
+        } else if (id.tipGorivaId == 5 && !imeGoriva.includes(id.imeGoriva)) {
           let dataset = {
             label: id.imeGoriva,
             fill: false,
@@ -319,7 +320,7 @@ export class DetaljiComponent implements OnInit {
   }
   odvedi() {
     let cords = this.service.lat.toString() + ", " + this.service.lon.toString();
-    let dest = this.trenutnaBenga.adresa + ", " + this.trenutnaBenga.grad;
+    let dest = this.trenutnaBenga.adresa + ", " + this.trenutnaBenga.mjesto;
 
     this.launchnavigator.navigate(dest, {
       start: cords

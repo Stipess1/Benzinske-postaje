@@ -19,4 +19,14 @@ export class Postaja {
     img: any;
     trenutnoRadnoVrijeme: string;
     udaljenost: number;
+    gorivo: string;
+
+    nadiGorivoPoImenu(imeGoriva: string): boolean {
+        for(let i = 0; i < this.cijenici.length; i++) {
+            if(this.cijenici[i].naziv.includes(imeGoriva)) 
+                return true;
+            
+        }
+        return false;
+    }
 }

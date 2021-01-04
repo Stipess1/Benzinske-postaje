@@ -106,22 +106,41 @@ export class PocetnaPage implements OnInit {
           let postaja = new Postaja();
           let web = data["postajas"][i];
 
-          postaja.adresa = web["adresa"];
+          postaja.adresa = web["adresa"].replace(/\u00A0/, " ");
           postaja.id = web['id'];
           postaja.lat = web['lat'];
           postaja.long = web['long'];
-          postaja.mjesto = web['mjesto'];
-          postaja.naziv = web['naziv'];
+          postaja.mjesto = web['mjesto'].replace(/\u00A0/, " ");
+          postaja.naziv = web['naziv'].replace(/\u00A0/, " ");
           postaja.obveznikId = web['obveznik_id'];
 
+          // dali postoji dizel bez aditiva
+          let postojiDizel8 = false;
           for(let j = 0; j < web['cjenici'].length; j++) {
             let gorivo = new Cijenik();
             gorivo.id = web['cjenici'][j]['id'];
             gorivo.gorivo_id = web['cjenici'][j]['gorivo_id'];
             gorivo.cijena = web['cjenici'][j]['cijena'];
             this.getNaziv(gorivo, data['gorivos']);
+            if(gorivo.vrstaGorivaId === 8) {
+              postojiDizel8 = true;
+              postaja.gorivo = gorivo.cijena.toFixed(2);
+            }
+              
             postaja.cijenici.push(gorivo);
           }
+
+          if(!postojiDizel8) {
+            for(let j = 0; j < postaja.cijenici.length; j++) {
+              if(postaja.cijenici[j].vrstaGorivaId === 7) {
+                postaja.gorivo = postaja.cijenici[j].cijena.toFixed(2);
+                break;
+              }
+            }
+            if(postaja.gorivo === undefined)
+              postaja.gorivo = "---";
+          }
+            
 
           for(let j = 0; j < web['opcije'].length; j++){
             postaja.opcije.push(new Usluge(web['opcije'][j]['opcija_id']));
@@ -159,7 +178,6 @@ export class PocetnaPage implements OnInit {
             postaja.img = "/assets/icon/pump/ags.png";
           } 
 
-          postaja.udaljenost = this.benzinske.calculateDistance(postaja.lat, postaja.long);
           this.benzinske.svePostaje.push(postaja);
       }
       // -console.log(this.benzinske.svePostaje);
@@ -169,18 +187,23 @@ export class PocetnaPage implements OnInit {
         let web = data['gorivos'][i];
 
         gorivo.id = web['id'];
-        gorivo.naziv = web['naziv'];
+        if(web['naziv'] != null)
+          gorivo.naziv = web['naziv'].replace(/\u00A0/, " ");
         gorivo.obveznik_id = web['obveznik_id'];
         gorivo.vrstaGorivaId = web['vrsta_goriva_id'];
 
         this.benzinske.svaGoriva.push(gorivo);
       }
-    })
+      console.log(this.benzinske.svaGoriva);
+      
+      this.benzinske.dataLoaded();
+    });
     // this.http.get('https://webservis.mzoe-gor.hr/api/trend-cijena ').subscribe((data: any) => {
     //   console.log(data);
       
     // })
   }
+
 
   getNaziv(cijenik: Cijenik, data: any) {
     for(let i = 0; i < data.length; i++) {
@@ -199,7 +222,7 @@ export class PocetnaPage implements OnInit {
    * undefined
    * @param {Postaja} postaja - Postaja koju trenutno parsamo
    * @param {string} benga - vrijeme koje parsamo
-   * @param {boolean} trenutno - dali parasmo trenutno vrijeme ili radna vremena tokom tjedna
+   * @param {RadnoVrijeme} radnoVrijeme - ako je != null onda dohvacamo trenutno radno vrijeme postaje
    * @returns {string} - vraca radno vrijeme benzinske (npr. 06:00 - 24:00)
    */
   parseTime(benga: string, postaja: Postaja, radnoVrijeme: RadnoVrijeme) {

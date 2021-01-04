@@ -42,7 +42,7 @@
                         <p class="benzin" *ngIf="gorivo.naziv.toLowerCase().includes('eurosuper')">E</p>
                         <div class="autoplin" *ngIf="gorivo.naziv.toLowerCase().includes('autoplin') || gorivo.naziv.toLowerCase().includes('lpg')"><p style="transform: rotateZ(-45deg); margin:auto;">H</p></div>
                         <p class="text-gorivo">{{gorivo.naziv}}</p>
-                        <p class="cijena">{{gorivo.cijena}} <span>kn/L</span> </p>
+                        <p class="cijena">{{gorivo.cijena.toFixed(2)}} <span>kn/L</span> </p>
                         
                     </ion-col>
                 </ion-row>

@@ -6,7 +6,7 @@ import { Gorivo } from '../benzinska/gorivo';
 import { HttpClient } from '@angular/common/http';
 import { Buffer } from 'buffer';
 import { BenzinskaOsnovni } from '../benzinska/benzinskaOsnovni';
-import { from } from 'rxjs';
+import { from, Subject } from 'rxjs';
 import { Postaja } from '../benzinska/postaja';
 
 @Injectable({
@@ -26,12 +26,18 @@ export class BenzinskePostajeService {
   // sa web api
   public svaGoriva: Gorivo[] = [];
   public svePostaje: Postaja[] = [];
+  public filterPostaji: Postaja[] = [];
+  public ucitano: boolean = false;
   //
   public lat: number;
   public lon: number;
   public insetBar: string;
   public vrsteGoriva: Gorivo[] = [];
   public radius: number = 5;
+
+  // callback tako da znamo kada su se postaje ucitale sa web api-a
+  private callback = new Subject<any>();
+  callback$ = this.callback.asObservable();
 
   // https://webservis.mzoe-gor.hr/api/cjenici-postaja/303 za INA cjenik
   // https://webservis.mzoe-gor.hr/api/cjenici-postaja/770 za petrol
@@ -71,15 +77,22 @@ export class BenzinskePostajeService {
     document.getElementById("tab-button-"+tempTab).children[0].setAttribute('style', "color: #3880ff;");
   }
 
-  demo() {
-    let redirectPath = "https://benzinske-postaje.herokuapp.com/";
-    
-    return from(this.http.get(redirectPath, {}, {
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36",
-      "Content-Type": "application/json",
-      "Accept-Encoding": "gzip, deflate"
-    }));
+  /**
+   * pozovemo ovu funkciju kada su se postaje ucitale sa web api-a
+   */
+  public dataLoaded() {
+    this.callback.next();
   }
+
+  // demo() {
+  //   let redirectPath = "https://benzinske-postaje.herokuapp.com/";
+    
+  //   return from(this.http.get(redirectPath, {}, {
+  //     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36",
+  //     "Content-Type": "application/json",
+  //     "Accept-Encoding": "gzip, deflate"
+  //   }));
+  // }
 
   // vraca podatke od svih benzinskih pumpi
   getData() {
@@ -88,7 +101,7 @@ export class BenzinskePostajeService {
   }
 
   getCijenik(id: string) {
-    return this.http.get("https://webservis.mzoe-gor.hr/api/cjenici-postaja/" + id, {}, {})
+    return this.httpClient.get("https://webservis.mzoe-gor.hr/api/cjenici-postaja/" + id);
   }
 
   getQuery(text: string) {

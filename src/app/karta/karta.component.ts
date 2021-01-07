@@ -41,7 +41,6 @@ export class KartaComponent implements OnInit {
   ionViewWillLeave() {
     const animation = this.animationController.create().addElement(document.getElementById('karte')).iterations(1).duration(500).fromTo('opacity', 1, 0);
     animation.play();
-    // this.subscription.unsubscribe();
   }
 
   loadMap() {

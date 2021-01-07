@@ -229,10 +229,10 @@ export class BenzinskePostajeService {
     let pocetnoVrijeme = splitTime[0].slice(0, splitTime[0].length - 3); // 6
     let zavrsnoVrijeme = splitTime[1].slice(0, splitTime[1].length - 3); // 20
     
-    if(parseInt(pocetnoVrijeme) == 6 && parseInt(zavrsnoVrijeme) == 22) {
-      console.log(parseInt(pocetnoVrijeme) + ' ' + parseInt(zavrsnoVrijeme));
-      console.log(date.getHours() < parseInt(zavrsnoVrijeme) && date.getHours() > parseInt(pocetnoVrijeme));
-    }
+    // if(parseInt(pocetnoVrijeme) == 6 && parseInt(zavrsnoVrijeme) == 22) {
+    //   console.log(parseInt(pocetnoVrijeme) + ' ' + parseInt(zavrsnoVrijeme));
+    //   console.log(date.getHours() < parseInt(zavrsnoVrijeme) && date.getHours() > parseInt(pocetnoVrijeme));
+    // }
       
     if (date.getHours() < parseInt(zavrsnoVrijeme) && date.getHours() > parseInt(pocetnoVrijeme)) {
       postaja.otvoreno = true;

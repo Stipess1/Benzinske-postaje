@@ -16,6 +16,7 @@ import { LaunchReview } from '@ionic-native/launch-review/ngx';
 import { Postaja } from '../benzinska/postaja';
 import { Chart } from 'chart.js';
 import { LaunchNavigator } from '@ionic-native/launch-navigator/ngx';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-home',
@@ -48,7 +49,8 @@ export class HomeComponent implements OnInit {
     private animationController: AnimationController,
     private backgroundMode: BackgroundMode,
     private launchReview: LaunchReview,
-    private alertController: AlertController) { }
+    private alertController: AlertController,
+    private storage: Storage) { }
 
   ngOnInit() {
 
@@ -83,15 +85,8 @@ export class HomeComponent implements OnInit {
                     }
                   }
                   this.benzinske.loadedData = true;
-                  // if(this.launchReview.isRatingSupported) {
-                  //   setTimeout(status => {
-                  //     this.launchReview.rating().subscribe(res => {
-                  //       console.log(res);
-                  //     });
-                  //   },500);
-                  // } else {
-                  //   this.launchReview.launch();
-                  // }
+                  this.pokreniReview();
+
 
                 }).catch(err => {
                   console.log("err: " + err);
@@ -140,6 +135,57 @@ export class HomeComponent implements OnInit {
           navigator['app'].exitApp();
           
         }
+      }]
+    });
+
+    await alert.present();
+  }
+
+  postaviStorage(broj: number) {
+    this.storage.set('vrijeme', broj);
+  }
+
+  pokreniReview() {
+    this.storage.get("vrijeme").then((val: number) => {
+      if(val == null)
+        this.postaviStorage(1);
+        else {
+          if(val == 4) {
+            this.review();
+          }
+          this.postaviStorage(val++);
+        }
+      
+    });
+
+
+  }
+
+  review() {
+    if (this.launchReview.isRatingSupported) {
+      setTimeout(status => {
+        this.launchReview.rating().subscribe(res => {
+          console.log(res);
+        });
+      }, 500);
+    } else {
+      this.alertZaReview();
+    }
+  }
+
+  async alertZaReview() {
+    const alert = await this.alertController.create({
+      header: 'Ocijenite',
+      message: 'Ukoliko uživate koristiti ovu aplikaciju, molim vas odvojite trenutak za ocjenjivanje. Hvala na vašoj podršci.',
+      buttons: [{
+        text: "Ocijeni",
+        handler: (ev) => {
+          this.launchReview.launch();
+        }
+      },
+      {
+        text: "Odustani",
+        role: 'cancel'
       }]
     });
 

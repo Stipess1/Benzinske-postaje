@@ -1,4 +1,5 @@
 <ion-content id="home">
+  <ion-backdrop *ngIf="!this.benzinske.loadedData"></ion-backdrop>
   <div class="fuel" id="fuel">
 
     <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">

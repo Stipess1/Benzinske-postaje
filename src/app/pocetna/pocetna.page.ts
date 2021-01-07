@@ -17,7 +17,7 @@ import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
 export class PocetnaPage implements OnInit {
 
   constructor(private http: HttpClient, 
-    private benzinske: BenzinskePostajeService,
+    public benzinske: BenzinskePostajeService,
     private launchReview: LaunchReview,
     private storage: Storage) { }
 

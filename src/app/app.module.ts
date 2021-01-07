@@ -20,6 +20,8 @@ import {AndroidFullScreen} from "@ionic-native/android-full-screen/ngx";
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { LaunchReview } from '@ionic-native/launch-review/ngx';
 import { IonicStorageModule } from '@ionic/storage';
+import { AppVersion } from '@ionic-native/app-version/ngx';
+import { EmailComposer } from '@ionic-native/email-composer/ngx';
 
 @NgModule({
   declarations: [AppComponent, PopoverComponent],
@@ -33,6 +35,8 @@ import { IonicStorageModule } from '@ionic/storage';
     AndroidPermissions,
     ScreenOrientation,
     Geolocation,
+    AppVersion,
+    EmailComposer,
     Diagnostic,
     BackgroundMode,
     LaunchReview,

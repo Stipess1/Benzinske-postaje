@@ -38,7 +38,7 @@
             Benzinske u {{grad}} ({{this.benzinske.filterPostaji.length}})
           </ion-label>
         </ion-list-header>
-        <ion-item class="benga" *ngFor="let benga of benzinske.filterPostaji" (click)="get(benga);" id="{{benga.id}}">
+        <ion-item class="benga" *ngFor="let benga of benzinske.filterPostaji" (click)="get(benga);" id="b{{benga.id}}">
 
           
             <ion-img slot="start" *ngIf="benga.img != 'http://localhost/home'" (ionError)="imgNotLoaded(benga)"
@@ -68,16 +68,15 @@
               <h1>{{benga.gorivo}}<span style="color: grey; font-size: medium;">kn/L</span></h1>
             </ion-label>
          
-
         </ion-item>
       </ion-list>
     </div>
     <div *ngIf="!this.benzinske.loadedData">
       <ion-list id="skeleton" class="benge" lines="none">
         <ion-list-header>
-          <ion-skeleton-text animated style="width: 80px"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 50%; margin: auto;"></ion-skeleton-text>
         </ion-list-header>
-        <ion-item class="benga">
+        <ion-item class="benga none">
           <ion-thumbnail slot="start">
             <ion-skeleton-text animated></ion-skeleton-text>
           </ion-thumbnail>
@@ -93,7 +92,7 @@
             </p>
           </ion-label>
         </ion-item>
-        <ion-item class="benga">
+        <ion-item class="benga none">
           <ion-thumbnail slot="start">
             <ion-skeleton-text animated></ion-skeleton-text>
           </ion-thumbnail>
@@ -109,7 +108,7 @@
             </p>
           </ion-label>
         </ion-item>
-        <ion-item class="benga">
+        <ion-item class="benga none">
           <ion-thumbnail slot="start">
             <ion-skeleton-text animated></ion-skeleton-text>
           </ion-thumbnail>
@@ -125,7 +124,7 @@
             </p>
           </ion-label>
         </ion-item>
-        <ion-item class="benga">
+        <ion-item class="benga none">
           <ion-thumbnail slot="start">
             <ion-skeleton-text animated></ion-skeleton-text>
           </ion-thumbnail>
@@ -141,7 +140,7 @@
             </p>
           </ion-label>
         </ion-item>
-        <ion-item class="benga">
+        <ion-item class="benga none">
           <ion-thumbnail slot="start">
             <ion-skeleton-text animated></ion-skeleton-text>
           </ion-thumbnail>
@@ -157,7 +156,7 @@
             </p>
           </ion-label>
         </ion-item>
-        <ion-item class="benga">
+        <ion-item class="benga none">
           <ion-thumbnail slot="start">
             <ion-skeleton-text animated></ion-skeleton-text>
           </ion-thumbnail>
@@ -173,7 +172,7 @@
             </p>
           </ion-label>
         </ion-item>
-        <ion-item class="benga">
+        <ion-item class="benga none">
           <ion-thumbnail slot="start">
             <ion-skeleton-text animated></ion-skeleton-text>
           </ion-thumbnail>
@@ -189,7 +188,7 @@
             </p>
           </ion-label>
         </ion-item>
-        <ion-item class="benga">
+        <ion-item class="benga none">
           <ion-thumbnail slot="start">
             <ion-skeleton-text animated></ion-skeleton-text>
           </ion-thumbnail>

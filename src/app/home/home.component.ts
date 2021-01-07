@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RadnoVrijeme } from '../benzinska/radnovrijeme';
 import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
-import { Platform, ToastController, PopoverController, AnimationController } from '@ionic/angular';
+import { Platform, ToastController, PopoverController, AnimationController, AlertController } from '@ionic/angular';
 import { PopoverComponent } from '../popover/popover.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -15,6 +15,7 @@ import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { LaunchReview } from '@ionic-native/launch-review/ngx';
 import { Postaja } from '../benzinska/postaja';
 import { Chart } from 'chart.js';
+import { LaunchNavigator } from '@ionic-native/launch-navigator/ngx';
 
 @Component({
   selector: 'app-home',
@@ -37,7 +38,6 @@ export class HomeComponent implements OnInit {
     private http: HttpClient,
     public benzinske: BenzinskePostajeService,
     private platform: Platform,
-    private toastController: ToastController,
     private popoverController: PopoverController,
     private router: Router,
     private route: ActivatedRoute,
@@ -47,7 +47,8 @@ export class HomeComponent implements OnInit {
     private diagnostic: Diagnostic,
     private animationController: AnimationController,
     private backgroundMode: BackgroundMode,
-    private launchReview: LaunchReview) { }
+    private launchReview: LaunchReview,
+    private alertController: AlertController) { }
 
   ngOnInit() {
 
@@ -78,25 +79,26 @@ export class HomeComponent implements OnInit {
                     postaja.udaljenost = Math.round(postaja.udaljenost * 10) / 10
                     if(postaja.udaljenost <= 5) {
                       this.benzinske.filterPostaji.push(postaja);
+
                     }
                   }
                   this.benzinske.loadedData = true;
-
-                  if(this.launchReview.isRatingSupported) {
-                    console.log("rating");
-                    setTimeout(status => {
-                      this.launchReview.rating().subscribe(res => {
-                        console.log(res);
-                      });
-                    },100)
-                  }
+                  // if(this.launchReview.isRatingSupported) {
+                  //   setTimeout(status => {
+                  //     this.launchReview.rating().subscribe(res => {
+                  //       console.log(res);
+                  //     });
+                  //   },500);
+                  // } else {
+                  //   this.launchReview.launch();
+                  // }
 
                 }).catch(err => {
                   console.log("err: " + err);
 
                 });
               else
-                this.presentToast();
+                this.presentAlert();
             })
 
           } else {
@@ -117,25 +119,31 @@ export class HomeComponent implements OnInit {
             this.benzinske.filterPostaji.push(postaja);
           }
         }
-        this.benzinske.loadedData = true;
+         this.benzinske.loadedData = true;
       }
 
     });
 
-
-    // this.prosjecneCijene();
     this.platform.ready().then(data => {
       
       this.benzinske.trenutnoGorivo = "DIZELA"; 
     });
   }
 
-  async presentToast() {
-    const toast = await this.toastController.create({
-      message: "GPS je isključen, upalite GPS.",
-      duration: 2000
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Uključite GPS',
+      message: 'GPS je isključen, upalite GPS.',
+      buttons: [{
+        text: "OK",
+        handler: (ev) => {
+          navigator['app'].exitApp();
+          
+        }
+      }]
     });
-    toast.present();
+
+    await alert.present();
   }
   /*
     id 1 - benzinsko
@@ -218,16 +226,27 @@ export class HomeComponent implements OnInit {
         udaljenost = Math.round(udaljenost * 10) / 10
 
         if (benga.udaljenost <= value) {
-            this.benzinske.filterPostaji.push(benga);
+          
+          this.benzinske.filterPostaji.push(benga);
         }
-
+        
       }
       this.benzinske.loadedData = true;
+      
     }).catch(err => {
       console.log("err: " + err);
 
     });
 
+  }
+
+  animiraj(id: string) {
+    console.log(id);
+    console.log(document.getElementById("b" + id));
+    
+    const animation = this.animationController.create().addElement(document.getElementById("b" + id)).
+      duration(300).iterations(1).fromTo('opacity', '0', '1');
+    animation.play();
   }
 
   get(benga: Postaja) {
@@ -266,52 +285,13 @@ export class HomeComponent implements OnInit {
 
   doRefresh(event: any) {
     console.log("refresh");
-    // this.benzinske.filterBenga = [];
-    // this.reloading = true;
-    // this.hakParser.loadedData = false;
-    // this.geolocation.getCurrentPosition().then((resp) => {
+    this.benzinske.loadedData = false;
+    this.benzinske.filterPostaji = [];
+    this.benzinske.dohvatiPodatke();
 
-    //   this.benzinske.lat = resp.coords.latitude;
-    //   this.benzinske.lon = resp.coords.longitude;
-    //   let brojUdaljenosti = 0;
-    //   let complete = false;
-    //   for (let i = 0; i < this.jsonBenge.length; i++) {
-    //     let benga = this.jsonBenge[i];
-    //     let udaljenost = this.benzinske.calculateDistance(benga.lat, benga.lon);
-    //     udaljenost = Math.round(udaljenost * 10) / 10
-    //     benga.udaljenost = udaljenost;
-
-    //     if (udaljenost <= this.benzinske.radius) {
-    //       this.hakParser.parse(benga).then(data => {
-    //         if(data.imaGorivo) {
-    //           this.benzinske.filterBenga.push(data);
-    //           this.hakParser.loadedData = true;
-    //           this.reloading = false;
-    //           setTimeout(() => {
-    //             const animation = this.animationController.create().addElement(document.getElementById("" + data.id)).
-    //               duration(300).iterations(1).fromTo('opacity', '0', '1');
-  
-    //             animation.play();
-    //           }, 50)
-    //           if (!complete) {
-    //             complete = true;
-    //             setTimeout(() => {
-    //               event.target.complete();
-                  
-    //             }, 1500);
-    //           }
-    //         }
-            
-    //       });
-
-    //     }
-
-    //   }
-
-    // }).catch(err => {
-    //   console.log("err: " + err);
-
-    // });
+    setTimeout(() => {
+      event.target.complete();              
+    }, 1000);
   }
 
   getBenzin(gorivo: string) {

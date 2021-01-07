@@ -1,5 +1,4 @@
 ion-content {
-    // --ion-background-color: #EBEBEB;
     font-family: 'Varela Round', sans-serif !important;
 }
 
@@ -44,6 +43,24 @@ ion-alert.select-alert {
     --inner-box-shadow: 10px;
     box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
 }
+ion-item { 
+    animation: fadeIn 0.5s 70ms both;
+}
+.none {
+    animation: none !important;
+}
+ion-list-header > ion-label, ion-skeleton-text {
+    text-align: center;
+    font-size: medium;
+}
+@keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
 #content {
     opacity: 0;
 }

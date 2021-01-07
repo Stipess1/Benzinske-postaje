@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { AnimationController } from '@ionic/angular';
+import { AnimationController, Platform } from '@ionic/angular';
 import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
+import { AppVersion } from '@ionic-native/app-version/ngx';
+import { EmailComposer } from '@ionic-native/email-composer/ngx';
+
 
 @Component({
   selector: 'app-settings',
@@ -12,10 +15,23 @@ export class SettingsComponent implements OnInit {
 
   constructor(private service: BenzinskePostajeService,
     private animationController: AnimationController,
-    private statusBar: StatusBar) { }
+    private statusBar: StatusBar,
+    public appVersion: AppVersion,
+    private email: EmailComposer,
+    private platform: Platform) { }
+
+  public version: string = "";
+  public dostupno: boolean;
 
   ngOnInit() {
-
+    if(this.platform.is('cordova')) {
+      this.appVersion.getVersionNumber().then(data => {
+        this.version = data;
+      })
+      this.email.isAvailable().then((ava: boolean) => {
+        this.dostupno = ava;
+      });
+    }
   }
 
   ionViewWillEnter() {
@@ -24,5 +40,17 @@ export class SettingsComponent implements OnInit {
     this.service.tabs('settings');
     document.getElementById('postavke').style.marginTop = this.service.insetBar + "px";
     this.statusBar.backgroundColorByHexString('#ffffff');
+  }
+
+  kontakt() {
+    if(this.dostupno) {
+      let email = {
+        to: 'stjepstjepanovic@gmail.com',
+        subject: 'Benzinske postaje',
+        isHtml: true
+      }
+
+      this.email.open(email);
+    }
   }
 }

@@ -4,7 +4,7 @@ export class Usluge {
     img: string;
 
     constructor(opcija_id: number) {
-        
+        this.opcija_id = opcija_id;
         switch(opcija_id) {
             case 1:
                 this.usluga = "Zamjena motornoga ulja";

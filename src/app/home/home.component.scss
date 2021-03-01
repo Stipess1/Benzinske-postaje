@@ -11,7 +11,15 @@ ion-content {
     text-align: center;
     color: #a2a2a2; 
 }
-
+.cupertino-pane {
+    display: none;
+}
+.content {
+    margin: 10px;
+}
+ion-fab {
+    z-index: -100 !important;
+}
 h2, p, ion-label, h1, ion-select-option, ion-select, .select-text {
     font-family: 'Varela Round', sans-serif !important;
 }
@@ -89,17 +97,10 @@ ion-refresher.md {
     margin-top: 56px;
     z-index: 999;
 }
-ion-select {
-    width: 120px;
-    margin-top: 5px;
-    float: left;
-    border: 1px solid #c9c9c9;
-    border-radius: 10px;
-    --placeholder-color: #a2a2a2 !important;
-}
 
 .benge {
     padding-top: 0;
+    padding-bottom: 25px;
 }
 ion-grid {
     padding-bottom: 0;
@@ -107,7 +108,11 @@ ion-grid {
 ion-text {
     font-family: 'Varela Round', sans-serif !important;
 }
-
+.filtriraj {
+    --box-shadow: 0;
+    --border-radius: 10px;
+    --background: rgba(255, 255, 255, 0);
+}
 .desno > h1 {
     float: right;
     color: #4B4B4B;

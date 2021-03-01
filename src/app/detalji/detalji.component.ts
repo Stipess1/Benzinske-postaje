@@ -99,9 +99,7 @@ export class DetaljiComponent implements OnInit {
             this.cijenikPostaje.push(cijenik);
           }
         }
-      }
-      console.log(this.cijenikPostaje);
-      
+      }   
 
       // Dizel, benzin, autoplin...
       // let dataPoints = [];

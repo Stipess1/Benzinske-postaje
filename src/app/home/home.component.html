@@ -5,32 +5,35 @@
     <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
-    <ion-grid >
-      <ion-row>
-        <ion-col>
-          <ion-select value="DIZELA" interface="action-sheet" cancelText="Odustani" (ionChange)="selectChange($event)"
-            mode="md" [interfaceOptions]="{header: 'Odaberite gorivo', cssClass: 'action'}">
-            <ion-select-option selectedText value="DIZELA">Dizel</ion-select-option>
-            <ion-select-option value="BENZINA">Benzin</ion-select-option>
-            <ion-select-option value="AUTOPLIN">Autoplin</ion-select-option>
-            <ion-select-option value="PLAVI-DIZEL">Plavi dizel</ion-select-option>
-          </ion-select>
-        </ion-col>
-        <ion-col>
-          <ion-select value="5" name="Radius" (ionChange)="radius($event)" interface="action-sheet" mode="md"
-            cancelText="Odustani" [interfaceOptions]="{header: 'Radijus', cssClass: 'action'}">
-            <ion-select-option value="5">5 km</ion-select-option>
-            <ion-select-option value="10">10 km</ion-select-option>
-            <ion-select-option value="15">15 km</ion-select-option>
-          </ion-select>
-        </ion-col>
-        <ion-col>
-          <div class="filter-div">
-            <ion-icon class="filter-img" button name="filter-outline" (click)="filter($event)"></ion-icon>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <div class="cupertino-pane">
+      
+      <div class="content" >
+        <h1>Filteri</h1>
+        <ion-list>
+          <ion-item>
+            <ion-label>Vrsta goriva</ion-label>
+            <ion-select value="DIZELA" interface="action-sheet" cancelText="Odustani"
+              (ionChange)="selectChange($event)" mode="md"
+              [interfaceOptions]="{header: 'Odaberite gorivo', cssClass: 'action'}">
+              <ion-select-option selectedText value="DIZELA">Dizel</ion-select-option>
+              <ion-select-option value="BENZINA">Benzin</ion-select-option>
+              <ion-select-option value="AUTOPLIN">Autoplin</ion-select-option>
+              <ion-select-option value="PLAVI-DIZEL">Plavi dizel</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>Izaberite radijus</ion-label>
+            <ion-select value="5" name="Radius" (ionChange)="radius($event)" interface="action-sheet" mode="md"
+              cancelText="Odustani" [interfaceOptions]="{header: 'Radijus', cssClass: 'action'}">
+              <ion-select-option value="5">5 km</ion-select-option>
+              <ion-select-option value="10">10 km</ion-select-option>
+              <ion-select-option value="15">15 km</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+        <ion-button expand="full" class="filtriraj" color="light" (click)="filter($event)">Filtriraj</ion-button>
+      </div>
+    </div>
     <div *ngIf="this.benzinske.loadedData">
 
       <ion-list lines="none" class="benge" *ngIf="!reloading">
@@ -41,36 +44,37 @@
         </ion-list-header>
         <ion-item class="benga" *ngFor="let benga of benzinske.filterPostaji" (click)="get(benga);" id="b{{benga.id}}">
 
-          
-            <ion-img slot="start" *ngIf="benga.img != 'http://localhost/home'" (ionError)="imgNotLoaded(benga)"
-              src="{{benga.img}}" style="background-size: cover; margin-right: 10px; width: 50px;"></ion-img>
 
-            <ion-label>
-              <div class="benga-wrapper">
-                <div class="benga-detalji">
-                  <h2>{{benga.naziv}}</h2>
-                  <p>{{benga.adresa}}</p>
-                </div>
-                <div class="benga-info">
-                  <p>
-                    <ion-icon name="navigate-outline"></ion-icon> {{benga.udaljenost}} km
-                  </p>
-                  <ion-chip color="success" *ngIf="benga.otvoreno">
-                    <ion-label>Otvoreno</ion-label>
-                  </ion-chip>
-                  <ion-chip color="danger" *ngIf="!benga.otvoreno">
-                    <ion-label>Zatvoreno</ion-label>
-                  </ion-chip>
-                </div>
+          <ion-img slot="start" *ngIf="benga.img != 'http://localhost/home'" (ionError)="imgNotLoaded(benga)"
+            src="{{benga.img}}" style="background-size: cover; margin-right: 10px; width: 50px;"></ion-img>
+
+          <ion-label>
+            <div class="benga-wrapper">
+              <div class="benga-detalji">
+                <h2>{{benga.naziv}}</h2>
+                <p>{{benga.adresa}}</p>
               </div>
+              <div class="benga-info">
+                <p>
+                  <ion-icon name="navigate-outline"></ion-icon> {{benga.udaljenost}} km
+                </p>
+                <ion-chip color="success" *ngIf="benga.otvoreno">
+                  <ion-label>Otvoreno</ion-label>
+                </ion-chip>
+                <ion-chip color="danger" *ngIf="!benga.otvoreno">
+                  <ion-label>Zatvoreno</ion-label>
+                </ion-chip>
+              </div>
+            </div>
 
-            </ion-label>
-            <ion-label class="desno">
-              <h1>{{benga.gorivo}}<span style="color: grey; font-size: medium;">kn/L</span></h1>
-            </ion-label>
-         
+          </ion-label>
+          <ion-label class="desno">
+            <h1>{{benga.gorivo}}<span style="color: grey; font-size: medium;">kn/L</span></h1>
+          </ion-label>
+
         </ion-item>
       </ion-list>
+
     </div>
     <div *ngIf="!this.benzinske.loadedData">
       <ion-list id="skeleton" class="benge" lines="none">
@@ -207,5 +211,13 @@
         </ion-item>
       </ion-list>
     </div>
+    
   </div>
 </ion-content>
+<ion-footer>
+  <ion-fab vertical="bottom" horizontal="end" *ngIf="!fabHidden">
+    <ion-fab-button color="light" (click)="fabClick()">
+      <ion-icon name="filter"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-footer>

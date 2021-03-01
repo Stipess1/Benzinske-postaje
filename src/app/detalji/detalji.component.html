@@ -61,7 +61,7 @@
             </ion-avatar>
             <ion-label>{{benga.usluga}}</ion-label>
         </ion-chip>
-        <ion-text *ngIf="trenutnaBenga.opcije == undefined">Nije unešeno</ion-text>
+        <ion-text *ngIf="trenutnaBenga.opcije.length == 0">Nije unešeno</ion-text>
     </div>
     <hr>
     <div class="grafikon">

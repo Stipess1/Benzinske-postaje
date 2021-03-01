@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RadnoVrijeme } from '../benzinska/radnovrijeme';
 import { BenzinskePostajeService } from '../service/benzinske-postaje.service';
-import { Platform, ToastController, PopoverController, AnimationController, AlertController } from '@ionic/angular';
+import { Platform, ToastController, PopoverController, AnimationController, AlertController, ModalController, IonRouterOutlet } from '@ionic/angular';
 import { PopoverComponent } from '../popover/popover.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -17,6 +17,8 @@ import { Postaja } from '../benzinska/postaja';
 import { Chart } from 'chart.js';
 import { LaunchNavigator } from '@ionic-native/launch-navigator/ngx';
 import { Storage } from '@ionic/storage';
+import { ModalComponent } from '../modal/modal.component';
+import { CupertinoPane, CupertinoSettings } from 'cupertino-pane';
 
 @Component({
   selector: 'app-home',
@@ -31,6 +33,7 @@ export class HomeComponent implements OnInit {
   public reloading: boolean = false;
   public grad: string = "blizini";
   public subscription: any;
+  public fabHidden: boolean = false;
   
   // -
   // https://nominatim.org/release-docs/develop/api/Search/
@@ -50,7 +53,9 @@ export class HomeComponent implements OnInit {
     private backgroundMode: BackgroundMode,
     private launchReview: LaunchReview,
     private alertController: AlertController,
-    private storage: Storage) { }
+    private storage: Storage,
+    private modalCtrl: ModalController,
+    private routerOutlet: IonRouterOutlet) { }
 
   ngOnInit() {
 
@@ -128,7 +133,7 @@ export class HomeComponent implements OnInit {
   async presentAlert() {
     const alert = await this.alertController.create({
       header: 'Uključite GPS',
-      message: 'GPS je isključen, upalite GPS.',
+      message: 'GPS je isključen, uključite GPS.',
       buttons: [{
         text: "OK",
         handler: (ev) => {
@@ -155,7 +160,6 @@ export class HomeComponent implements OnInit {
           }
           this.postaviStorage(val++);
         }
-      
     });
 
 
@@ -171,6 +175,31 @@ export class HomeComponent implements OnInit {
     } else {
       this.alertZaReview();
     }
+  }
+
+  async fabClick() {
+    this.fabHidden = true;
+    let settings: CupertinoSettings = { backdrop: true, touchMoveStopPropagation: true, bottomClose: true, onBackdropTap: (e) => {
+      pane.destroy({animate: true});
+    },
+    onDidDismiss: (e) => {
+      this.fabHidden = false;
+    }
+  };
+    let pane = new CupertinoPane('.cupertino-pane', settings);
+    pane.present({animate: true}); 
+    // const modal = await this.modalCtrl.create({
+    //   component: ModalComponent,
+    //   mode: 'ios',
+    //   cssClass: 'modal-css',
+    //   presentingElement: this.routerOutlet.nativeEl,
+    //   backdropDismiss: true,
+    //   showBackdrop: true,
+    //   animated: true,
+    //   swipeToClose: true
+    // });
+    // return await modal.present();
+    
   }
 
   async alertZaReview() {
@@ -287,8 +316,6 @@ export class HomeComponent implements OnInit {
   }
 
   animiraj(id: string) {
-    console.log(id);
-    console.log(document.getElementById("b" + id));
     
     const animation = this.animationController.create().addElement(document.getElementById("b" + id)).
       duration(300).iterations(1).fromTo('opacity', '0', '1');
@@ -296,6 +323,8 @@ export class HomeComponent implements OnInit {
   }
 
   get(benga: Postaja) {
+    console.log(typeof benga);
+    
     console.log(benga);
     
     this.benzinske.trenutnaBenga = benga;

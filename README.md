@@ -5,11 +5,11 @@
 <p align="center"> <a href="https://play.google.com/store/apps/details?id=stjepan.com.benz" alt="Google play izdanje"> <img src="assets/google-play-badge.png" width="200"></a></p>
 
 ## Slike zaslona
-[<img src="assets/slika1.jpg" width="280">](assets/slika1.jpg)
-[<img src="assets/slika2.jpg" width="280">](assets/slika2.jpg)
-[<img src="assets/slika3.jpg" width="280">](assets/slika3.jpg)
-[<img src="assets/slika4.jpg" width="280">](assets/slika4.jpg)
-[<img src="assets/slika5.jpg" width="280">](assets/slika5.jpg)
+[<img src="assets/slika1.jpg" width="200">](assets/slika1.jpg)
+[<img src="assets/slika2.jpg" width="200">](assets/slika2.jpg)
+[<img src="assets/slika3.jpg" width="200">](assets/slika3.jpg)
+[<img src="assets/slika4.jpg" width="200">](assets/slika4.jpg)
+[<img src="assets/slika5.jpg" width="200">](assets/slika5.jpg)
 
 
 ## Opis

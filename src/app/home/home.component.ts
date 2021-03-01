@@ -17,7 +17,6 @@ import { Postaja } from '../benzinska/postaja';
 import { Chart } from 'chart.js';
 import { LaunchNavigator } from '@ionic-native/launch-navigator/ngx';
 import { Storage } from '@ionic/storage';
-import { ModalComponent } from '../modal/modal.component';
 import { CupertinoPane, CupertinoSettings } from 'cupertino-pane';
 
 @Component({

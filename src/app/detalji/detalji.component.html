@@ -42,6 +42,7 @@
                         <p class="dizel" *ngIf="gorivo.naziv.toLowerCase().includes('eurodiesel') || gorivo.naziv.toLowerCase().includes('eurodizel')">B</p>
                         <p class="benzin" *ngIf="gorivo.naziv.toLowerCase().includes('eurosuper')">E</p>
                         <div class="autoplin" *ngIf="gorivo.naziv.toLowerCase().includes('autoplin') || gorivo.naziv.toLowerCase().includes('lpg')"><p style="transform: rotateZ(-45deg); margin:auto;">H</p></div>
+                        <div class="ostalo" *ngIf="gorivo.naziv.toLowerCase().includes('ulje')"><p style="margin:auto;">O</p></div>
                         <p class="text-gorivo">{{gorivo.naziv}}</p>
                         <p class="cijena">{{gorivo.cijena.toFixed(2)}} <span>kn/L</span> </p>
                         

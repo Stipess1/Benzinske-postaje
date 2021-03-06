@@ -187,17 +187,6 @@ export class HomeComponent implements OnInit {
   };
     let pane = new CupertinoPane('.cupertino-pane', settings);
     pane.present({animate: true}); 
-    // const modal = await this.modalCtrl.create({
-    //   component: ModalComponent,
-    //   mode: 'ios',
-    //   cssClass: 'modal-css',
-    //   presentingElement: this.routerOutlet.nativeEl,
-    //   backdropDismiss: true,
-    //   showBackdrop: true,
-    //   animated: true,
-    //   swipeToClose: true
-    // });
-    // return await modal.present();
     
   }
 

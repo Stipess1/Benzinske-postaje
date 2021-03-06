@@ -74,7 +74,7 @@ export class BenzinskePostajeService {
   }
 
   dohvatiPodatke() {
-    
+    this.svePostaje = [];
     this.storage.get('updateVrijeme').then((data: Date) => {
       let diffDays = -1;
       if(data != null) {
@@ -92,7 +92,7 @@ export class BenzinskePostajeService {
         console.log('tu sam');
         
         let heroku = "https://benzinske-postaje.herokuapp.com";
-        this.svePostaje = [];
+        
         this.httpClient.get(heroku).subscribe((data: any) => {
           // console.log(data["postajas"]);
           for (let i = 0; i < data["postajas"].length; i++) {
@@ -342,17 +342,19 @@ export class BenzinskePostajeService {
   getBenzinskaTimeFromJson(radnoVrijeme: string, postaja: Postaja) {
 
     let date = new Date();
-    let split = radnoVrijeme.split("-");
-    let pocetnoVrijeme = split[0].slice(0, split[0].length - 3);
-    let zavrsnoVrijeme = split[1].slice(0, split[1].length - 3);
-
-    if (date.getHours() < parseInt(zavrsnoVrijeme) && date.getHours() > parseInt(pocetnoVrijeme)) {
-      postaja.otvoreno = true;
-    } else {
-      if (zavrsnoVrijeme === "24" && pocetnoVrijeme == "00")
+    if(radnoVrijeme != undefined) {
+      let split = radnoVrijeme.split("-");
+      let pocetnoVrijeme = split[0].slice(0, split[0].length - 3);
+      let zavrsnoVrijeme = split[1].slice(0, split[1].length - 3);
+  
+      if (date.getHours() < parseInt(zavrsnoVrijeme) && date.getHours() > parseInt(pocetnoVrijeme)) {
         postaja.otvoreno = true;
-      else
-        postaja.otvoreno = false;
+      } else {
+        if (zavrsnoVrijeme === "24" && pocetnoVrijeme == "00")
+          postaja.otvoreno = true;
+        else
+          postaja.otvoreno = false;
+      }
     }
   }
 

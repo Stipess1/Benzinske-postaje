@@ -1,6 +1,7 @@
 <p align="center"><a href="https://play.google.com/store/apps/details?id=stjepan.com.benz"><img src="assets/icon.png" width="150"></a></p> 
 <h2 align="center"><b>Benzinske postaje</b></h2>
 <p align="center"> <a href="https://github.com/Stipess1/Benzinske-postaje/releases" alt="GitHub release"><img src="https://img.shields.io/github/v/release/Stipess1/Benzinske-postaje" ></a></p>
+<h2 align="center">Nastavak Developmenta <a href="https://github.com/Stipess1/benzinske_postaje_flutter">OVDJE</a></h2>
 <h4 align="center">Hibridna aplikacija za prikazivanje cijene goriva</h4>
 <p align="center"> <a href="https://play.google.com/store/apps/details?id=stjepan.com.benz" alt="Google play izdanje"> <img src="assets/google-play-badge.png" width="200"></a></p>
 
